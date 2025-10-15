@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Cargar Socket.IO si no está presente -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+    // Chat en Vivo: abrir/cerrar
+    function toggleLiveChat() {
+        const box = document.getElementById('livechat-box');
+        const btn = document.getElementById('livechat-toggle');
+        if (box.style.display === 'none' || box.style.display === '') {
+            box.style.display = 'block';
+            btn.style.display = 'none';
+        } else {
+            box.style.display = 'none';
+            btn.style.display = 'flex';
+        }
+    }
+
+    // Chatbot: abrir/cerrar
+    function toggleChatbot() {
+        const box = document.getElementById('chatbot-box');
+        const btn = document.getElementById('chatbot-toggle');
+        if (box.style.display === 'none' || box.style.display === '') {
+            box.style.display = 'block';
+            btn.style.display = 'none';
+        } else {
+            box.style.display = 'none';
+            btn.style.display = 'flex';
+        }
+    }
+
+    // Chatbot: enviar mensaje
+    async function sendChatbotMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById('chatbot-input');
+        const messages = document.getElementById('chatbot-messages');
+        const userMsg = input.value.trim();
+        if (!userMsg) return;
+        messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:#ffe066;color:#2a5298;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;'>${userMsg}</span></div>`;
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+        // Llamar al backend
+        try {
+            const res = await fetch('/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMsg })
+            });
+            const data = await res.json();
+            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#ffe066;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>${data.response}</span></div>`;
+            messages.scrollTop = messages.scrollHeight;
+        } catch (err) {
+            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#ffe066;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>Error de conexión con el bot.</span></div>`;
+        }
+    }
+
+    // Inicializar socket.io para chat en vivo
+    let socket;
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof io !== 'undefined') {
+            socket = io();
+            socket.on('receive_message', function(data) {
+                const usernameInput = document.getElementById('livechat-username');
+                const messages = document.getElementById('livechat-messages');
+                const isUser = usernameInput && data.username === usernameInput.value.trim();
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'msg' + (isUser ? ' user' : '');
+                msgDiv.innerHTML = `<span style='font-size:0.9rem;color:#bfc9d1;margin:0 0.5rem;'>${data.username}</span><span style='max-width:70%;padding:0.7rem 1.1rem;border-radius:16px 16px 2px 16px;background:${isUser ? '#2a5298' : '#ffe066'};color:${isUser ? '#ffe066' : '#2a5298'};font-weight:500;font-size:1.05rem;box-shadow:0 1px 4px rgba(44,62,80,0.07);display:inline-block;'>${data.message}</span>`;
+                messages.appendChild(msgDiv);
+                messages.scrollTop = messages.scrollHeight;
+                // Sonido solo si el mensaje es de otro usuario
+                if (!isUser) {
+                    var sound = document.getElementById('livechat-sound');
+                    if (sound) {
+                        sound.currentTime = 0;
+                        sound.play().catch(()=>{});
+                    }
+                }
+            });
+        }
+    });
+    </script>
+</head>
+<body {% if theme != 'default' %}class="theme-{{ theme }}"{% endif %} style="font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: linear-gradient(120deg, #23272f 0%, #2a5298 100%); min-height: 100vh; margin: 0;">
+    <script>
+    // Evitar que el usuario vea el dashboard tras cerrar sesión usando volver/reenviar
+    if (window.performance && window.performance.navigation && window.performance.navigation.type === 2) {
+        window.location.reload();
+    }
+    // Forzar headers de no-cache en el frontend
+    (function() {
+        var meta = document.createElement('meta');
+        meta.httpEquiv = 'Cache-Control';
+        meta.content = 'no-store, no-cache, must-revalidate, max-age=0';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        var meta2 = document.createElement('meta');
+        meta2.httpEquiv = 'Pragma';
+        meta2.content = 'no-cache';
+        document.getElementsByTagName('head')[0].appendChild(meta2);
+        var meta3 = document.createElement('meta');
+        meta3.httpEquiv = 'Expires';
+        meta3.content = '0';
+        document.getElementsByTagName('head')[0].appendChild(meta3);
+    })();
+    </script>
+    <!-- Barra de navegación mejorada -->
+    <nav class="main-navbar enhanced-navbar">
+        <div class="navbar-content" style="display:flex;align-items:center;justify-content:space-between;">
+            <!-- Logo a la izquierda -->
+            <a href="/dashboard" class="navbar-logo" style="display:flex;align-items:center;gap:0.7rem;">
+                <img src="/static/img/mentora.png" alt="MenTora Logo" style="height:52px;width:52px;border-radius:50%;background:#fff;border:3px solid #00fff1;box-shadow:0 2px 8px #00fff1a0;">
+            </a>
+            <!-- Links centrados -->
+            <ul class="navbar-links" style="display:flex;gap:2.2rem;justify-content:center;align-items:center;flex:1;list-style:none;margin:0;padding:0;">
+                <li><a href="/games">Juegos</a></li>
+                <li><a href="/quiz">Retos</a></li>
+                <li><a href="/dashboard#logros">Logros</a></li>
+            </ul>
+            <!-- Usuario a la derecha -->
+            <div class="navbar-user" style="display:flex;align-items:center;gap:1rem;">
+                <img src="{{ avatar_url }}" alt="avatar" class="navbar-avatar" style="width:52px;height:52px;border-radius:50%;border:3px solid #00fff1;background:#fff;box-shadow:0 2px 8px #00fff1a0;">
+                <span class="navbar-username">{{ username }}</span>
+                <button id="userMenuBtn" class="navbar-user-btn">▼</button>
+                <div id="userMenu" class="navbar-user-menu">
+                    <a href="/edit_profile">Editar Perfil</a>
+                    <a href="#reto-especial" onclick="scrollToSection('reto-especial')">Reto Especial del Día</a>
+                    <a href="#notificaciones" onclick="scrollToSection('notificaciones')">Notificaciones</a>
+                    <a href="#historial" onclick="scrollToSection('historial')">Historial de Actividad</a>
+                    <a href="#" onclick="showModal();return false;" style="color:#e74c3c; font-weight:700;">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <style>
+    /* --- TECNONAUTA/RETROFUTURISTA --- */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600;700&display=swap');
+    body, html {
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        background: linear-gradient(120deg, #181a2b 0%, #23272f 60%, #2a5298 100%);
+        color: #e0e7ef;
+        min-height: 100vh;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+    .main-navbar {
+        background: linear-gradient(90deg, #181a2b 60%, #23272f 100%);
+        border-bottom: 2.5px solid #00fff1;
+        box-shadow: 0 4px 32px #00fff1a0;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        letter-spacing: 2px;
+    }
+    .navbar-logo, .navbar-title {
+        color: #00fff1 !important;
+        text-shadow: 0 0 8px #00fff1, 0 0 2px #fff;
+    }
+    .navbar-avatar {
+        border: 3px solid #00fff1 !important;
+        box-shadow: 0 2px 8px #00fff1a0;
+    }
+    .navbar-links li a {
+        color: #fff !important;
+        background: none !important;
+        border: 1.5px solid transparent;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        letter-spacing: 1px;
+        transition: color 0.2s, border 0.2s, box-shadow 0.2s;
+    }
+    .navbar-links li a:hover, .navbar-links li a.active {
+        color: #00fff1 !important;
+        border: 1.5px solid #00fff1;
+        box-shadow: 0 0 12px #00fff1a0;
+        background: rgba(0,255,241,0.08) !important;
+    }
+    .navbar-user-btn {
+        color: #00fff1 !important;
+    }
+    .navbar-user-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 2.8rem;
+        background: rgba(26,33,62,0.98) !important;
+        color: #00fff1 !important;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px #00fff1a0;
+        min-width: 220px;
+        overflow: hidden;
+        z-index: 200;
+        border: 2px solid #00fff1 !important;
+        backdrop-filter: blur(6px);
+        flex-direction: column;
+        padding: 0;
+    }
+    .navbar-user-menu a {
+        display: block;
+        width: 100%;
+        padding: 1.1rem 1.5rem;
+        text-decoration: none;
+        color: #00fff1 !important;
+        font-weight: 600;
+        border-bottom: 1px solid #16213e !important;
+        transition: background 0.2s, color 0.2s;
+        text-align: left;
+    }
+    .navbar-user-menu a:last-child {
+        border-bottom: none;
+    }
+    .navbar-user-menu a:hover {
+        background: #00fff1 !important;
+        color: #181a2b !important;
+    }
+    .glass-card, .special-section, .modal-content.glass-modal {
+        background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
+        border: 2.5px solid #00fff1;
+        box-shadow: 0 8px 32px #00fff1a0, 0 0 24px #00fff1;
+        color: #e0e7ef;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+    }
+    .stat-card {
+        border: 2px solid #00fff1 !important;
+        background: rgba(0,255,241,0.08) !important;
+        color: #00fff1 !important;
+        box-shadow: 0 2px 12px #00fff1a0 !important;
+    }
+    .stat-value {
+        color: #00fff1 !important;
+        text-shadow: 0 0 8px #00fff1;
+    }
+    .stat-label {
+        color: #e0e7ef !important;
+    }
+    .styled-quiz-btn, .games-button, .quiz-button, .confirm {
+        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%) !important;
+        color: #181a2b !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        font-weight: bold;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px #00fff1a0 !important;
+        letter-spacing: 1px;
+        transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .styled-quiz-btn:hover, .games-button:hover, .quiz-button:hover, .confirm:hover {
+        background: linear-gradient(90deg, #00c3ff 60%, #00fff1 100%) !important;
+        color: #fff !important;
+        transform: scale(1.04);
+        box-shadow: 0 4px 18px #00fff1cc !important;
+    }
+    .cancel {
+        background: #23243a !important;
+        color: #00fff1 !important;
+        border: 2px solid #00fff1 !important;
+    }
+    .cancel:hover {
+        background: #00fff1 !important;
+        color: #23243a !important;
+    }
+    .level-progress-bar {
+        background: linear-gradient(90deg,#00fff1,#00c3ff) !important;
+    }
+    .level-progress-text {
+        color: #00fff1 !important;
+        text-shadow: 0 0 8px #00fff1;
+    }
+    .motivational {
+        background: linear-gradient(90deg, #00fff1 0%, #00c3ff 100%) !important;
+        color: #181a2b !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        font-size: 1.3rem !important;
+        text-shadow: 0 0 8px #00fff1;
+        border: 2px solid #00fff1 !important;
+        box-shadow: 0 2px 12px #00fff1a0 !important;
+    }
+    .insignia-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        border: 2px solid #00fff1;
+        background: #fff;
+        object-fit: cover;
+        box-shadow: 0 2px 8px #00fff1a0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #00fff1;
+    }
+    .reto-item, .logro-item {
+        background: rgba(0,255,241,0.07) !important;
+        border: 2px solid #00fff1 !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2px 12px #00fff1a0 !important;
+        color: #e0e7ef !important;
+    }
+    .reto-item h4, .logro-item h4 {
+        color: #00fff1 !important;
+        text-shadow: 0 0 8px #00fff1;
+    }
+    .reto-item p, .logro-item p {
+        color: #e0e7ef !important;
+    }
+    .special-section h2 {
+        color: #00fff1 !important;
+        text-shadow: 0 0 8px #00fff1;
+    }
+    .notification-list li, .activity-list li {
+        color: #00fff1 !important;
+    }
+    .main-footer {
+        background: linear-gradient(90deg, #23243a 60%, #1a1a2e 100%);
+        border-top: 2.5px solid #00fff1;
+        color: #00fff1 !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        text-shadow: 0 0 8px #00fff1;
+    }
+    .main-footer span {
+        color: #00fff1 !important;
+    }
+    .modal-content.glass-modal h3 {
+        color: #00fff1 !important;
+        text-shadow: 0 0 8px #00fff1;
+    }
+    /* Circuitos SVG más brillantes */
+    .circuit-bg {
+        opacity: 0.22 !important;
+        filter: blur(1.5px) brightness(1.2) drop-shadow(0 0 12px #00fff1);
+    }
+    /* Animación glow para títulos */
+    @keyframes glow {
+        from { text-shadow: 0 0 12px #00fff1, 0 0 2px #fff; }
+        to { text-shadow: 0 0 32px #00fff1, 0 0 8px #fff; }
+    }
+    .navbar-title, .main-footer span, .motivational, .special-section h2, .stat-value, .level-progress-text {
+        animation: glow 1.5s infinite alternate;
+    }
+    </style>
+
+</body>
+</html>
+    <!-- Fondo animado de circuitos SVG -->
+        <svg class="circuit-bg" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#ffe066" stroke-width="2">
+                <polyline points="100,100 300,100 300,300 500,300"/>
+                <polyline points="400,200 600,200 600,400 800,400"/>
+                <polyline points="700,500 900,500 900,700 1100,700"/>
+                <polyline points="1200,150 1400,150 1400,350 1600,350"/>
+                <polyline points="1700,600 1500,600 1500,800 1300,800"/>
+                <circle cx="300" cy="100" r="8" fill="#2a5298">
+                    <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="600" cy="200" r="8" fill="#2a5298">
+                    <animate attributeName="r" values="8;14;8" dur="2.2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="900" cy="500" r="8" fill="#2a5298">
+                    <animate attributeName="r" values="8;14;8" dur="2.4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="1400" cy="150" r="8" fill="#2a5298">
+                    <animate attributeName="r" values="8;14;8" dur="2.1s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="1500" cy="600" r="8" fill="#2a5298">
+                    <animate attributeName="r" values="8;14;8" dur="2.3s" repeatCount="indefinite"/>
+                </circle>
+            </g>
+        </svg>
+
+    <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.2rem 2.5rem 1.2rem;">
+            <!-- Estadísticas principales -->
+            <div class="stats" style="display: flex; gap: 2.5rem; justify-content: center; margin-bottom: 2.5rem;">
+                <div class="stat-card glass-card">
+                    <div class="stat-value">{{ points }}</div>
+                    <div class="stat-label">Puntos</div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-value">{{ level }}</div>
+                    <div class="stat-label">Nivel</div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-value">{{ achievements|length }}</div>
+                    <div class="stat-label">Logros</div>
+                </div>
+            </div>
+
+        <!-- Ranking de líderes -->
+
+    <div class="leaderboard glass-card card-theme-{{ theme if theme != 'default' else 'dark' }}" style="margin-bottom:2.5rem;">
+    <h2 style="font-size:2rem;letter-spacing:1px;margin-bottom:1.2rem;">🏆 <span>Ranking de Líderes</span></h2>
+    <table style="width:100%;border-collapse:separate;border-spacing:0 0.5rem;">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Usuario</th>
+                <th>Nivel</th>
+                <th>Puntos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# Mostrar solo alumnos, no profesores #}
+            {% for u in leaderboard %}
+                {% if not u.is_admin and (not u.teacher_profile) %}
+                <tr class="{% if u.username == username %}highlight{% endif %}">
+                    <td style="text-align:center;">{{ loop.index }}</td>
+                    <td>{{ u.username }}</td>
+                    <td style="text-align:center;">{{ u.level }}</td>
+                    <td style="text-align:center;">{{ u.points }}</td>
+                </tr>
+                {% endif %}
+            {% else %}
+            <tr><td colspan="4" style="text-align:center; color:#bfc9d1;">No hay usuarios en el ranking aún.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+        <!-- Barra de progreso de nivel -->
+    <div class="level-progress-section glass-card card-theme-{{ theme if theme != 'default' else 'dark' }}" style="margin-bottom:2.5rem;">
+            <h2 style="font-size:1.5rem;letter-spacing:1px;margin-bottom:1.2rem;">🎯 <span>Progreso de Nivel</span></h2>
+            <div class="level-progress" style="background:#e0e7ef;border-radius:12px;height:22px;overflow:hidden;box-shadow:0 1px 6px rgba(44,62,80,0.08);margin-bottom:0.7rem;">
+                <div class="level-progress-bar" style="height:100%;background:linear-gradient(90deg,#ffe066,#fab005);border-radius:12px;width: {{ progress_percent }}%;transition:width 0.7s;"></div>
+            </div>
+            <div class="level-progress-text" style="font-size:1.1rem;color:#2a5298;font-weight:600;">
+                Progreso hacia el siguiente nivel: {{ progress_percent }}%
+            </div>
+        </div>
+
+
+    <!-- Mensaje motivacional -->
+    <div class="motivational glass-card card-theme-{{ theme if theme != 'default' else 'dark' }}" style="margin-bottom:2.5rem;font-size:1.25rem;text-align:center;">
+        {{ motivational_message }}
+    </div>
+
+    <!-- Reto Especial del Día -->
+    <section id="reto-especial" class="special-section glass-card" style="margin-bottom:2.5rem;">
+        <div class="special-bg">
+            <svg viewBox="0 0 600 120" width="100%" height="120" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;">
+                <g stroke="#ffe066" stroke-width="2">
+                    <polyline points="20,60 100,60 100,30 200,30"/>
+                    <circle cx="100" cy="60" r="8" fill="#2a5298">
+                        <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+        <div class="special-content">
+            <h2>⚡ Reto Especial del Día</h2>
+            <p style="font-size:1.1rem;">¡Participa en el reto especial y gana puntos extra!<br><span style="color:#ffe066;font-weight:bold;">{{ special_challenge.title if special_challenge else 'Próximamente...' }}</span></p>
+            {% if special_challenge %}
+            <form method="GET" action="/quiz/{{ special_challenge.id }}">
+                <button type="submit" class="quiz-button">Intentar Reto Especial</button>
+            </form>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Notificaciones -->
+    <section id="notificaciones" class="special-section glass-card" style="margin-bottom:2.5rem;">
+        <div class="special-bg">
+            <svg viewBox="0 0 600 120" width="100%" height="120" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;">
+                <g stroke="#ffe066" stroke-width="2">
+                    <polyline points="20,80 120,80 120,40 220,40"/>
+                    <circle cx="120" cy="80" r="8" fill="#2a5298">
+                        <animate attributeName="r" values="8;14;8" dur="2.2s" repeatCount="indefinite"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+        <div class="special-content">
+            <h2>🔔 Notificaciones</h2>
+            <ul class="notification-list">
+                {% if notifications and notifications|length > 0 %}
+                    {% for n in notifications %}
+                        <li><span style="color:#ffe066;">•</span> {{ n.message }} <span style="font-size:0.9em;color:#bfc9d1;">({{ n.created_at.strftime('%d/%m/%Y %H:%M') }})</span></li>
+                    {% endfor %}
+                {% else %}
+                    <li style="color:#bfc9d1;">No tienes notificaciones nuevas.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+
+    <!-- Historial de Actividad -->
+    <section id="historial" class="special-section glass-card" style="margin-bottom:2.5rem;">
+        <div class="special-bg">
+            <svg viewBox="0 0 600 120" width="100%" height="120" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;">
+                <g stroke="#ffe066" stroke-width="2">
+                    <polyline points="20,100 140,100 140,60 260,60"/>
+                    <circle cx="140" cy="100" r="8" fill="#2a5298">
+                        <animate attributeName="r" values="8;14;8" dur="2.4s" repeatCount="indefinite"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+        <div class="special-content">
+            <h2>📜 Historial de Actividad</h2>
+            <ul class="activity-list">
+                {% if activity_log and activity_log|length > 0 %}
+                    {% for a in activity_log %}
+                        <li><span style="color:#ffe066;">•</span> {{ a.action }} <span style="font-size:0.9em;color:#bfc9d1;">({{ a.timestamp.strftime('%d/%m/%Y %H:%M') }})</span></li>
+                    {% endfor %}
+                {% else %}
+                    <li style="color:#bfc9d1;">No hay actividad reciente.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+
+        <!-- Insignias destacadas -->
+        {% if achievements|length > 0 %}
+    <div class="insignias-destacadas" style="display:flex;gap:1.2rem;justify-content:center;margin-bottom:2.5rem;">
+            {% for logro in achievements[:3] %}
+            {% if logro.badge and logro.badge.image_url %}
+                <img class="insignia-icon" src="{{ logro.badge.image_url }}" alt="{{ logro.badge.name }}" title="{{ logro.badge.name }}" />
+            {% else %}
+                <div class="insignia-icon" title="{{ logro.badge.name if logro.badge else 'Insignia' }}">🏅</div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    <div class="logros glass-card card-theme-{{ theme if theme != 'default' else 'dark' }}" id="logros" style="margin-bottom:2.5rem;">
+            <h2>🎖️ <span>Tus Logros</span></h2>
+            <div style="display:flex; flex-wrap:wrap; gap:0.7rem;">
+                {% for logro in achievements %}
+                <div class="logro-item" style="flex:1 1 220px; min-width:220px; display:flex; align-items:center; gap:1rem;">
+                    {% if logro.badge and logro.badge.image_url %}
+                        <img src="{{ logro.badge.image_url }}" alt="{{ logro.badge.name }}" style="width:54px; height:54px; border-radius:50%; border:2px solid #ffe066; background:#fff; object-fit:cover; margin-right:0.7rem;">
+                    {% else %}
+                        <div class="insignia-icon" title="{{ logro.badge.name if logro.badge else 'Insignia' }}">🏅</div>
+                    {% endif %}
+                    <div>
+                        <h4 style="margin-bottom:0.2rem; color:#ffe066;">{{ logro.badge.name if logro.badge else logro.title }}</h4>
+                        <p style="margin-bottom:0.2rem;">{{ logro.badge.description if logro.badge else logro.description }}</p>
+                        {% if logro.earned_at %}
+                        <span style="font-size:0.85em; color:#bfc9d1;">Obtenido: {{ logro.earned_at.strftime('%d/%m/%Y') }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <p style="color:#bfc9d1;">No has desbloqueado logros aún.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    <div class="retos glass-card card-theme-{{ theme if theme != 'default' else 'dark' }}" style="margin-bottom:2.5rem;">
+        <h2>🧠 <span>Retos/Juegos Creados por el Profesor/Admin</span></h2>
+        <div style="display:flex; flex-wrap:wrap; gap:0.7rem;">
+            {% set hay_retos = (quizzes and quizzes|length > 0) or (games and games|length > 0) %}
+            {% if quizzes and quizzes|length > 0 %}
+                {% for quiz in quizzes %}
+                    <div class="reto-item card-theme-{{ theme if theme != 'default' else 'dark' }}" style="flex:1 1 180px; min-width:180px; position:relative;">
+                        <h4>📝 {{ quiz.title }}</h4>
+                        <p>Área: {{ quiz.area }}</p>
+                        <form method="GET" action="/quiz/{{ quiz.id }}" style="margin-top:0.7rem;">
+                            <button type="submit" class="styled-quiz-btn">Intentar Quiz</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if games and games|length > 0 %}
+                {% for game in games %}
+                    <div class="reto-item card-theme-{{ theme if theme != 'default' else 'dark' }}" style="flex:1 1 180px; min-width:180px; position:relative;">
+                        <h4>🎮 {{ game.name }}</h4>
+                        <p>Tipo: {{ game.type }}</p>
+                        <form method="GET" action="/games/{{ game.id }}" style="margin-top:0.7rem;">
+                            <button type="submit" class="styled-quiz-btn">Ver Juego</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if not hay_retos %}
+                <p style="color:#bfc9d1;">No hay retos ni juegos creados por el profesor o admin aún.</p>
+            {% endif %}
+        </div>
+    </div>
+
+        <a href="/games" class="games-button" style="display:inline-block;margin:0 auto 2.5rem auto;padding:1rem 2.5rem;background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:700;font-size:1.2rem;border-radius:16px;box-shadow:0 2px 12px rgba(255,224,102,0.18);text-decoration:none;transition:background 0.2s, color 0.2s;">
+            <span style="font-size:1.3rem;">🎮</span> Ir a Juegos
+        </a>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <!-- Footer moderno -->
+    <footer class="main-footer glass-card card-theme-{{ theme if theme != 'default' else 'dark' }}" style="margin-top:2rem; padding:1.5rem 0; text-align:center; font-size:1.05rem; border-top:1px solid #2a5298;">
+        <div style="max-width:900px; margin:0 auto;">
+            <span style="font-weight:bold; color:#ffe066;">MenTora</span> &copy; {{ year if year is defined else 2025 }} &middot; Plataforma gamificada para el aprendizaje.<br>
+            <span style="font-size:0.97em; color:#bfc9d1;">Hecho con <span style="color:#e74c3c;">&#10084;</span> por el equipo MenTora.</span>
+        </div>
+    </footer>
+    <form id="logoutForm" method="POST" action="/logout"></form>
+
+    <div id="logoutModal" class="modal" tabindex="-1" style="display:none;align-items:center;justify-content:center;">
+        <div class="modal-content glass-modal tecnonauta-modal">
+            <div style="font-size:2rem;font-family:'Orbitron','Inter',Arial,sans-serif;font-weight:bold;color:#00fff1;letter-spacing:2px;text-shadow:0 0 12px #00fff1,0 0 2px #fff;animation:glow 1.2s infinite alternate; margin-bottom:1.1rem;">¿Cerrar Sesión?</div>
+            <div style="font-size:1.1rem;color:#fff;font-family:'Poppins','Orbitron',Arial,sans-serif;margin-bottom:1.2rem;text-align:center;">¿Seguro que quieres salir de MenTora?<br>¡Te esperamos pronto!</div>
+            <div style="display:flex;gap:1.2rem;justify-content:center;width:100%;margin-bottom:0.5rem;">
+                <button class="confirm" onclick="submitLogout(event)" style="background:linear-gradient(90deg,#00fff1,#00c3ff);color:#181a2b;font-weight:700;border:none;padding:0.7rem 1.5rem;font-size:1.1rem;border-radius:12px;box-shadow:0 2px 8px #00fff1a0;cursor:pointer;transition:background 0.2s;">Sí, cerrar</button>
+                <button class="cancel" onclick="hideModal();return false;" style="background:#23243a;color:#00fff1;font-weight:700;border:2px solid #00fff1;padding:0.7rem 1.5rem;font-size:1.1rem;border-radius:12px;box-shadow:0 2px 8px #00fff1a0;cursor:pointer;transition:background 0.2s;">Cancelar</button>
+            </div>
+            <div style="position:absolute;top:-30px;right:-30px;width:80px;height:80px;background:radial-gradient(circle,#00fff1 0%,transparent 70%);opacity:0.18;"></div>
+            <div style="position:absolute;bottom:-30px;left:-30px;width:80px;height:80px;background:radial-gradient(circle,#00fff1 0%,transparent 70%);opacity:0.13;"></div>
+        </div>
+    </div>
+    <style>
+    .tecnonauta-modal { animation: fadeInUp 0.8s; }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44,62,80,0.25);
+        backdrop-filter: blur(2px);
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        overflow: auto;
+    }
+    .modal-content.glass-modal {
+        background: linear-gradient(120deg,#00fff1 0%,#16213e 100%);
+        border:2.5px solid #00fff1;
+        box-shadow:0 8px 32px #00fff1a0, 0 0 24px #00fff1;
+        color:#181a2b;
+        min-width:260px;
+        max-width:380px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        padding:2.2rem 2.5rem 2rem 2.5rem;
+        position: relative;
+        margin: auto;
+        border-radius: 22px;
+    }
+    </style>
+
+    <script>
+        // Menú desplegable usuario
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+        if(userMenuBtn && userMenu) {
+            userMenuBtn.onclick = function(e) {
+                e.stopPropagation();
+                userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
+            };
+            document.body.addEventListener('click', function() {
+                userMenu.style.display = 'none';
+            });
+            userMenu.onclick = function(e) {
+                e.stopPropagation();
+            };
+        }
+        // Scroll a sección
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.scrollIntoView({behavior:'smooth', block:'start'});
+                userMenu.style.display = 'none';
+            }
+        }
+        function showModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.style.display = 'flex';
+            modal.focus();
+        }
+        function hideModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+        function submitLogout(e) {
+            e.preventDefault();
+            document.getElementById('logoutForm').submit();
+        }
+        // Cerrar modal con Escape o clic fuera
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') hideModal();
+        });
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) hideModal();
+        });
+    </script>
+
+
+    <!-- Chat en Vivo flotante -->
+    <!-- Sonido de notificación para chat en vivo -->
+    <audio id="livechat-sound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae5b6.mp3" preload="auto" style="display:none;"></audio>
+
+    <!-- TECNONAUTA: Chat en Vivo y ChatBot con mismo diseño -->
+    <div id="livechat-container" style="position:fixed;bottom:32px;left:32px;z-index:1000;">
+        <div id="livechat-box" class="tecnonauta-chatbox" style="display:none;width:340px;max-width:90vw;overflow:hidden;flex-direction:column;">
+            <div style="background:linear-gradient(90deg,#00fff1 60%,#00c3ff 100%);color:#181a2b;padding:1rem 1.2rem;font-weight:bold;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #00fff1;box-shadow:0 2px 8px #00fff1a0;">
+                <span>💬 Chat en Vivo</span>
+                <button onclick="toggleLiveChat()" style="background:none;border:none;color:#181a2b;font-size:1.3rem;cursor:pointer;">×</button>
+            </div>
+            <div style="padding:0.7rem 1.2rem 0.2rem 1.2rem;">
+                <input class="livechat-username" id="livechat-username" type="text" placeholder="Tu nombre o usuario" style="width:100%;margin-bottom:0.5rem;padding:0.4rem 0.7rem;border-radius:7px;border:1.5px solid #00fff1;font-size:1rem;" maxlength="32">
+            </div>
+            <div class="livechat-messages" id="livechat-messages" style="flex:1;height:210px;overflow-y:auto;padding:1rem;background:rgba(0,255,241,0.07);color:#00fff1;font-family:'Orbitron','Inter',Arial,sans-serif;font-size:1rem;border-bottom:1.5px solid #00fff1;"></div>
+            <form class="livechat-input-area" id="livechat-form" style="display:flex;background:#181a2b;border-top:2px solid #00fff1;align-items:center;padding:0.5rem 0.7rem;" autocomplete="off">
+                <input class="livechat-input" id="livechat-input" type="text" placeholder="Escribe un mensaje..." autocomplete="off" required style="flex:1;padding:0.6rem 0.8rem;border:none;background:rgba(0,255,241,0.08);color:#00fff1;font-size:1rem;outline:none;border:1.5px solid #00fff1;border-radius:10px;font-family:'Orbitron','Inter',Arial,sans-serif;margin-right:0.5rem;">
+                <button class="livechat-send" type="submit" style="background:linear-gradient(90deg,#00fff1 60%,#00c3ff 100%);color:#181a2b;font-family:'Orbitron','Inter',Arial,sans-serif;font-weight:bold;border:none;border-radius:10px;box-shadow:0 2px 8px #00fff1a0;font-size:1.1rem;padding:0.6rem 1.2rem;cursor:pointer;transition:background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;">Enviar</button>
+            </form>
+        </div>
+        <button id="livechat-toggle" onclick="toggleLiveChat()" style="background:linear-gradient(90deg,#00fff1 60%,#00c3ff 100%);color:#181a2b;font-weight:bold;border:none;border-radius:50%;width:60px;height:60px;box-shadow:0 2px 12px #00fff1a0;font-size:2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;">
+            💬
+        </button>
+    </div>
+
+    <script>
+    // Chat en Vivo: enviar mensaje (requiere socket.io en backend)
+    document.addEventListener('DOMContentLoaded', function() {
+        const livechatForm = document.getElementById('livechat-form');
+        if (livechatForm && typeof io !== 'undefined') {
+            livechatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const input = document.getElementById('livechat-input');
+                const usernameInput = document.getElementById('livechat-username');
+                const msg = input.value.trim();
+                const username = usernameInput && usernameInput.value.trim() ? usernameInput.value.trim() : 'Invitado';
+                if (!msg || !socket) return;
+                socket.emit('send_message', { message: msg, username: username });
+                input.value = '';
+            });
+        }
+    });
+    </script>
+
+    <div id="chatbot-container" style="position:fixed;bottom:32px;right:104px;z-index:1000;">
+        <div id="chatbot-box" style="display:none;width:340px;max-width:90vw;overflow:hidden;"
+            class="tecnonauta-chatbox">
+            <div style="background:linear-gradient(90deg,#00fff1 60%,#00c3ff 100%);color:#181a2b;padding:0.8rem 1.2rem;font-weight:bold;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #00fff1;box-shadow:0 2px 8px #00fff1a0;">
+                <span>🤖 MenToraBot</span>
+                <button onclick="toggleChatbot()" style="background:none;border:none;color:#181a2b;font-size:1.3rem;cursor:pointer;">×</button>
+            </div>
+            <div id="chatbot-messages" style="height:260px;overflow-y:auto;padding:1rem;background:rgba(0,255,241,0.07);color:#00fff1;font-family:'Orbitron','Inter',Arial,sans-serif;font-size:1rem;border-bottom:1.5px solid #00fff1;"></div>
+            <form id="chatbot-form" style="display:flex;background:#181a2b;border-top:2px solid #00fff1;align-items:center;padding:0.5rem 0.7rem;" onsubmit="sendChatbotMessage(event)">
+                <input id="chatbot-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" style="flex:1;padding:0.6rem 0.8rem;border:none;background:rgba(0,255,241,0.08);color:#00fff1;font-size:1rem;outline:none;border:1.5px solid #00fff1;border-radius:10px;font-family:'Orbitron','Inter',Arial,sans-serif;margin-right:0.5rem;">
+                <button type="submit" style="background:linear-gradient(90deg,#00fff1 60%,#00c3ff 100%);color:#181a2b;font-family:'Orbitron','Inter',Arial,sans-serif;font-weight:bold;border:none;border-radius:10px;box-shadow:0 2px 8px #00fff1a0;font-size:1.1rem;padding:0.6rem 1.2rem;cursor:pointer;transition:background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;">Enviar</button>
+            </form>
+        </div>
+        <button id="chatbot-toggle" onclick="toggleChatbot()" style="background:linear-gradient(90deg,#00fff1 60%,#00c3ff 100%);color:#181a2b;font-weight:bold;border:none;border-radius:50%;width:60px;height:60px;box-shadow:0 2px 12px #00fff1a0;font-size:2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;">
+            🤖
+        </button>
+    </div>
+
+    <style>
+    .tecnonauta-chatbox {
+        background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%) !important;
+        border: 2.5px solid #00fff1 !important;
+        box-shadow: 0 8px 32px #00fff1a0, 0 0 24px #00fff1 !important;
+        border-radius: 22px !important;
+        color: #e0e7ef !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif !important;
+        padding: 0 !important;
+        overflow: hidden;
+        animation: fadeInUp 0.8s;
+    }
+    </style>
+
+    <!-- Extra CSS for special sections and SVG background -->
+    <style>
+    /* Modal centrado y glassmorphism */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: auto;
+        background: rgba(44,62,80,0.25);
+        backdrop-filter: blur(2px);
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+    .modal:focus {
+        outline: none;
+    }
+    .modal-content.glass-modal {
+        background: rgba(255,255,255,0.25);
+        border-radius: 22px;
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 2px solid #ffe066;
+        margin: auto;
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        max-width: 95vw;
+        min-width: 320px;
+        text-align: center;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    /* Glassmorphism card */
+    .glass-card {
+        background: rgba(255,255,255,0.18);
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1.5px solid rgba(255,255,255,0.22);
+        padding: 2.2rem 2.2rem 1.5rem 2.2rem;
+    }
+    .stat-card {
+        min-width: 140px;
+        text-align: center;
+        background: rgba(255,255,255,0.22);
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(44,62,80,0.10);
+        padding: 1.5rem 1.2rem;
+        border: 1.5px solid #ffe066;
+    }
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #2a5298;
+        margin-bottom: 0.3rem;
+        letter-spacing: 1px;
+    }
+    .stat-label {
+        font-size: 1.1rem;
+        color: #23272f;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    .circuit-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.13;
+        filter: blur(1.5px) brightness(1.1);
+    }
+    .special-section {
+        position: relative;
+        margin: 2.5rem auto 2.5rem auto;
+        max-width: 700px;
+        background: rgba(44,62,80,0.07);
+        border-radius: 18px;
+        box-shadow: 0 2px 12px rgba(44,62,80,0.08);
+        overflow: hidden;
+        padding: 2.2rem 2.2rem 1.5rem 2.2rem;
+        min-height: 120px;
+    }
+    .special-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 0;
+        opacity: 0.22;
+        pointer-events: none;
+    }
+    .special-content {
+        position: relative;
+        z-index: 1;
+    }
+    .special-section h2 {
+        color: #ffe066;
+        margin-bottom: 0.7rem;
+    }
+    .notification-list, .activity-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 1.05rem;
+    }
+    .notification-list li, .activity-list li {
+        margin-bottom: 0.5rem;
+        padding-left: 0.5rem;
+    }
+    /* --- TECNONAUTA CHAT & BOT --- */
+    #livechat-box, #chatbot-box {
+        background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%) !important;
+        border: 2.5px solid #00fff1 !important;
+        box-shadow: 0 8px 32px #00fff1a0, 0 0 24px #00fff1 !important;
+        border-radius: 22px !important;
+        color: #e0e7ef !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif !important;
+        padding: 0 !important;
+        overflow: hidden;
+        animation: fadeInUp 0.8s;
+    }
+    #livechat-box > div:first-child, #chatbot-box > div:first-child {
+        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%) !important;
+        color: #181a2b !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif !important;
+        font-weight: bold;
+        font-size: 1.15rem;
+        letter-spacing: 1px;
+        border-bottom: 2px solid #00fff1;
+        box-shadow: 0 2px 8px #00fff1a0;
+    }
+    #livechat-messages, #chatbot-messages {
+        background: rgba(0,255,241,0.07) !important;
+        color: #00fff1 !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif !important;
+        border-bottom: 1.5px solid #00fff1;
+        border-radius: 0 0 18px 18px;
+    }
+    #livechat-form, #chatbot-form {
+        background: #181a2b !important;
+        border-top: 2px solid #00fff1 !important;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.7rem;
+    }
+    #livechat-form input, #chatbot-form input {
+        background: rgba(0,255,241,0.08) !important;
+        color: #00fff1 !important;
+        border: 1.5px solid #00fff1 !important;
+        border-radius: 10px !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif !important;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+        padding: 0.6rem 0.8rem;
+        outline: none;
+        transition: box-shadow 0.2s, border 0.2s;
+    }
+    #livechat-form input:focus, #chatbot-form input:focus {
+        box-shadow: 0 0 0 2px #00fff1;
+        background: #23243a !important;
+        color: #fff !important;
+    }
+    #livechat-form button, #chatbot-form button {
+        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%) !important;
+        color: #181a2b !important;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif !important;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 8px #00fff1a0 !important;
+        font-size: 1.1rem;
+        padding: 0.6rem 1.2rem;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    #livechat-form button:hover, #chatbot-form button:hover {
+        background: linear-gradient(90deg, #00c3ff 60%, #00fff1 100%) !important;
+        color: #fff !important;
+        transform: scale(1.04);
+        box-shadow: 0 4px 18px #00fff1cc !important;
+    }
+    #livechat-toggle, #chatbot-toggle {
+        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%) !important;
+        color: #181a2b !important;
+        border: none;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 12px #00fff1a0 !important;
+        font-size: 2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    #livechat-toggle:hover, #chatbot-toggle:hover {
+        background: linear-gradient(90deg, #00c3ff 60%, #00fff1 100%) !important;
+        color: #fff !important;
+        transform: scale(1.08);
+        box-shadow: 0 4px 18px #00fff1cc !important;
+    }
+    #emoji-picker {
+        color: #00fff1 !important;
+        font-size: 1.2rem;
+        text-shadow: 0 0 8px #00fff1;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>

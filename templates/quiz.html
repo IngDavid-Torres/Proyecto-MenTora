@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reto Activo | MenTora</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #2a5298, #1e3c72);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .quiz-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 500px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+
+        .quiz-list-container {
+            background-color: rgba(255,255,255,0.13);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 500px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.18);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+        }
+
+        .quiz-list-container h2 {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            color: #ffe066;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option {
+            background-color: #ffe066;
+            color: #2a5298;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .option:hover {
+            background-color: #fab005;
+        }
+
+        .submit-btn {
+            background-color: #ffffff;
+            color: #2a5298;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #d0e6ff;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .back-link a {
+            color: #ffe066;
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .quiz-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.2rem;
+        }
+
+        .quiz-list-table th, .quiz-list-table td {
+            padding: 0.7rem;
+            border-bottom: 1px solid #ffe06644;
+            text-align: left;
+        }
+
+        .quiz-list-table th {
+            color: #ffe066;
+            font-size: 1.05rem;
+        }
+
+        .quiz-list-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .quiz-list-table .quiz-btn {
+            background: linear-gradient(90deg, #ffe066, #fab005);
+            color: #2a5298;
+            border: none;
+            border-radius: 7px;
+            padding: 0.5rem 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .quiz-list-table .quiz-btn:hover {
+            background: #2a5298;
+            color: #ffe066;
+        }
+    </style>
+</head>
+<body>
+    {% if all_quizzes %}
+    <div class="quiz-list-container">
+        <h2>Quizzes Disponibles</h2>
+        <table class="quiz-list-table">
+            <thead>
+                <tr><th>Título</th><th>Área</th><th>Acción</th></tr>
+            </thead>
+            <tbody>
+            {% for quiz in all_quizzes %}
+                <tr>
+                    <td>{{ quiz.title }}</td>
+                    <td>{{ quiz.area }}</td>
+                    <td>
+                        <form method="GET" action="/quiz/{{ quiz.id }}">
+                            <button type="submit" class="quiz-btn">Intentar Quiz</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="3" style="text-align:center; color:#ffe06699;">No hay quizzes disponibles.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    <div class="quiz-container">
+        {% if cooldown %}
+            <h2>⏳ Espera</h2>
+            <p style="color:#ffe066; font-weight:bold;">Sin intentos disponibles.<br>Intenta de nuevo en {{ mins_left }} minutos.</p>
+            <div class="back-link"><a href="/dashboard">← Volver al Dashboard</a></div>
+        {% elif show_answers and results %}
+            <h2>{{ quiz.title }}</h2>
+            <div style="margin-bottom:1.2rem;">
+                <b>Resultados del Quiz:</b>
+            </div>
+            {% for q, user_ans in results %}
+                <div style="margin-bottom:1.2rem;">
+                    <div style="font-weight:bold; margin-bottom:0.5rem;">{{ loop.index }}. {{ q.text }}</div>
+                    <ul style="list-style:none; padding-left:0;">
+                        {% for option in q.options %}
+                        <li style="margin-bottom:0.2rem;">
+                            {% if option == q.correct_answer %}
+                                <span style="color:#27ae60; font-weight:bold;">✔ {{ option }} (Correcta)</span>
+                            {% elif user_ans == option %}
+                                <span style="color:#e74c3c; font-weight:bold;">✘ {{ option }} (Tu respuesta)</span>
+                            {% else %}
+                                <span>{{ option }}</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+            <div class="back-link">
+                <a href="/dashboard">← Volver al Dashboard</a>
+            </div>
+        {% else %}
+            <h2>{{ quiz.title if quiz else question.text }}</h2>
+            <form method="POST">
+                {% if questions %}
+                    {% for q in questions %}
+                        <div style="margin-bottom:1.2rem;">
+                            <div style="font-weight:bold; margin-bottom:0.5rem;">{{ loop.index }}. {{ q.text }}</div>
+                            {% for option in q.options %}
+                                <label style="display:block; margin-bottom:0.3rem;">
+                                    <input type="radio" name="q_{{ q.id }}" value="{{ option }}" required> {{ option }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="submit-btn">Enviar respuestas</button>
+                {% else %}
+                    {% for option in question.options %}
+                        <button type="submit" name="selected_answer" value="{{ option }}" class="option">{{ option }}</button>
+                    {% endfor %}
+                {% endif %}
+            </form>
+            <div style="margin-top:1rem; color:#ffe066; font-size:1.05rem;">
+                Intentos usados: {{ attempts }}/{{ max_attempts }}
+            </div>
+            {% if error %}
+                <div style="color:#ff7675; font-weight:bold; margin-top:0.7rem;">Respuestas incorrectas. Intenta de nuevo.</div>
+            {% endif %}
+            <div class="back-link">
+                <a href="/dashboard">← Volver al Dashboard</a>
+            </div>
+        {% endif %}
+        {% if show_15pts_modal %}
+        <div id="modal-15pts" style="display:flex;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;align-items:center;justify-content:center;background:rgba(44,62,80,0.45);backdrop-filter:blur(2px);">
+            <div style="background:linear-gradient(120deg,#00fff1 0%,#16213e 100%);border-radius:22px;box-shadow:0 8px 32px #00fff1a0,0 0 24px #00fff1;padding:2.5rem 2.5rem 2rem 2.5rem;max-width:95vw;min-width:320px;text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;">
+                <div style="font-size:2.5rem;font-family:'Orbitron','Inter',Arial,sans-serif;font-weight:bold;color:#ffe066;letter-spacing:2px;text-shadow:0 0 12px #ffe066,0 0 2px #fff;animation:glow 1.2s infinite alternate; margin-bottom:1.1rem;">¡Excelente!</div>
+                <div style="font-size:1.7rem;color:#00fff1;font-family:'Poppins','Orbitron',Arial,sans-serif;margin-bottom:1.2rem;text-align:center;">+{{ 15 if quiz.teacher_id else 10 }} puntos</div>
+                <button onclick="document.getElementById('modal-15pts').style.display='none'" style="margin-top:1.2rem;padding:0.7rem 2.2rem;background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:bold;border:none;border-radius:8px;font-size:1.08rem;cursor:pointer;box-shadow:0 2px 8px #fab00522;">Aceptar</button>
+            </div>
+        </div>
+        <script>
+        setTimeout(function(){
+            var m = document.getElementById('modal-15pts');
+            if(m) m.style.display = 'flex';
+        }, 200);
+        </script>
+        {% endif %}
+    </div>
+
+</body>
+</html>

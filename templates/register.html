@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro | MenTora</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, #2c3e50 0%, #4ca1af 100%);
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .bg-animated {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .register-container {
+            background-color: rgba(255, 255, 255, 0.13);
+            padding: 2.2rem 2rem 2rem 2rem;
+            border-radius: 16px;
+            width: 370px;
+            box-shadow: 0 0 18px rgba(0,0,0,0.18);
+            margin: 4.5rem auto 2rem auto;
+            position: relative;
+            z-index: 2;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            color: #ffe066;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+            color: #ffe066;
+        }
+        input, select {
+            padding: 0.6rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 7px;
+            font-size: 1rem;
+            background: #f4f6f8;
+            color: #2a5298;
+        }
+        input:focus, select:focus {
+            outline: 2px solid #ffe066;
+        }
+        button {
+            padding: 0.7rem;
+            background: linear-gradient(90deg, #ffe066, #fab005);
+            color: #2a5298;
+            font-weight: bold;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 1.08rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+            transition: background 0.3s, color 0.3s;
+        }
+        button:hover {
+            background: #fab005;
+            color: #fff;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.98rem;
+        }
+        .login-link a {
+            color: #ffe066;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .alert-success {
+            background: linear-gradient(90deg, #ffe066, #fab005);
+            color: #2a5298;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(255,224,102,0.13);
+            animation: slideDown 1s;
+            display: none;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Navbar & Footer */
+        .navbar {
+            width: 100vw;
+            background: #2a5298;
+            color: #ffe066;
+            padding: 0.7rem 0;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .navbar-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.2rem;
+        }
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+            color: #ffe066;
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .navbar-logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #ffe066;
+            background: #fff;
+        }
+        .navbar-links {
+            list-style: none;
+            display: flex;
+            gap: 1.2rem;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar-links li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.05rem;
+            transition: color 0.2s;
+        }
+        .navbar-links li a:hover {
+            color: #ffe066;
+        }
+        .footer {
+            width: 100vw;
+            background: #2a5298;
+            color: #ffe066;
+            text-align: center;
+            padding: 1.1rem 0 0.7rem 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            z-index: 10;
+            font-size: 1rem;
+        }
+        @media (max-width: 600px) {
+            .register-container { width: 98vw; padding: 1.2rem 0.2rem; }
+            .navbar-content { flex-direction: column; gap: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo SVG animado: cerebros y controles -->
+    <svg class="bg-animated" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <!-- Cerebros -->
+            <g>
+                <circle cx="200" cy="200" r="38" fill="#ffe066" opacity="0.18">
+                    <animate attributeName="cy" values="200;300;200" dur="7s" repeatCount="indefinite"/>
+                </circle>
+                <ellipse cx="400" cy="700" rx="32" ry="22" fill="#fab005" opacity="0.13">
+                    <animate attributeName="cx" values="400;600;400" dur="8s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="1700" cy="300" rx="30" ry="20" fill="#ffe066" opacity="0.13">
+                    <animate attributeName="cy" values="300;500;300" dur="6s" repeatCount="indefinite"/>
+                </ellipse>
+            </g>
+            <!-- Controles de videojuego -->
+            <g>
+                <rect x="1200" y="800" width="60" height="30" rx="10" fill="#2a5298" opacity="0.18">
+                    <animate attributeName="x" values="1200;1400;1200" dur="9s" repeatCount="indefinite"/>
+                </rect>
+                <circle cx="1300" cy="815" r="8" fill="#fab005" opacity="0.25">
+                    <animate attributeName="cy" values="815;830;815" dur="5s" repeatCount="indefinite"/>
+                </circle>
+                <rect x="300" y="900" width="50" height="24" rx="8" fill="#2a5298" opacity="0.13">
+                    <animate attributeName="x" values="300;500;300" dur="10s" repeatCount="indefinite"/>
+                </rect>
+                <circle cx="320" cy="912" r="7" fill="#ffe066" opacity="0.18">
+                    <animate attributeName="cx" values="320;370;320" dur="7s" repeatCount="indefinite"/>
+                </circle>
+            </g>
+        </g>
+    </svg>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="navbar-logo">
+                <img src="/static/img/mentora.png" alt="logo">
+                <span>MenTora</span>
+            </a>
+            <ul class="navbar-links">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/login">Iniciar sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="register-container">
+        <div id="alert-success" class="alert-success">Registro exitoso, ¡bienvenido a MenTora!</div>
+        <h2>Crear Cuenta</h2>
+        <form id="registerForm" autocomplete="off">
+            <label for="username">Usuario</label>
+            <input type="text" id="username" name="username" required>
+            <label for="email">Correo</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" required>
+            <input type="hidden" id="area" name="area" value="Programación">
+            <label for="user_type">Tipo de usuario</label>
+            <select id="user_type" name="user_type" required>
+                <option value="student">Alumno</option>
+                <option value="teacher">Profesor</option>
+            </select>
+            <button type="submit">Registrarse</button>
+        </form>
+        <div class="login-link">
+            ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
+        </div>
+    </div>
+    <footer class="footer">
+        © 2025 MenTora | Aprende jugando. Todos los derechos reservados.
+    </footer>
+    <script>
+    // Registro dinámico AJAX
+    const registerForm = document.getElementById('registerForm');
+    const alertSuccess = document.getElementById('alert-success');
+    if(registerForm) {
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(registerForm);
+            const data = Object.fromEntries(formData.entries());
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: formData
+                });
+                if(response.ok) {
+                    const res = await response.json();
+                    if(res.success) {
+                        alertSuccess.style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 1800);
+                    } else {
+                        alertSuccess.style.display = 'none';
+                        alert(res.message || 'Error en el registro.');
+                    }
+                } else {
+                    alertSuccess.style.display = 'none';
+                    alert('Error en el registro.');
+                }
+            } catch (err) {
+                alertSuccess.style.display = 'none';
+                alert('Error de conexión.');
+            }
+        });
+    }
+    </script>
+</body>
+</html>

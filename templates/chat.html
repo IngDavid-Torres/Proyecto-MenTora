@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat en Vivo | MenTora</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, #2a5298 0%, #ffe066 100%);
+            color: #23272f;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-container {
+            max-width: 480px;
+            margin: 3rem auto;
+            background: #fffbe6;
+            border-radius: 18px;
+            box-shadow: 0 4px 32px rgba(44,62,80,0.13);
+            padding: 2rem 1.5rem 1.2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+        .chat-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            background: #f4f6f8;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 1px 6px rgba(44,62,80,0.07);
+        }
+        .msg {
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: flex-end;
+        }
+        .msg.user {
+            justify-content: flex-end;
+        }
+        .msg-content {
+            max-width: 70%;
+            padding: 0.7rem 1.1rem;
+            border-radius: 16px 16px 2px 16px;
+            background: #ffe066;
+            color: #2a5298;
+            font-weight: 500;
+            font-size: 1.05rem;
+            box-shadow: 0 1px 4px rgba(44,62,80,0.07);
+        }
+        .msg.user .msg-content {
+            background: #2a5298;
+            color: #ffe066;
+            border-radius: 16px 16px 16px 2px;
+        }
+        .msg-username {
+            font-size: 0.9rem;
+            color: #bfc9d1;
+            margin: 0 0.5rem;
+        }
+        .chat-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .chat-form input[type="text"] {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 10px;
+            border: 1px solid #bfc9d1;
+            font-size: 1rem;
+            background: #f4f6f8;
+            color: #23272f;
+        }
+        .chat-form button {
+            background: linear-gradient(90deg, #ffe066, #fab005);
+            color: #2a5298;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            padding: 0.7rem 1.5rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .chat-form button:hover {
+            background: linear-gradient(90deg, #fab005, #ffe066);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Chat en Vivo MenTora</div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <form id="chat-form" class="chat-form" autocomplete="off">
+            <input type="text" id="username" placeholder="Tu nombre" style="max-width:120px;" required>
+            <input type="text" id="message" placeholder="Escribe un mensaje..." required>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        const form = document.getElementById('chat-form');
+        const messages = document.getElementById('chat-messages');
+        const usernameInput = document.getElementById('username');
+        const messageInput = document.getElementById('message');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = usernameInput.value.trim() || 'Invitado';
+            const message = messageInput.value.trim();
+            if (!message) return;
+            socket.emit('send_message', { username, message });
+            messageInput.value = '';
+        });
+
+        socket.on('receive_message', function(data) {
+            const isUser = data.username === usernameInput.value.trim();
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'msg' + (isUser ? ' user' : '');
+            msgDiv.innerHTML = `<span class="msg-username">${data.username}</span><span class="msg-content">${data.message}</span>`;
+            messages.appendChild(msgDiv);
+            messages.scrollTop = messages.scrollHeight;
+        });
+    </script>
+</body>
+</html>

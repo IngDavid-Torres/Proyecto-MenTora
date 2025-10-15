@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Quiz | MenTora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', 'Poppins', sans-serif; background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%); color: #2c3e50; margin: 0; }
+        .container { max-width: 600px; margin: 3rem auto; padding: 2.5rem 2rem; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px #2a52981a; }
+        h1 { color: #2a5298; font-size: 2rem; margin-bottom: 1.2rem; }
+        label { font-weight: bold; color: #2a5298; }
+        input[type="text"] { width: 100%; padding: 0.7rem; border-radius: 7px; border: 1px solid #e0e7ef; font-size: 1rem; margin-bottom: 1rem; }
+        .btn { background: linear-gradient(90deg, #ffe066, #fab005); color: #2a5298; border: none; border-radius: 7px; padding: 0.7rem 1.5rem; font-weight: bold; cursor: pointer; transition: background 0.3s, color 0.3s, transform 0.2s; box-shadow: 0 2px 8px #fab00522; font-size: 1.08rem; display: inline-flex; align-items: center; gap: 0.6rem; }
+        .btn:hover { background: #2a5298; color: #ffe066; transform: scale(1.04); }
+        .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa-solid fa-pen"></i> Editar Quiz</h1>
+        <form method="POST">
+            <label for="title">Título:</label>
+            <input type="text" name="title" id="title" required value="{{ quiz.title }}">
+
+            <label for="area">Área:</label>
+            <input type="text" name="area" id="area" required value="{{ quiz.area }}">
+
+            <label for="description">Descripción:</label>
+            <input type="text" name="description" id="description" value="{{ quiz.description }}">
+
+            <div class="actions">
+                <button type="submit" class="btn"><i class="fa-solid fa-save"></i> Guardar cambios</button>
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:#e0e7ef; color:#2a5298;"><i class="fa-solid fa-arrow-left"></i> Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

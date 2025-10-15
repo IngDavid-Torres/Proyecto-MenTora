@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+body {
+    background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%) !important;
+}
+.tecnonauta-glass {
+    max-width: 500px;
+    margin: 2.5rem auto;
+    background: rgba(0,255,241,0.10);
+    border-radius: 28px;
+    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 2.5px solid #00fff1;
+    padding: 2.7rem 2.2rem 2.2rem 2.2rem;
+    color: #fff;
+    font-family: 'Orbitron','Poppins',Arial,sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+.tecnonauta-glass:before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, #ffe066 0%, #00fff1 80%, transparent 100%);
+    opacity: 0.18;
+    z-index: 0;
+}
+.tecnonauta-glass h2 {
+    color: #ffe066;
+    font-family: 'Orbitron','Poppins',Arial,sans-serif;
+    font-size: 2.2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-shadow: 0 0 18px #00fff1, 0 0 2px #fff;
+    z-index: 1;
+    position: relative;
+}
+.tecnonauta-glass label {
+    color: #00fff1;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    display: block;
+    font-size: 1.09rem;
+    z-index: 1;
+    position: relative;
+}
+.tecnonauta-glass input, .tecnonauta-glass select {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: 1.5px solid #00fff1;
+    margin-bottom: 1.2rem;
+    font-size: 1.09rem;
+    background: rgba(255,255,255,0.13);
+    color: #fff;
+    font-family: 'Poppins', Arial, sans-serif;
+    z-index: 1;
+    position: relative;
+}
+.tecnonauta-glass .avatar-list {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+    z-index: 1;
+    position: relative;
+}
+.tecnonauta-glass .avatar-list label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+.tecnonauta-glass .avatar-list img {
+    border-radius: 50%;
+    border: 2.5px solid #00fff1;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.2rem;
+    transition: box-shadow 0.2s, border 0.2s;
+    background: #fff;
+}
+.tecnonauta-glass .avatar-list input[type="radio"]:checked + img,
+.tecnonauta-glass .avatar-list img[style*="box-shadow"] {
+    box-shadow: 0 0 0 5px #ffe066;
+    border: 2.5px solid #ffe066;
+}
+.tecnonauta-glass .btn-tecnonauta {
+    background: linear-gradient(90deg,#ffe066,#00fff1);
+    color: #181a2b;
+    border: none;
+    border-radius: 10px;
+    padding: 0.9rem 2.5rem;
+    font-weight: bold;
+    font-size: 1.18rem;
+    cursor: pointer;
+    box-shadow: 0 2px 12px #00fff133;
+    margin-top: 0.7rem;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    z-index: 1;
+    position: relative;
+}
+.tecnonauta-glass .btn-tecnonauta:hover {
+    background: #00fff1;
+    color: #2a5298;
+    transform: scale(1.05);
+}
+.tecnonauta-glass #alert-edit-success {
+    display: none;
+    margin-top: 1.2rem;
+    background: linear-gradient(90deg,#ffe066,#00fff1);
+    color: #2a5298;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 0.8rem 1.3rem;
+    text-align: center;
+    font-size: 1.13rem;
+    z-index: 2;
+    position: relative;
+}
+</style>
+<div class="tecnonauta-glass">
+    <h2>Editar Perfil</h2>
+    <form id="editProfileForm" method="POST" action="/update_profile" autocomplete="off">
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ user.email }}" required>
+        <label>Área:</label>
+        <input type="text" name="area" value="{{ user.area }}" required>
+        <label>Avatar:</label>
+        <div class="avatar-list">
+            {% for seed in avatar_seeds %}
+            <label>
+                <input type="radio" name="avatar_seed" value="{{ seed }}" {% if user.avatar_url and (seed in user.avatar_url) %}checked{% endif %} style="display:none;">
+                <img src="https://api.dicebear.com/7.x/identicon/svg?seed={{ seed }}" alt="avatar" {% if user.avatar_url and (seed in user.avatar_url) %}style="box-shadow:0 0 0 5px #ffe066; border:2.5px solid #ffe066;"{% endif %}>
+                <span style="font-size:0.93rem;color:#ffe066;">{{ seed|capitalize }}</span>
+            </label>
+            {% endfor %}
+        </div>
+        <label>Tema:</label>
+        <select name="theme">
+            {% for t in themes %}
+            <option value="{{ t }}" {% if user.theme == t %}selected{% endif %}>{{ t|capitalize }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-tecnonauta">Guardar Cambios</button>
+        <div id="alert-edit-success">¡Perfil actualizado!</div>
+    </form>
+</div>
+<script>
+const editProfileForm = document.getElementById('editProfileForm');
+const alertEditSuccess = document.getElementById('alert-edit-success');
+if(editProfileForm) {
+    editProfileForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(editProfileForm);
+        try {
+            const response = await fetch('/update_profile', {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+            if(response.ok) {
+                const res = await response.json();
+                if(res.success) {
+                    alertEditSuccess.style.display = 'block';
+                    setTimeout(() => { window.location.reload(); }, 800);
+                } else {
+                    alertEditSuccess.style.display = 'none';
+                    alert(res.message || 'Error al actualizar el perfil.');
+                }
+            } else {
+                alertEditSuccess.style.display = 'none';
+                alert('Error al actualizar el perfil.');
+            }
+        } catch (err) {
+            alertEditSuccess.style.display = 'none';
+            alert('Error de conexión.');
+        }
+    });
+}
+</script>
+{% endblock %}

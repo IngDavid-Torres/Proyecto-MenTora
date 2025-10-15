@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}MenTora{% endblock %}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			margin: 0;
+			font-family: 'Segoe UI', 'Poppins', sans-serif;
+			background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+			color: #222;
+			min-height: 100vh;
+		}
+		.container {
+			margin: 2rem auto;
+			max-width: 900px;
+		}
+		.btn {
+			padding: 0.7rem 1.5rem;
+			background: linear-gradient(90deg, #ffe066, #fab005);
+			color: #2a5298;
+			font-weight: bold;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			transition: background 0.3s, transform 0.2s;
+			box-shadow: 0 2px 12px rgba(255,224,102,0.13);
+		}
+		.btn:hover {
+			background: linear-gradient(90deg, #fab005, #ffe066);
+			transform: scale(1.04);
+		}
+		.form-control {
+			padding: 0.6rem;
+			margin-bottom: 1rem;
+			border: none;
+			border-radius: 6px;
+			font-size: 1rem;
+			background: rgba(255,255,255,0.18);
+			color: #2a5298;
+			box-shadow: 0 1px 4px rgba(30,60,114,0.08);
+			transition: box-shadow 0.2s;
+			width: 100%;
+		}
+		.form-control:focus {
+			outline: none;
+			box-shadow: 0 0 0 2px #ffe066;
+		}
+	</style>
+	{% block styles %}{% endblock %}
+</head>
+<body>
+</style>
+</head>
+<body style="padding-top:60px; padding-bottom:50px;" {% if session.get('theme') %}class="theme-{{ session['theme'] }}"{% endif %}>
+	<!-- Barra de navegación global -->
+	   <style>
+	   /* Temas visuales */
+	   body.theme-default {
+		   background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%) !important;
+		   color: #222;
+	   }
+	   body.theme-dark {
+		   background: linear-gradient(120deg, #232526 0%, #414345 100%) !important;
+		   color: #fff;
+	   }
+	   body.theme-light {
+		   background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%) !important;
+		   color: #222;
+	   }
+	   body.theme-blue {
+		   background: linear-gradient(120deg, #00c6fb 0%, #005bea 100%) !important;
+		   color: #fff;
+	   }
+	   body.theme-green {
+		   background: linear-gradient(120deg, #43e97b 0%, #38f9d7 100%) !important;
+		   color: #181a2b;
+	   }
+	   body.theme-pink {
+		   background: linear-gradient(120deg, #f857a6 0%, #ff5858 100%) !important;
+		   color: #fff;
+	   }
+	   .navbar-tecnonauta {
+		   width: 100vw;
+		   position: fixed;
+		   top: 0; left: 0;
+		   background: rgba(0,255,241,0.13);
+		   color: #fff;
+		   display: flex;
+		   align-items: center;
+		   z-index: 100;
+		   box-shadow: 0 2px 18px 0 #00fff1cc;
+		   justify-content: space-between;
+		   padding: 0.7rem 2.5rem;
+		   backdrop-filter: blur(14px);
+		   -webkit-backdrop-filter: blur(14px);
+		   border-bottom: 2.5px solid #00fff1;
+	   }
+	   .navbar-tecnonauta .logo {
+		   display: flex; align-items: center; gap: 0.7rem;
+	   }
+	   .navbar-tecnonauta .logo img {
+		   height: 40px; width: 40px; border-radius: 50%; background: #fff;
+		   border: 2.5px solid #ffe066; box-shadow: 0 1px 8px #00fff1aa;
+	   }
+	   .navbar-tecnonauta .logo span {
+		   font-size: 1.35rem; font-weight: bold; color: #00fff1; letter-spacing: 2px; text-shadow: 0 0 8px #00fff1;
+	   }
+	   .navbar-tecnonauta .nav-links {
+		   display: flex; gap: 1.7rem; margin-left: 2.5rem; align-items: center;
+	   }
+	   .navbar-tecnonauta .nav-links a {
+		   color: #ffe066; text-decoration: none; font-weight: 600; font-size: 1.08rem;
+		   transition: color 0.2s, text-shadow 0.2s;
+		   text-shadow: 0 0 6px #00fff1cc;
+		   padding: 0.2rem 0.7rem;
+		   border-radius: 6px;
+	   }
+	   .navbar-tecnonauta .nav-links a:hover {
+		   color: #181a2b; background: #00fff1; text-shadow: 0 0 10px #ffe066;
+	   }
+	   .navbar-tecnonauta .user-info {
+		   margin-left: 2.5rem;
+		   margin-right: auto;
+		   display: flex;
+		   align-items: center;
+		   gap: 0.5rem;
+	   }
+	   .navbar-tecnonauta .user-info img {
+		   border-radius: 50%; border: 2.5px solid #ffe066; background: #fff; width: 34px; height: 34px;
+	   }
+	   .navbar-tecnonauta .user-info span {
+		   color: #ffe066; font-weight: bold; font-size: 1.05rem;
+	   }
+	   .navbar-tecnonauta .user-info .theme {
+		   margin-left: 0.7rem; font-size: 0.97rem; color: #00fff1;
+	   }
+	   @media (max-width: 700px) {
+		   .navbar-tecnonauta { flex-direction: column; padding: 0.7rem 1rem; }
+		   .navbar-tecnonauta .nav-links { margin-left: 0; gap: 1rem; }
+	   }
+	   .footer-tecnonauta {
+		   width: 100vw;
+		   position: fixed;
+		   bottom: 0; left: 0;
+		   background: rgba(0,255,241,0.13);
+		   color: #ffe066;
+		   text-align: center;
+		   padding: 0.8rem 0;
+		   font-size: 1.05rem;
+		   letter-spacing: 0.7px;
+		   z-index: 100;
+		   box-shadow: 0 -2px 18px 0 #00fff1cc;
+		   border-top: 2.5px solid #00fff1;
+		   backdrop-filter: blur(14px);
+		   -webkit-backdrop-filter: blur(14px);
+	   }
+		</style>
+	   <nav class="navbar-tecnonauta">
+		   <div class="logo">
+			   <img src="/static/img/mentora.png" alt="MenTora Logo">
+			   <span>MenTora</span>
+		   </div>
+		   <div style="display:flex; align-items:center; flex:1;">
+			   <div class="nav-links">
+				   {% if not session.get('user_id') %}
+					   <a href="/register">Registro</a>
+					   <a href="/login">Iniciar sesión</a>
+				   {% else %}
+					   <a href="/dashboard">Dashboard</a>
+					   <a href="/logout">Cerrar sesión</a>
+				   {% endif %}
+			   </div>
+			   {% if session.get('user_id') %}
+			   <div class="user-info">
+				   {% if session.get('avatar_url') %}
+					   <img src="{{ session['avatar_url'] }}" alt="avatar">
+				   {% endif %}
+				   <span>{{ session.get('username', '') }}</span>
+				   {% if session.get('theme') %}
+					   <span class="theme">Tema: {{ session['theme']|capitalize }}</span>
+				   {% endif %}
+			   </div>
+			   {% endif %}
+		   </div>
+	   </nav>
+		<!-- Fondo de partículas -->
+		<canvas id="particles-bg" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none;"></canvas>
+
+	{% block content %}{% endblock %}
+	<script>
+	// Partículas animadas de fondo (simple, puedes mejorar el efecto)
+	const canvas = document.getElementById('particles-bg');
+	if(canvas) {
+		const ctx = canvas.getContext('2d');
+		function resize() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+		window.addEventListener('resize', resize);
+		resize();
+		let particles = [];
+		for (let i = 0; i < 40; i++) {
+			particles.push({
+				x: Math.random() * canvas.width,
+				y: Math.random() * canvas.height,
+				r: 1.5 + Math.random() * 2.5,
+				dx: (Math.random() - 0.5) * 0.4,
+				dy: (Math.random() - 0.5) * 0.4,
+				alpha: 0.10 + Math.random() * 0.18
+			});
+		}
+		function drawParticles() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			for (const p of particles) {
+				ctx.beginPath();
+				ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+				ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+				ctx.fill();
+				p.x += p.dx;
+				p.y += p.dy;
+				if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+				if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+			}
+			requestAnimationFrame(drawParticles);
+		}
+		drawParticles();
+	}
+	</script>
+
+	<!-- Footer global -->
+	   <footer class="footer-tecnonauta">
+		   &copy; 2025 <span style="color:#00fff1; font-weight:bold;">MenTora</span> | Aprende jugando. Todos los derechos reservados.
+	   </footer>
+</body>
+</html>
+</body>
+</html>

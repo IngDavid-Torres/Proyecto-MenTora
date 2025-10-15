@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Profesor | MenTora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            margin: 0;
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+        .navbar {
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(176, 224, 230, 0.18);
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 2.5rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 2.5px solid #7fd8f6;
+            box-shadow: 0 2px 18px 0 #b2f0e6cc;
+        }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2a5298;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        .navbar .logo img {
+            height: 44px;
+            width: 44px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #ffe066;
+            box-shadow: 0 1px 4px #2a529810;
+        }
+        .navbar .nav-links a {
+            color: #2a5298;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            font-size: 1.08rem;
+            transition: color 0.2s;
+            background: #e3f6fd;
+            border-radius: 6px;
+            padding: 0.2rem 0.7rem;
+            margin: 0 5.15rem 0 0.15rem;
+        }
+        .navbar .nav-links a:hover {
+            color: #fff;
+            background: #7fd8f6;
+        }
+        .footer {
+            width: 100vw;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background: rgba(176, 224, 230, 0.18);
+            color: #2a5298;
+            text-align: center;
+            padding: 1rem 0 0.7rem 0;
+            font-size: 1rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-top: 2.5px solid #7fd8f6;
+            box-shadow: 0 -2px 18px 0 #b2f0e6cc;
+        }
+        @media (max-width: 900px) {
+            .navbar { flex-direction: column; gap: 0.7rem; padding: 0.7rem 0.5rem; }
+            .navbar .nav-links a { margin-left: 0.7rem; }
+            .navbar .nav-links a {
+                margin: 0 0.3rem 0 0.2rem;
+            }
+        }
+        .container {
+            max-width: 1200px;
+            margin: 3.5rem auto 4.5rem auto;
+            padding: 2.5rem 2rem;
+            background: rgba(255,255,255,0.13);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid #b2f0e6;
+        }
+        h1, h2, h3 {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+        }
+        h1 {
+            color: #2a5298;
+            font-size: 2.3rem;
+            margin-bottom: 0.7rem;
+            text-shadow: 0 0 8px #b2f0e6cc;
+        }
+        h2 {
+            color: #4fc3f7;
+            font-size: 1.4rem;
+            margin-bottom: 1.1rem;
+            text-shadow: 0 0 6px #b2f0e6cc;
+        }
+        .dashboard-cards {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+        .dashboard-card {
+            flex: 1 1 220px;
+            background: linear-gradient(120deg, #e3f6fd 0%, #b2f0e6 100%);
+            color: #2a5298;
+            border-radius: 18px;
+            padding: 1.7rem 1.3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 18px #b2f0e6cc, 0 1.5px 18px #7fd8f6cc;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #7fd8f6;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .dashboard-card:hover {
+            transform: scale(1.04) rotate(-1deg);
+            box-shadow: 0 4px 32px #b2f0e6cc, 0 2px 18px #7fd8f6cc;
+        }
+        .dashboard-card i {
+            font-size: 2.7rem;
+            margin-bottom: 0.7rem;
+            color: #4fc3f7;
+            text-shadow: 0 0 8px #b2f0e6cc;
+        }
+        .dashboard-card .count {
+            font-size: 2.3rem;
+            font-weight: bold;
+            margin-bottom: 0.2rem;
+            color: #2a5298;
+            text-shadow: 0 0 8px #b2f0e6cc;
+        }
+        .dashboard-card .label {
+            font-size: 1.1rem;
+            color: #4fc3f7;
+            text-shadow: 0 0 6px #b2f0e6cc;
+        }
+        .dashboard-card .area {
+            font-size: 1.1rem;
+            color: #2a5298;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 6px #b2f0e6cc;
+        }
+        .section {
+            margin-bottom: 2.7rem;
+        }
+        .btn {
+            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
+            color: #2a5298;
+            border: none;
+            border-radius: 9px;
+            padding: 0.7rem 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 12px #b2f0e6cc;
+            font-size: 1.08rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-shadow: 0 0 6px #e3f6fdcc;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #7fd8f6, #b2f0e6);
+            color: #181a2b;
+            transform: scale(1.04);
+            box-shadow: 0 4px 18px #b2f0e6cc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(255,255,255,0.10);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px #b2f0e633;
+        }
+        th, td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #b2f0e6;
+            text-align: left;
+        }
+        th {
+            background: #e3f6fd;
+            color: #2a5298;
+            font-size: 1.05rem;
+            text-shadow: 0 0 6px #b2f0e6cc;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .empty-row {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+        .ai-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .ai-form input[type="text"], .ai-form input[type="number"] {
+            padding: 0.6rem;
+            border-radius: 7px;
+            border: 1.5px solid #b2f0e6;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.18);
+            color: #2a5298;
+            box-shadow: 0 1px 4px #b2f0e633;
+        }
+        .ai-form button { margin-left: 0.5rem; }
+        ul.notifications {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        ul.notifications li {
+            background: #e3f6fd;
+            border-radius: 7px;
+            margin-bottom: 0.7rem;
+            padding: 0.8rem 1.1rem;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 1px 4px #b2f0e633;
+        }
+        ul.notifications li .fa-bell {
+            color: #7fd8f6;
+            text-shadow: 0 0 6px #b2f0e6cc;
+        }
+        @media (max-width: 900px) {
+            .dashboard-cards { flex-direction: column; gap: 1.2rem; }
+            .container { padding: 1.2rem 0.2rem; }
+        }
+        /* NAVBAR y FOOTER personalizados */
+        .navbar-tecnonauta {
+            background: rgba(176, 224, 230, 0.18) !important;
+            color: #2a5298 !important;
+            box-shadow: 0 2px 18px 0 #b2f0e6cc !important;
+            border-bottom: 2.5px solid #7fd8f6 !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .navbar-tecnonauta .logo span {
+            color: #2a5298 !important;
+            text-shadow: 0 0 8px #b2f0e6cc;
+        }
+        .navbar-tecnonauta .nav-links a {
+            color: #2a5298 !important;
+            background: #e3f6fd;
+            border-radius: 6px;
+            padding: 0.2rem 0.7rem;
+            margin: 0 1.5rem 0 0.2rem !important; /* Más margen a la derecha, menos a la izquierda */
+            text-shadow: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        .navbar-tecnonauta .nav-links a:hover {
+            color: #fff !important;
+            background: #7fd8f6;
+        }
+        .navbar-tecnonauta .user-info span {
+            color: #2a5298 !important;
+        }
+        .footer-tecnonauta {
+            background: rgba(176, 224, 230, 0.18) !important;
+            color: #2a5298 !important;
+            border-top: 2.5px solid #7fd8f6 !important;
+            box-shadow: 0 -2px 18px 0 #b2f0e6cc !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        /* Chat flotante tecnonauta */
+        .chatbot-toggle, .livechat-toggle {
+            position: fixed;
+            bottom: 2.2rem;
+            z-index: 1200;
+            background: linear-gradient(90deg, #7fd8f6, #b2f0e6);
+            color: #2a5298;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            box-shadow: 0 2px 18px #b2f0e6cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .chatbot-toggle:hover, .livechat-toggle:hover {
+            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
+            color: #fff;
+            transform: scale(1.08);
+        }
+        .livechat-toggle { right: 5.5rem; }
+        .chatbot-box, .livechat-box {
+            position: fixed;
+            bottom: 5.5rem;
+            right: 5.5rem;
+            width: 340px;
+            max-width: 95vw;
+            background: rgba(255,255,255,0.18);
+            border-radius: 18px;
+            box-shadow: 0 4px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc;
+            border: 2px solid #b2f0e6;
+            z-index: 1201;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .livechat-box { right: 5.5rem; }
+        .chatbot-header, .livechat-header {
+            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
+            color: #2a5298;
+            padding: 1rem 1.2rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid #7fd8f6;
+        }
+        .chatbot-messages, .livechat-messages {
+            flex: 1;
+            padding: 1rem 1.2rem;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.10);
+            font-size: 1.05rem;
+            color: #2a5298;
+            max-height: 260px;
+        }
+        .chatbot-input-area, .livechat-input-area {
+            display: flex;
+            padding: 0.7rem 1rem;
+            background: rgba(255,255,255,0.13);
+            border-top: 1.5px solid #b2f0e6;
+        }
+        .chatbot-input, .livechat-input {
+            flex: 1;
+            border: 1.5px solid #b2f0e6;
+            border-radius: 8px;
+            padding: 0.5rem 0.8rem;
+            font-size: 1rem;
+            background: #fff;
+            color: #2a5298;
+            margin-right: 0.7rem;
+        }
+        .chatbot-send, .livechat-send {
+            background: linear-gradient(90deg, #7fd8f6, #b2f0e6);
+            color: #2a5298;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .chatbot-send:hover, .livechat-send:hover {
+            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
+            color: #fff;
+        }
+        .chatbot-close, .livechat-close {
+            background: none;
+            border: none;
+            color: #2a5298;
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            transition: color 0.2s;
+        }
+        .chatbot-close:hover, .livechat-close:hover {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <img src="/static/img/mentora.png" alt="MenTora Logo">
+            MenTora
+        </a>
+        <div class="nav-links">
+            <a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+            <!-- Modal de confirmación de logout -->
+            <div id="logoutModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(44,62,80,0.45); z-index:10000; justify-content:center; align-items:center;">
+                <div style="background:#fff; color:#2a5298; border-radius:18px; padding:2.2rem 2.5rem; box-shadow:0 4px 32px rgba(44,62,80,0.18); display:flex; flex-direction:column; align-items:center; min-width:320px; max-width:90vw;">
+                    <div style="font-size:2.1rem; font-weight:bold; margin-bottom:1.1rem;"><i class="fa-solid fa-circle-question" style="color:#fab005;"></i> ¿Seguro que quieres cerrar sesión?</div>
+                    <div style="margin-bottom:1.2rem; color:#444; font-size:1.1rem;">Tu sesión se cerrará y deberás volver a iniciar sesión para acceder de nuevo.</div>
+                    <div style="display:flex; gap:1.2rem;">
+                        <button id="confirmLogout" style="padding:0.7rem 1.5rem; background:linear-gradient(90deg,#ffe066,#fab005); color:#2a5298; font-weight:bold; border:none; border-radius:8px; font-size:1.08rem; cursor:pointer; box-shadow:0 2px 8px #fab00522;">Sí, cerrar sesión</button>
+                        <button id="cancelLogout" style="padding:0.7rem 1.5rem; background:#e0e7ef; color:#2a5298; font-weight:bold; border:none; border-radius:8px; font-size:1.08rem; cursor:pointer;">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1><i class="fa-solid fa-chalkboard-user"></i> Bienvenido, {{ user.username }} <span style="font-size:1.1rem; color:#ffe066;">(Profesor)</span></h1>
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <div class="count" id="quizCount">{{ quizzes|length }}</div>
+                <div class="label">Quizzes creados</div>
+                <div class="area"><i class="fa-solid fa-layer-group"></i> {{ teacher.area or 'General' }}</div>
+            </div>
+            <div class="dashboard-card">
+                <i class="fa-solid fa-gamepad"></i>
+                <div class="count" id="gameCount">{{ games|length }}</div>
+                <div class="label">Juegos creados</div>
+            </div>
+        </div>
+        <div class="section">
+            <h2><i class="fa-solid fa-users"></i> Alumnos inscritos en tu área</h2>
+            <table>
+                <thead><tr><th>Nombre</th><th>Correo</th><th>Puntaje en tus quizzes</th></tr></thead>
+                <tbody>
+                {% for s in student_scores %}
+                {% if s.student.id != user.id %}
+                <tr>
+                    <td>{{ s.student.username }}</td>
+                    <td>{{ s.student.email }}</td>
+                    <td>{{ s.quiz_points }}</td>
+                </tr>
+                {% endif %}
+                {% else %}
+                <tr><td colspan="3" class="empty-row">No hay alumnos inscritos en tu área.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2><i class="fa-solid fa-list-check"></i> Mis Quizzes/Exámenes</h2>
+            <a href="#" class="btn" id="openQuizModal"><i class="fa-solid fa-plus"></i> Crear nuevo quiz/examen</a>
+            <table>
+                <thead><tr><th>Título</th><th>Área</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                <tbody>
+                {% for quiz in quizzes %}
+                <tr>
+                    <td>{{ quiz.title }}</td>
+                    <td>{{ quiz.area }}</td>
+                    <td>{{ quiz.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_quiz', quiz_id=quiz.id) }}" class="btn"><i class="fa-solid fa-pen"></i> Editar</a>
+                        <form method="POST" action="{{ url_for('eliminar_quiz', quiz_id=quiz.id) }}" style="display:inline;">
+                            <button type="submit" class="btn" style="background:#e74c3c; color:#fff;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="empty-row">No has creado quizzes aún.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2><i class="fa-solid fa-robot"></i> Generador de Exámenes con IA</h2>
+            <form method="POST" action="" class="ai-form">
+                <label><i class="fa-solid fa-lightbulb"></i> Tema:</label>
+                <input type="text" name="tema" required placeholder="Ej: Álgebra, Historia...">
+                <label><i class="fa-solid fa-list-ol"></i> Cantidad de preguntas:</label>
+                <input type="number" name="cantidad" min="1" max="50" value="5" required>
+                <label><i class="fa-solid fa-list"></i> Tipo de examen:</label>
+                <select name="tipo_examen" style="padding:0.5rem; border-radius:7px; border:1px solid #b2f0e6; font-size:1rem;">
+                    <option value="simple" {% if ia_tipo_examen == 'simple' %}selected{% endif %}>Solo preguntas</option>
+                    <option value="opciones" {% if ia_tipo_examen == 'opciones' %}selected{% endif %}>Preguntas con opciones y respuesta</option>
+                </select>
+                <button type="submit" class="btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar con IA</button>
+            </form>
+            {% if ia_questions %}
+            <div style="margin-top:1.5rem; background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.5rem 1.2rem;">
+                <h3 style="color:#2a5298; margin-bottom:0.7rem;"><i class="fa-solid fa-file-lines"></i> Examen generado para el área: <span style="color:#4fc3f7;">{{ teacher.area or 'General' }}</span></h3>
+                {% if ia_tipo_examen == 'opciones' and ia_questions and ia_questions[0] is mapping %}
+                    <ol style="font-size:1.08rem; color:#2c3e50;">
+                    {% for q in ia_questions %}
+                        <li>
+                            <strong>{{ q.pregunta }}</strong>
+                            <ul style="margin-top:0.3rem;">
+                                {% for opt in q.opciones %}
+                                <li style="list-style-type: lower-alpha;">{{ opt }}</li>
+                                {% endfor %}
+                            </ul>
+                            <span style="color:#2a5298; font-size:0.98rem;"><b>Respuesta correcta:</b> {{ q.respuesta }}</span>
+                        </li>
+                    {% endfor %}
+                    </ol>
+                {% else %}
+                    <ol style="font-size:1.08rem; color:#2c3e50;">
+                    {% for q in ia_questions %}
+                        <li>{{ q }}</li>
+                    {% endfor %}
+                    </ol>
+                {% endif %}
+                <div style="margin-top:1.2rem; display:flex; gap:1rem;">
+                    <form method="post" action="{{ url_for('download_exam_word') }}" style="display:inline;">
+                        <input type="hidden" name="tema" value="{{ ia_tema }}">
+                        <input type="hidden" name="area" value="{{ teacher.area }}">
+                        <input type="hidden" name="tipo_examen" value="{{ ia_tipo_examen }}">
+                        <input type="hidden" name="preguntas" value="{{ ia_questions|tojson }}">
+                        <button type="submit" class="btn"><i class="fa-solid fa-file-word"></i> Descargar Word</button>
+                    </form>
+                    <form method="post" action="{{ url_for('download_exam_pdf') }}" style="display:inline;">
+                        <input type="hidden" name="tema" value="{{ ia_tema }}">
+                        <input type="hidden" name="area" value="{{ teacher.area }}">
+                        <input type="hidden" name="tipo_examen" value="{{ ia_tipo_examen }}">
+                        <input type="hidden" name="preguntas" value="{{ ia_questions|tojson }}">
+                        <button type="submit" class="btn"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="section">
+            <h2><i class="fa-solid fa-puzzle-piece"></i> Mis Juegos/Retos</h2>
+            <a href="#" class="btn" id="openGameModal"><i class="fa-solid fa-plus"></i> Crear nuevo juego/reto</a>
+            <table>
+                <thead><tr><th>Nombre</th><th>Tipo</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                <tbody>
+                {% for game in games %}
+                <tr>
+                    <td>{{ game.name }}</td>
+                    <td>{{ game.type }}</td>
+                    <td>{{ game.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_juego', game_id=game.id) }}" class="btn"><i class="fa-solid fa-pen"></i> Editar</a>
+                        <form method="POST" action="{{ url_for('eliminar_juego', game_id=game.id) }}" style="display:inline;">
+                            <button type="submit" class="btn" style="background:#e74c3c; color:#fff;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="empty-row">No has creado juegos aún.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2><i class="fa-solid fa-bell"></i> Notificaciones recientes</h2>
+            <ul class="notifications">
+            {% for n in notifications %}
+                <li><i class="fa-solid fa-bell"></i> {{ n.message }} <span style="color:#888;">({{ n.date_sent.strftime('%Y-%m-%d') }})</span></li>
+            {% else %}
+                <li class="empty-row"><i class="fa-solid fa-bell-slash"></i> No tienes notificaciones recientes.</li>
+            {% endfor %}
+            </ul>
+        </div>
+        <!-- Modales -->
+        <div id="modalQuiz" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(44,62,80,0.45); z-index:10001; justify-content:center; align-items:center;">
+            <form method="POST" action="{{ url_for('teacher_create_quiz') }}" style="background:rgba(255,255,255,0.98); border-radius:18px; padding:2rem 2.5rem; box-shadow:0 4px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; display:flex; flex-direction:column; gap:1rem; min-width:320px; max-width:90vw; border:2px solid #b2f0e6;">
+                <h3 style="color:#2a5298;">{{ 'Editar Quiz/Examen' if quiz_to_edit else 'Crear nuevo Quiz/Examen' }}</h3>
+                <input type="hidden" name="quiz_id" value="{{ quiz_to_edit.id if quiz_to_edit else '' }}">
+                <input type="text" name="title" placeholder="Título" required value="{{ quiz_to_edit.title if quiz_to_edit else '' }}">
+                <input type="text" name="area" placeholder="Área" value="{{ quiz_to_edit.area if quiz_to_edit else teacher.area or '' }}" required>
+                <button type="submit" class="btn">{{ 'Actualizar' if quiz_to_edit else 'Guardar' }}</button>
+                <button type="button" class="btn" style="background:#e0e7ef; color:#2a5298;" onclick="document.getElementById('modalQuiz').style.display='none'">Cancelar</button>
+                {% if quiz_to_edit %}
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:#e0e7ef; color:#2a5298;">Cancelar edición</a>
+                {% endif %}
+            </form>
+        </div>
+        <div id="modalGame" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(44,62,80,0.45); z-index:10001; justify-content:center; align-items:center;">
+            <form method="POST" action="{{ url_for('teacher_create_game') }}" style="background:rgba(255,255,255,0.98); border-radius:18px; padding:2rem 2.5rem; box-shadow:0 4px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; display:flex; flex-direction:column; gap:1rem; min-width:320px; max-width:90vw; border:2px solid #b2f0e6;">
+                <h3 style="color:#2a5298;">{{ 'Editar Juego/Reto' if game_to_edit else 'Crear nuevo Juego/Reto' }}</h3>
+                <input type="hidden" name="game_id" value="{{ game_to_edit.id if game_to_edit else '' }}">
+                <input type="text" name="name" placeholder="Nombre del juego" required value="{{ game_to_edit.name if game_to_edit else '' }}">
+                <input type="text" name="type" placeholder="Tipo de juego" required value="{{ game_to_edit.type if game_to_edit else '' }}">
+                <button type="submit" class="btn">{{ 'Actualizar' if game_to_edit else 'Guardar' }}</button>
+                <button type="button" class="btn" style="background:#e0e7ef; color:#2a5298;" onclick="document.getElementById('modalGame').style.display='none'">Cancelar</button>
+                {% if game_to_edit %}
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:#e0e7ef; color:#2a5298;">Cancelar edición</a>
+                {% endif %}
+            </form>
+        </div>
+        <div class="section">
+            <h2><i class="fa-solid fa-question"></i> Agregar preguntas a un Quiz</h2>
+            <form method="POST" action="{{ url_for('teacher_add_question') }}" style="background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.5rem 1.2rem; margin-bottom:1.5rem;">
+                <label for="quiz_id"><b>Quiz:</b></label>
+                <select name="quiz_id" required style="margin-bottom:0.7rem; padding:0.5rem; border-radius:7px; border:1.5px solid #b2f0e6;">
+                    {% for quiz in quizzes %}
+                    <option value="{{ quiz.id }}">{{ quiz.title }} ({{ quiz.area }})</option>
+                    {% endfor %}
+                </select>
+                <label for="question_text"><b>Pregunta:</b></label>
+                <input type="text" name="question_text" required placeholder="Escribe la pregunta" style="margin-bottom:0.7rem; width:100%; padding:0.5rem; border-radius:7px; border:1.5px solid #b2f0e6;">
+                <label><b>Opciones:</b></label>
+                <input type="text" name="option1" required placeholder="Opción 1" style="margin-bottom:0.5rem; width:100%;">
+                <input type="text" name="option2" required placeholder="Opción 2" style="margin-bottom:0.5rem; width:100%;">
+                <input type="text" name="option3" required placeholder="Opción 3" style="margin-bottom:0.5rem; width:100%;">
+                <input type="text" name="option4" required placeholder="Opción 4" style="margin-bottom:0.5rem; width:100%;">
+                <label for="correct_answer"><b>Respuesta correcta:</b></label>
+                <select name="correct_answer" required style="margin-bottom:1rem; padding:0.5rem; border-radius:7px; border:1.5px solid #b2f0e6;">
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                    <option value="3">Opción 3</option>
+                    <option value="4">Opción 4</option>
+                </select>
+                <button type="submit" class="btn"><i class="fa-solid fa-plus"></i> Agregar pregunta</button>
+            </form>
+        </div>
+        <div class="section">
+            <h2><i class="fa-solid fa-list-ul"></i> Preguntas agregadas a los Quizzes</h2>
+            {% for quiz in quizzes %}
+            <div style="margin-bottom:1.5rem; background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.2rem 1rem;">
+                <h3 style="color:#2a5298; margin-bottom:0.5rem;"><i class="fa-solid fa-file-lines"></i> {{ quiz.title }} ({{ quiz.area }})</h3>
+                {% if quiz.questions %}
+                <table style="width:100%;">
+                    <thead><tr><th>Pregunta</th><th>Opciones</th><th>Respuesta correcta</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                    {% for q in quiz.questions %}
+                    <tr>
+                        <td>{{ q.text }}</td>
+                        <td>
+                            <ul style="padding-left:1.2rem; margin:0;">
+                            {% for opt in q.options %}
+                                <li>{{ opt }}</li>
+                            {% endfor %}
+                            </ul>
+                        </td>
+                        <td><b>{{ q.correct_answer }}</b></td>
+                        <td>
+                                <form method="POST" action="{{ url_for('eliminar_pregunta', question_id=q.id) }}" style="display:inline;">
+                                    <button type="submit" class="btn" style="background:#e74c3c; color:#fff; font-size:0.95rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                                </form>
+                                <a href="{{ url_for('edit_question', question_id=q.id) }}" class="btn" style="font-size:0.95rem;"><i class="fa-solid fa-pen"></i> Editar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-row">No hay preguntas agregadas a este quiz.</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+    &copy; 2025 MenTora | Aprende jugando. Todos los derechos reservados.
+    <!-- Socket.IO client for live chat -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+    // Modal de confirmación de logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutModal = document.getElementById('logoutModal');
+    const confirmLogout = document.getElementById('confirmLogout');
+    const cancelLogout = document.getElementById('cancelLogout');
+    if (logoutBtn && logoutModal && confirmLogout && cancelLogout) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logoutModal.style.display = 'flex';
+        });
+        cancelLogout.addEventListener('click', function() {
+            logoutModal.style.display = 'none';
+        });
+        confirmLogout.addEventListener('click', async function() {
+            // Cierre de sesión real por POST y redirección segura
+            try {
+                await fetch('/logout', { method: 'POST', credentials: 'same-origin' });
+            } catch (e) {}
+            // Limpiar historial y redirigir
+            window.location.replace('/login');
+        });
+    }
+    // Evitar volver atrás tras logout
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            window.location.replace('/login');
+        }
+    });
+    </script>
+    </footer>
+    <script>
+    // Abrir modales de creación de quiz/juego
+    document.getElementById('openQuizModal').onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('modalQuiz').style.display = 'flex';
+    };
+    document.getElementById('openGameModal').onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('modalGame').style.display = 'flex';
+    };
+    // Animación de contadores
+    function animateCount(id, end) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        let start = 0;
+        const duration = 900;
+        const step = Math.ceil(end / (duration / 30));
+        function update() {
+            start += step;
+            if (start >= end) {
+                el.textContent = end;
+            } else {
+                el.textContent = start;
+                setTimeout(update, 30);
+            }
+        }
+        update();
+    }
+    animateCount('quizCount', parseInt(document.getElementById('quizCount').textContent));
+    animateCount('gameCount', parseInt(document.getElementById('gameCount').textContent));
+    </script>
+    <!-- Botones flotantes -->
+    <button class="livechat-toggle" id="livechat-toggle" title="Chat en vivo" onclick="toggleLiveChat()"><i class="fa-solid fa-comments"></i></button>
+    <button class="chatbot-toggle" id="chatbot-toggle" title="ChatBot" onclick="toggleChatbot()"><i class="fa-solid fa-robot"></i></button>
+    <!-- Chat en vivo -->
+    <div class="livechat-box" id="livechat-box">
+        <div class="livechat-header">
+            Chat en Vivo
+            <button class="livechat-close" onclick="toggleLiveChat()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="padding:0.7rem 1.2rem 0.2rem 1.2rem;">
+            <input class="livechat-username" id="livechat-username" type="text" placeholder="Tu nombre o usuario" style="width:100%;margin-bottom:0.5rem;padding:0.4rem 0.7rem;border-radius:7px;border:1.5px solid #b2f0e6;font-size:1rem;" maxlength="32">
+        </div>
+        <div class="livechat-messages" id="livechat-messages"></div>
+        <form class="livechat-input-area" onsubmit="sendLiveChatMessage(event)">
+            <input class="livechat-input" id="livechat-input" type="text" placeholder="Escribe un mensaje..." autocomplete="off" required>
+            <button class="livechat-send" type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </div>
+    <!-- ChatBot -->
+    <div class="chatbot-box" id="chatbot-box">
+        <div class="chatbot-header">
+            ChatBot
+            <button class="chatbot-close" onclick="toggleChatbot()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages"></div>
+        <form class="chatbot-input-area" onsubmit="sendChatbotMessage(event)">
+            <input class="chatbot-input" id="chatbot-input" type="text" placeholder="Pregunta algo..." autocomplete="off" required>
+            <button class="chatbot-send" type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </div>
+    <script>
+    // TECNONAUTA: Chat en Vivo y ChatBot
+    function toggleLiveChat() {
+        const box = document.getElementById('livechat-box');
+        const btn = document.getElementById('livechat-toggle');
+        if (box.style.display === 'none' || box.style.display === '') {
+            box.style.display = 'flex';
+            btn.style.display = 'none';
+        } else {
+            box.style.display = 'none';
+            btn.style.display = 'flex';
+        }
+    }
+    function toggleChatbot() {
+        const box = document.getElementById('chatbot-box');
+        const btn = document.getElementById('chatbot-toggle');
+        if (box.style.display === 'none' || box.style.display === '') {
+            box.style.display = 'flex';
+            btn.style.display = 'none';
+        } else {
+            box.style.display = 'none';
+            btn.style.display = 'flex';
+        }
+    }
+    // ChatBot: enviar mensaje
+    async function sendChatbotMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById('chatbot-input');
+        const messages = document.getElementById('chatbot-messages');
+        const userMsg = input.value.trim();
+        if (!userMsg) return;
+        messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:#b2f0e6;color:#2a5298;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;'>${userMsg}</span></div>`;
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+        try {
+            const res = await fetch('/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMsg })
+            });
+            const data = await res.json();
+            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#b2f0e6;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>${data.response}</span></div>`;
+            messages.scrollTop = messages.scrollHeight;
+        } catch (err) {
+            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#b2f0e6;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>Error de conexión con el bot.</span></div>`;
+        }
+    }
+    // Chat en Vivo: enviar mensaje (requiere socket.io en backend)
+    let socket;
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof io !== 'undefined') {
+            socket = io();
+            socket.on('receive_message', function(data) {
+                const usernameInput = document.getElementById('livechat-username');
+                const messages = document.getElementById('livechat-messages');
+                const isUser = usernameInput && data.username === usernameInput.value.trim();
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'msg' + (isUser ? ' user' : '');
+                msgDiv.innerHTML = `<span style='font-size:0.9rem;color:#7fd8f6;margin:0 0.5rem;'>${data.username}</span><span style='max-width:70%;padding:0.7rem 1.1rem;border-radius:16px 16px 2px 16px;background:${isUser ? '#2a5298' : '#b2f0e6'};color:${isUser ? '#b2f0e6' : '#2a5298'};font-weight:500;font-size:1.05rem;box-shadow:0 1px 4px #b2f0e633;display:inline-block;'>${data.message}</span>`;
+                messages.appendChild(msgDiv);
+                messages.scrollTop = messages.scrollHeight;
+            });
+        }
+    });
+    function sendLiveChatMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById('livechat-input');
+        const usernameInput = document.getElementById('livechat-username');
+        const msg = input.value.trim();
+        const username = usernameInput && usernameInput.value.trim() ? usernameInput.value.trim() : 'Invitado';
+        if (!msg || !socket) return;
+        socket.emit('send_message', { message: msg, username: username });
+        input.value = '';
+    }
+    </script>
+</body>
+</html>

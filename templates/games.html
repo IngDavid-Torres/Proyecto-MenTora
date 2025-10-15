@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Juegos | MenTora{% endblock %}
+{% block content %}
+<div class="container" style="max-width:900px; margin:2rem auto; background:#fff; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.07); padding:2rem;">
+    <h2 style="color:#2a5298; text-align:center;">Juegos y Quizzes Disponibles</h2>
+    <div style="display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; margin-top:2rem;">
+        {% set hay_juegos = games and games|length > 0 %}
+        {% set hay_quizzes = quizzes and quizzes|length > 0 %}
+        {% if hay_juegos %}
+            {% for game in games %}
+            <div style="flex:1 1 260px; min-width:260px; background:#e3f0ff; border-radius:10px; box-shadow:0 2px 8px rgba(42,82,152,0.07); padding:1.2rem; display:flex; flex-direction:column; align-items:center;">
+                <h3 style="color:#2a5298;">🎮 {{ game.name }}</h3>
+                <p style="color:#34495e; font-size:1rem;">{{ game.description }}</p>
+                <span style="background:#ffe066; color:#2a5298; border-radius:6px; padding:0.2rem 0.7rem; font-size:0.95rem; margin-bottom:0.7rem;">Tipo: {{ game.type|capitalize }}</span>
+                <a href="/games/{{ game.id }}" class="btn" style="margin-top:auto; background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:700;border-radius:10px;padding:0.5rem 1.2rem;">Jugar</a>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% if hay_quizzes %}
+            {% for quiz in quizzes %}
+            <div style="flex:1 1 260px; min-width:260px; background:#f9f6e7; border-radius:10px; box-shadow:0 2px 8px rgba(42,82,152,0.07); padding:1.2rem; display:flex; flex-direction:column; align-items:center;">
+                <h3 style="color:#2a5298;">📝 {{ quiz.title }}</h3>
+                <p style="color:#34495e; font-size:1rem;">{{ quiz.description }}</p>
+                <span style="background:#ffe066; color:#2a5298; border-radius:6px; padding:0.2rem 0.7rem; font-size:0.95rem; margin-bottom:0.7rem;">Área: {{ quiz.area }}</span>
+                <a href="/quiz/{{ quiz.id }}" class="btn" style="margin-top:auto; background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:700;border-radius:10px;padding:0.5rem 1.2rem;">Intentar Quiz</a>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% if not hay_juegos and not hay_quizzes %}
+            <p style="color:#7f8c8d;">No hay juegos ni quizzes disponibles aún.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
