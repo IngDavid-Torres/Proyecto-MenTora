@@ -393,6 +393,7 @@ def admin_panel():
     user_to_edit = session.pop('user_to_edit', None)
     from models import Game
     games = Game.query.order_by(Game.created_at.desc()).all()
+    game_to_edit = session.get('game_to_edit', None)
     quizzes = Quiz.query.order_by(Quiz.created_at.desc()).all()
     achievements = Badge.query.order_by(Badge.created_at.desc()).all()
     achievement_to_edit = session.pop('achievement_to_edit', None)
@@ -408,6 +409,7 @@ def admin_panel():
                            users=users,
                            user_to_edit=user_to_edit,
                            games=games,
+                           game_to_edit=game_to_edit,
                            quizzes=quizzes,
                            achievements=achievements,
                            achievement_to_edit=achievement_to_edit,
@@ -538,6 +540,7 @@ def create_game():
         return redirect(url_for('login'))
 
     from models import Game
+    game_id = request.form.get('game_id')
     name = request.form.get('game_name', '').strip()
     description = request.form.get('game_description', '').strip()
     rules = request.form.get('game_rules', '').strip()
@@ -547,14 +550,69 @@ def create_game():
         return redirect(url_for('admin_panel'))
 
     try:
-        new_game = Game(name=name, description=description, rules=rules, teacher_id=None, created_at=datetime.utcnow())
-        db.session.add(new_game)
-        db.session.commit()
-        flash(f'Juego "{name}" creado exitosamente.')
+        if game_id:  # Editar juego existente
+            game = Game.query.get_or_404(game_id)
+            game.name = name
+            game.description = description
+            game.rules = rules
+            db.session.commit()
+            flash(f'Juego "{name}" actualizado correctamente.')
+        else:  # Crear nuevo juego
+            new_game = Game(name=name, description=description, rules=rules, teacher_id=None, created_at=datetime.utcnow())
+            db.session.add(new_game)
+            db.session.commit()
+            flash(f'Juego "{name}" creado exitosamente.')
     except Exception as e:
         db.session.rollback()
-        flash(f'Error al crear el juego: {e}')
+        flash(f'Error al procesar el juego: {e}')
+    
+    # Limpiar datos de edición
+    session.pop('game_to_edit', None)
     return redirect(url_for('admin_panel'))
+
+# Eliminar juego
+@app.route('/admin/delete_game/<int:game_id>', methods=['POST'])
+def delete_game(game_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.')
+        return redirect(url_for('login'))
+    
+    from models import Game
+    game = Game.query.get_or_404(game_id)
+    
+    try:
+        db.session.delete(game)
+        db.session.commit()
+        flash(f'Juego "{game.name}" eliminado correctamente.')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar el juego: {e}')
+    
+    return redirect(url_for('admin_panel'))
+
+# Editar juego (cargar en formulario)
+@app.route('/admin/edit_game/<int:game_id>', methods=['GET'])
+def edit_game(game_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.')
+        return redirect(url_for('login'))
+    
+    from models import Game
+    game = Game.query.get_or_404(game_id)
+    session['game_to_edit'] = {
+        'id': game.id,
+        'name': game.name,
+        'description': game.description,
+        'rules': game.rules
+    }
+    return redirect(url_for('admin_panel'))
+
+# Cancelar edición de juego
+@app.route('/admin/clear_game_edit')
+def clear_game_edit():
+    session.pop('game_to_edit', None)
+    return redirect(url_for('admin_panel'))
+
 # Ruta para crear quiz desde admin
 @app.route('/admin/create_quiz', methods=['POST'])
 
@@ -665,6 +723,19 @@ def games():
     for g in games_all:
         games.append(g)
     return render_template('games.html', quizzes=quizzes, games=games)
+
+@app.route('/juegos-interactivos')
+def juegos_interactivos():
+    """Ruta para los juegos interactivos (programación y VR)"""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('juegos_interactivos.html', 
+                         username=user.username,
+                         user_id=user.id,
+                         avatar_url=user.avatar_url,
+                         theme=session.get('theme', user.theme if user.theme else 'default'))
 
 
 @app.route('/games/<int:game_id>/run', methods=['POST'])
@@ -1001,6 +1072,55 @@ def edit_user(user_id):
 @app.route('/admin/clear_user_edit')
 def clear_user_edit():
     session.pop('user_to_edit', None)
+    return redirect(url_for('admin_panel'))
+
+# Eliminar usuario
+@app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.')
+        return redirect(url_for('login'))
+    
+    user = User.query.get_or_404(user_id)
+    
+    # No permitir eliminar administradores
+    if user.is_admin:
+        flash('No se puede eliminar un usuario administrador.')
+        return redirect(url_for('admin_panel'))
+    
+    # Eliminar datos relacionados del usuario
+    UserAnswer.query.filter_by(user_id=user_id).delete()
+    Achievement.query.filter_by(user_id=user_id).delete()
+    # Notification.to_user is an Integer FK to users.id — use id, not username
+    Notification.query.filter_by(to_user=user.id).delete()
+    
+    # Eliminar el usuario
+    db.session.delete(user)
+    db.session.commit()
+    
+    flash(f'Usuario "{user.username}" eliminado correctamente.')
+    return redirect(url_for('admin_panel'))
+
+# Bloquear/Desbloquear usuario
+@app.route('/admin/toggle_block_user/<int:user_id>', methods=['POST'])
+def toggle_block_user(user_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.')
+        return redirect(url_for('login'))
+    
+    user = User.query.get_or_404(user_id)
+    
+    # No permitir bloquear administradores
+    if user.is_admin:
+        flash('No se puede bloquear un usuario administrador.')
+        return redirect(url_for('admin_panel'))
+    
+    # Cambiar estado de bloqueo
+    user.is_blocked = not user.is_blocked
+    db.session.commit()
+    
+    status = "bloqueado" if user.is_blocked else "desbloqueado"
+    flash(f'Usuario "{user.username}" {status} correctamente.')
     return redirect(url_for('admin_panel'))
 
 @app.route('/admin/assign_achievement', methods=['POST'])

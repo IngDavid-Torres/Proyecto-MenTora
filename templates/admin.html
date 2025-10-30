@@ -483,23 +483,23 @@
                     <h2>🎮 Gestión de Juegos</h2>
                     <!-- Formulario para agregar juego -->
                     <form method="POST" action="/admin/create_game" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
+                        <input type="hidden" name="game_id" value="{{ game_to_edit.id if game_to_edit else '' }}">
                         <div style="flex:1; min-width:160px;">
                             <label for="game_name" style="font-weight:bold;">Nombre del Juego:</label>
-                            <input type="text" id="game_name" name="game_name" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:220px;">
-                            <label for="game_area" style="font-weight:bold;">Área:</label>
-                            <input type="text" id="game_area" name="game_area" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
+                            <input type="text" id="game_name" name="game_name" value="{{ game_to_edit.name if game_to_edit else '' }}" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
                         </div>
                         <div style="flex:2; min-width:220px;">
                             <label for="game_description" style="font-weight:bold;">Descripción:</label>
-                            <input type="text" id="game_description" name="game_description" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
+                            <input type="text" id="game_description" name="game_description" value="{{ game_to_edit.description if game_to_edit else '' }}" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
                         </div>
                         <div style="flex:2; min-width:220px;">
                             <label for="game_rules" style="font-weight:bold;">Reglas:</label>
-                            <input type="text" id="game_rules" name="game_rules" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
+                            <input type="text" id="game_rules" name="game_rules" value="{{ game_to_edit.rules if game_to_edit else '' }}" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
                         </div>
-                        <button type="submit" style="margin-top:1.2rem;">Agregar Juego</button>
+                        <button type="submit" style="margin-top:1.2rem;">{{ 'Actualizar' if game_to_edit else 'Agregar' }} Juego</button>
+                        {% if game_to_edit %}
+                        <a href="/admin/clear_game_edit" style="margin-left:1rem; color:#e67e22; font-weight:bold;">Cancelar edición</a>
+                        {% endif %}
                     </form>
                     <!-- Lista de juegos existentes -->
                     <h3 style="margin-top:1.5rem;">Juegos Agregados</h3>
@@ -507,7 +507,7 @@
                         <thead>
                             <tr style="background:#e0e7ef; color:#2a5298;">
                                 <th style="padding:0.7rem;">Nombre</th>
-                                <th style="padding:0.7rem;">Área</th>
+                                <th style="padding:0.7rem;">Tipo</th>
                                 <th style="padding:0.7rem;">Descripción</th>
                                 <th style="padding:0.7rem;">Reglas</th>
                                 <th style="padding:0.7rem;">Fecha</th>
@@ -518,12 +518,12 @@
                             {% for game in games %}
                             <tr style="background:#fff; color:#2c3e50;">
                                 <td style="padding:0.6rem;">{{ game.name }}</td>
-                                <td style="padding:0.6rem;">{{ game.area }}</td>
+                                <td style="padding:0.6rem;">{{ game.type or 'N/A' }}</td>
                                 <td style="padding:0.6rem;">{{ game.description }}</td>
-                                <td style="padding:0.6rem;">{{ game.rules }}</td>
+                                <td style="padding:0.6rem;">{{ game.rules or 'N/A' }}</td>
                                 <td style="padding:0.6rem;">{{ game.created_at.strftime('%Y-%m-%d') if game.created_at else '' }}</td>
                                 <td style="padding:0.6rem; text-align:center;">
-                                    <a href="#" style="color:#2a5298; font-weight:bold; margin-right:0.7rem; text-decoration:none;">Editar</a>
+                                    <a href="/admin/edit_game/{{ game.id }}" style="color:#2a5298; font-weight:bold; margin-right:0.7rem; text-decoration:none;">Editar</a>
                                     <form method="POST" action="/admin/delete_game/{{ game.id }}" style="display:inline;">
                                         <button type="submit" style="background:none; border:none; color:#e74c3c; font-weight:bold; margin-right:0.7rem; cursor:pointer;">Eliminar</button>
                                     </form>
@@ -850,6 +850,50 @@
             </section>
         </main>
     </div>
+
+    <script>
+    // Confirmaciones para acciones de usuarios
+    document.addEventListener('DOMContentLoaded', function() {
+        // Confirmación para eliminar usuarios
+        const deleteUserForms = document.querySelectorAll('form[action*="/admin/delete_user/"]');
+        deleteUserForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const userName = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                if (confirm(`¿Estás seguro de que quieres eliminar el usuario "${userName}"? Esta acción no se puede deshacer.`)) {
+                    this.submit();
+                }
+            });
+        });
+
+        // Confirmación para bloquear/desbloquear usuarios
+        const blockUserForms = document.querySelectorAll('form[action*="/admin/toggle_block_user/"]');
+        blockUserForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const userName = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                const button = this.querySelector('button[type="submit"]');
+                const action = button.textContent.trim().toLowerCase();
+                
+                if (confirm(`¿Estás seguro de que quieres ${action} el usuario "${userName}"?`)) {
+                    this.submit();
+                }
+            });
+        });
+
+        // Confirmación para eliminar juegos
+        const deleteGameForms = document.querySelectorAll('form[action*="/admin/delete_game/"]');
+        deleteGameForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const gameName = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                if (confirm(`¿Estás seguro de que quieres eliminar el juego "${gameName}"? Esta acción no se puede deshacer.`)) {
+                    this.submit();
+                }
+            });
+        });
+    });
+    </script>
 
 </body>
 </html>
