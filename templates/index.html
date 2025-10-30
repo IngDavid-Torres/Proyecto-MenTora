@@ -44,21 +44,21 @@
             text-shadow: 0 0 8px #00fff1;
         }
         .hero {
-            text-align: center;
-            padding: 5rem 2rem 2rem 2rem;
-            animation: fadeIn 1.2s;
-            position: relative;
-        }
+    text-align: center;
+    padding: 2rem 2rem 2rem 2rem;  /* Cambié de 5rem a 2rem */
+    animation: fadeIn 1.2s;
+    position: relative;
+}
         .hero h2 {
-            font-size: 4.2rem;
+            font-size: 3.6rem;
             margin-bottom: 1.2rem;
             color: #ffffffff;
             font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
             text-shadow: 0 0 16px #767777ff, 0 0 2px #fff;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
         .hero p {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             max-width: 650px;
             margin: 0 auto;
             color: #e0e7ef;
@@ -88,67 +88,71 @@
             transform: scale(1.08);
             box-shadow: 0 4px 32px #00fff1cc;
         }
-        .features {
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            gap: 2.2rem;
-            padding: 3.5rem 2rem;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-        }
-        .feature {
-            background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
-            border-radius: 18px;
-            padding: 2rem 1.5rem;
-            min-width: 280px;
-            max-width: 320px;
-            text-align: center;
-            box-shadow: 0 0 18px #00fff133;
-            border: 2px solid #00fff1;
-            transition: transform 0.3s, box-shadow 0.3s, border 0.2s;
-            cursor: pointer;
-            position: relative;
-        }
-        .feature:hover {
-            transform: translateY(-12px) scale(1.05);
-            box-shadow: 0 8px 32px #00fff1cc;
-            border: 2.5px solid #00fff1;
-        }
-        .feature h3 {
-            font-size: 1.35rem;
-            margin-bottom: 0.7rem;
-            color: #00fff1;
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            text-shadow: 0 0 8px #00fff1;
-        }
-        .feature p {
-            font-size: 1.05rem;
-            color: #e0e7ef;
-            text-shadow: 0 0 2px #00fff1;
-        }
-        .testimonials {
-            background: linear-gradient(90deg, #23243a 60%, #1a1a2e 100%);
-            padding: 2.5rem 1rem 2rem 1rem;
-            text-align: center;
-            border-top: 2px solid #00fff1;
-            border-bottom: 2px solid #00fff1;
-            box-shadow: 0 2px 18px #00fff133;
-        }
-        .testimonials h3 {
-            font-size: 1.4rem;
-            margin-bottom: 1.2rem;
-            color: #00fff1;
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            text-shadow: 0 0 8px #00fff1;
-        }
-        .testimonial-slider {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-        }
+        .features-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+    background: #f9fafb; /* Color de fondo suave */
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 4rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.feature {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.feature:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #1a202c;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.feature p {
+    font-size: 1.05rem;
+    color: #4a5568;
+    line-height: 1.7;
+    text-align: center;
+}
+
         .testimonial {
             background: rgba(0,255,241,0.09);
             border-radius: 14px;
@@ -268,16 +272,16 @@
                     <polyline points="800,200 1000,200 1000,400 1200,400"/>
                     <polyline points="1400,500 1600,500 1600,700 1800,700"/>
                     <polyline points="300,800 500,800 500,1000 700,1000"/>
-                    <circle cx="400" cy="100" r="8" fill="#fab005">
+                    <circle cx="400" cy="100" r="8" fill="#ffffffff">
                         <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"/>
                     </circle>
-                    <circle cx="1000" cy="200" r="8" fill="#fab005">
+                    <circle cx="1000" cy="200" r="8" fill="#ffffffff">
                         <animate attributeName="r" values="8;14;8" dur="2.2s" repeatCount="indefinite"/>
                     </circle>
-                    <circle cx="1600" cy="500" r="8" fill="#fab005">
+                    <circle cx="1600" cy="500" r="8" fill="#ffffffff">
                         <animate attributeName="r" values="8;14;8" dur="2.4s" repeatCount="indefinite"/>
                     </circle>
-                    <circle cx="500" cy="800" r="8" fill="#fab005">
+                    <circle cx="500" cy="800" r="8" fill="#ffffffff">
                         <animate attributeName="r" values="8;14;8" dur="2.1s" repeatCount="indefinite"/>
                     </circle>
                 </g>
@@ -286,10 +290,10 @@
                             <circle cx="300" cy="900" r="18" fill="#fff" opacity="0.13">
                                 <animate attributeName="cy" values="900;200;900" dur="12s" repeatCount="indefinite"/>
                             </circle>
-                            <circle cx="1700" cy="200" r="12" fill="#ffe066" opacity="0.13">
+                            <circle cx="1700" cy="200" r="12" fill="#ffffffff" opacity="0.13">
                                 <animate attributeName="cy" values="200;800;200" dur="10s" repeatCount="indefinite"/>
                             </circle>
-                            <circle cx="800" cy="1000" r="10" fill="#fab005" opacity="0.13">
+                            <circle cx="800" cy="1000" r="10" fill="#ffffffff" opacity="0.13">
                                 <animate attributeName="cy" values="1000;400;1000" dur="14s" repeatCount="indefinite"/>
                             </circle>
                         </g>
@@ -297,12 +301,12 @@
                         <g>
                             <!-- Humanoide 1 -->
                             <g>
-                                <circle cx="250" cy="400" r="22" fill="#ffe066"/>
-                                <rect x="238" y="422" width="24" height="60" rx="12" fill="#ffe066"/>
-                                <rect x="230" y="482" width="10" height="40" rx="5" fill="#ffe066">
+                                <circle cx="250" cy="400" r="22" fill="#ffffffff"/>
+                                <rect x="238" y="422" width="24" height="60" rx="12" fill="#ffffffff"/>
+                                <rect x="230" y="482" width="10" height="40" rx="5" fill="#ffffffff">
                                     <animate attributeName="y" values="482;492;482" dur="2.5s" repeatCount="indefinite"/>
                                 </rect>
-                                <rect x="260" y="482" width="10" height="40" rx="5" fill="#ffe066">
+                                <rect x="260" y="482" width="10" height="40" rx="5" fill="#ffffffff">
                                     <animate attributeName="y" values="482;472;482" dur="2.5s" repeatCount="indefinite"/>
                                 </rect>
                             </g>
@@ -331,7 +335,6 @@
                         </g>
             </svg>
 
-
     <nav>
         <div style="display: flex; align-items: center; gap: 0.7rem;">
             <img src="/static/img/mentora1.png" alt="Logo MenTora" style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;">
@@ -344,6 +347,7 @@
     </nav>
 
 
+
     <section class="hero">
         <h2> ACTIVA TU MENTE</h2>
         <p>Explora, compite y conquista desafíos mientras te diviertes. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
@@ -352,10 +356,9 @@
             <a href="/login">YA TENGO CUENTA </a>
         </div>
 
-            <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
-            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 180px; width: 250px; animation: float 3s ease-in-out infinite;">
-            </div>
-        <button class="scroll-down" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'});">↓</button>
+        <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
+        <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 200px; width: 280px; animation: float 3s ease-in-out infinite;">
+        </div>
     </section>
 
     <section class="features" id="features">
