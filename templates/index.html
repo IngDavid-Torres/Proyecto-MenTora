@@ -50,11 +50,11 @@
             position: relative;
         }
         .hero h2 {
-            font-size: 3.2rem;
+            font-size: 4.2rem;
             margin-bottom: 1.2rem;
-            color: #00fff1;
+            color: #ffffffff;
             font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            text-shadow: 0 0 16px #00fff1, 0 0 2px #fff;
+            text-shadow: 0 0 16px #767777ff, 0 0 2px #fff;
             letter-spacing: 2px;
         }
         .hero p {
@@ -69,7 +69,7 @@
         }
         .cta-buttons a {
             text-decoration: none;
-            background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
+            background: linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%);
             color: #1a1a2e;
             padding: 1rem 2.5rem;
             border-radius: 40px;
@@ -214,6 +214,15 @@
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+   
+} }
     </style>
 </head>
  
@@ -325,7 +334,7 @@
 
     <nav>
         <div style="display: flex; align-items: center; gap: 0.7rem;">
-            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 60px; width: 60px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.13); background: #fff; object-fit: cover;">
+            <img src="/static/img/mentora1.png" alt="Logo MenTora" style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;">
             <h1 style="margin: 0;"></h1>
         </div>
         <div>
@@ -336,12 +345,16 @@
 
 
     <section class="hero">
-        <h2> Desafía tu mente. Aprende jugando. </h2>
-        <p> Únete a una comunidad de exploradores del conocimiento. Responde retos, gana logros y debate con otros apasionados como tú. </p>
+        <h2> ACTIVA TU MENTE</h2>
+        <p>Explora, compite y conquista desafíos mientras te diviertes. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
         <div class="cta-buttons">
-            <a href="/register">Comenzar</a>
-            <a href="/login">Ya tengo cuenta</a>
+            <a href="/register">COMENZAR</a>
+            <a href="/login">YA TENGO CUENTA </a>
         </div>
+
+            <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
+            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 180px; width: 250px; animation: float 3s ease-in-out infinite;">
+            </div>
         <button class="scroll-down" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'});">↓</button>
     </section>
 
