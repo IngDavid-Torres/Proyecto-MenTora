@@ -480,22 +480,53 @@
             </table>
         </div>
         <div class="section">
-            <h2><i class="fa-solid fa-robot"></i> Generador de Exámenes con IA</h2>
-            <form method="POST" action="" class="ai-form">
-                <label><i class="fa-solid fa-lightbulb"></i> Tema:</label>
-                <input type="text" name="tema" required placeholder="Ej: Álgebra, Historia...">
-                <label><i class="fa-solid fa-list-ol"></i> Cantidad de preguntas:</label>
-                <input type="number" name="cantidad" min="1" max="50" value="5" required>
-                <label><i class="fa-solid fa-list"></i> Tipo de examen:</label>
-                <select name="tipo_examen" style="padding:0.5rem; border-radius:7px; border:1px solid #b2f0e6; font-size:1rem;">
-                    <option value="simple" {% if ia_tipo_examen == 'simple' %}selected{% endif %}>Solo preguntas</option>
-                    <option value="opciones" {% if ia_tipo_examen == 'opciones' %}selected{% endif %}>Preguntas con opciones y respuesta</option>
-                </select>
-                <button type="submit" class="btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar con IA</button>
-            </form>
+            <h2><i class="fa-solid fa-robot"></i> Generador de Exámenes con IA Local</h2>
+            <div style="background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.5rem 1.2rem; margin-bottom:1rem;">
+                <div style="color:#2a5298; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fa-solid fa-microchip" style="color:#4fc3f7;"></i>
+                    <strong>IA Local - Sin necesidad de internet</strong>
+                </div>
+                <form method="POST" action="" class="ai-form">
+                    <label><i class="fa-solid fa-lightbulb"></i> Tema:</label>
+                    <input type="text" name="tema" required placeholder="Ej: Álgebra, Historia, Ciencias...">
+                    
+                    <label><i class="fa-solid fa-list-ol"></i> Cantidad de preguntas:</label>
+                    <input type="number" name="cantidad" min="1" max="20" value="5" required>
+                    
+                    <label><i class="fa-solid fa-list"></i> Tipo de examen:</label>
+                    <select name="tipo_examen" style="padding:0.5rem; border-radius:7px; border:1px solid #b2f0e6; font-size:1rem;">
+                        <option value="simple" {% if ia_tipo_examen == 'simple' %}selected{% endif %}>Solo preguntas</option>
+                        <option value="opciones" {% if ia_tipo_examen == 'opciones' %}selected{% endif %}>Preguntas con opciones múltiples</option>
+                    </select>
+                    
+                    <label><i class="fa-solid fa-cogs"></i> Método de IA:</label>
+                    <select name="ai_method" style="padding:0.5rem; border-radius:7px; border:1px solid #b2f0e6; font-size:1rem;">
+                        <option value="offline">🚀 Plantillas (Rápido)</option>
+                        <option value="ollama">🦙 Ollama (Requiere instalación)</option>
+                        <option value="huggingface">🤗 Hugging Face (Requiere descarga)</option>
+                    </select>
+                    
+                    <button type="submit" class="btn"><i class="fa-solid fa-microchip"></i> Generar con IA Local</button>
+                </form>
+                
+                <div style="margin-top:1rem; padding:0.8rem; background:rgba(76,195,247,0.1); border-radius:8px; border-left:4px solid #4fc3f7;">
+                    <strong style="color:#2a5298;">💡 Métodos disponibles:</strong>
+                    <ul style="margin:0.5rem 0 0 1rem; color:#2c3e50;">
+                        <li><strong>Plantillas:</strong> Rápido, funciona siempre, ideal para demostración</li>
+                        <li><strong>Ollama:</strong> IA avanzada local (requiere instalar Ollama + modelo)</li>
+                        <li><strong>Hugging Face:</strong> Modelos preentrenados (descarga automática)</li>
+                    </ul>
+                </div>
+            </div>
             {% if ia_questions %}
             <div style="margin-top:1.5rem; background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.5rem 1.2rem;">
-                <h3 style="color:#2a5298; margin-bottom:0.7rem;"><i class="fa-solid fa-file-lines"></i> Examen generado para el área: <span style="color:#4fc3f7;">{{ teacher.area or 'General' }}</span></h3>
+                <h3 style="color:#2a5298; margin-bottom:0.7rem;">
+                    <i class="fa-solid fa-microchip"></i> Examen generado con IA Local 
+                    <span style="color:#4fc3f7;">{{ teacher.area or 'General' }}</span>
+                    <span style="font-size:0.9rem; color:#888; margin-left:1rem;">
+                        <i class="fa-solid fa-wifi-slash"></i> Sin conexión a internet
+                    </span>
+                </h3>
                 {% if ia_tipo_examen == 'opciones' and ia_questions and ia_questions[0] is mapping %}
                     <ol style="font-size:1.08rem; color:#2c3e50;">
                     {% for q in ia_questions %}
@@ -517,20 +548,22 @@
                     {% endfor %}
                     </ol>
                 {% endif %}
-                <div style="margin-top:1.2rem; display:flex; gap:1rem;">
+                <div style="margin-top:1.2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+                    <form method="post" action="{{ url_for('download_exam_simple') }}" style="display:inline;">
+                        <input type="hidden" name="tema" value="{{ ia_tema }}">
+                        <input type="hidden" name="area" value="{{ teacher.area }}">
+                        <input type="hidden" name="tipo_examen" value="{{ ia_tipo_examen }}">
+                        <input type="hidden" name="preguntas" value="{{ ia_questions|safe_json }}">
+                        <button type="submit" class="btn" style="background:linear-gradient(90deg,#b2f0e6,#7fd8f6); border:2px solid #4fc3f7;">
+                            <i class="fa-solid fa-file-text"></i> Descargar TXT (Siempre funciona)
+                        </button>
+                    </form>
                     <form method="post" action="{{ url_for('download_exam_word') }}" style="display:inline;">
                         <input type="hidden" name="tema" value="{{ ia_tema }}">
                         <input type="hidden" name="area" value="{{ teacher.area }}">
                         <input type="hidden" name="tipo_examen" value="{{ ia_tipo_examen }}">
-                        <input type="hidden" name="preguntas" value="{{ ia_questions|tojson }}">
+                        <input type="hidden" name="preguntas" value="{{ ia_questions|safe_json }}">
                         <button type="submit" class="btn"><i class="fa-solid fa-file-word"></i> Descargar Word</button>
-                    </form>
-                    <form method="post" action="{{ url_for('download_exam_pdf') }}" style="display:inline;">
-                        <input type="hidden" name="tema" value="{{ ia_tema }}">
-                        <input type="hidden" name="area" value="{{ teacher.area }}">
-                        <input type="hidden" name="tipo_examen" value="{{ ia_tipo_examen }}">
-                        <input type="hidden" name="preguntas" value="{{ ia_questions|tojson }}">
-                        <button type="submit" class="btn"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</button>
                     </form>
                 </div>
             </div>
@@ -697,15 +730,96 @@
     </script>
     </footer>
     <script>
+    // Función global para abrir modales - más confiable
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+    
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
     // Abrir modales de creación de quiz/juego
-    document.getElementById('openQuizModal').onclick = function(e) {
-        e.preventDefault();
-        document.getElementById('modalQuiz').style.display = 'flex';
-    };
-    document.getElementById('openGameModal').onclick = function(e) {
-        e.preventDefault();
-        document.getElementById('modalGame').style.display = 'flex';
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+        // Implementación más robusta usando múltiples métodos
+        const openQuizBtn = document.getElementById('openQuizModal');
+        const openGameBtn = document.getElementById('openGameModal');
+        const modalQuiz = document.getElementById('modalQuiz');
+        const modalGame = document.getElementById('modalGame');
+        
+        // Modal de Quiz - Método robusto
+        if (openQuizBtn) {
+            // Remover cualquier event listener previo
+            openQuizBtn.removeEventListener('click', handleQuizClick);
+            openQuizBtn.addEventListener('click', handleQuizClick);
+            
+            function handleQuizClick(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openModal('modalQuiz');
+            }
+        }
+        
+        // Modal de Juego - Método robusto
+        if (openGameBtn) {
+            // Remover cualquier event listener previo
+            openGameBtn.removeEventListener('click', handleGameClick);
+            openGameBtn.addEventListener('click', handleGameClick);
+            
+            function handleGameClick(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openModal('modalGame');
+            }
+        }
+        
+        // Cerrar modales al hacer clic fuera
+        [modalQuiz, modalGame].forEach(modal => {
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            }
+        });
+        
+        // Cerrar modales con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal('modalQuiz');
+                closeModal('modalGame');
+            }
+        });
+        
+        // Botones de cancelar - método más directo
+        const cancelButtons = document.querySelectorAll('button[onclick*="modalQuiz"], button[onclick*="modalGame"]');
+        cancelButtons.forEach(btn => {
+            const originalOnclick = btn.getAttribute('onclick');
+            if (originalOnclick) {
+                btn.removeAttribute('onclick');
+                btn.addEventListener('click', function() {
+                    if (originalOnclick.includes('modalQuiz')) {
+                        closeModal('modalQuiz');
+                    }
+                    if (originalOnclick.includes('modalGame')) {
+                        closeModal('modalGame');
+                    }
+                });
+            }
+        });
+    });
+    
+    // Funciones globales de respaldo
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    
     // Animación de contadores
     function animateCount(id, end) {
         const el = document.getElementById(id);

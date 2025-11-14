@@ -1,0 +1,47 @@
+EXAMEN DE TECNOLOGÍA
+==================================================
+Tema: programación
+Tipo: opciones
+Numero de preguntas: 5
+Instrucciones: Responde las siguientes preguntas.
+
+1. ?Para que se utiliza grafos en programacion?
+    a) Modelar relaciones entre elementos
+    b) Solo para matematicas
+    c) Crear interfaces
+    d) Almacenar videos
+    Respuesta correcta: A
+
+2. ?Para que se utiliza colas en programacion?
+    a) Estructura FIFO para procesos
+    b) Solo almacenar texto
+    c) Crear graficos
+    d) Optimizar disco
+    Respuesta correcta: A
+
+3. ?Que ventajas tiene Django sobre Ruby on Rails?
+    a) Framework completo con ORM
+    b) Solo para APIs
+    c) No soporta bases de datos
+    d) Solo para principiantes
+    Respuesta correcta: A
+
+4. ?Que significa iteracion en el contexto de programacion funcional?
+    a) Bucle for
+    b) Bucle while
+    c) Bucle do-while
+    d) Todas las anteriores
+    Respuesta correcta: A
+
+5. ?Que tipo de dato devuelve indexOf() en JavaScript?
+    a) var
+    b) let
+    c) const
+    d) function
+    Respuesta correcta: A
+
+
+==================================================
+Examen generado por MenTora - IA Local
+Total de preguntas procesadas: 5
+Metodo de generacion: Sistema de plantillas offline

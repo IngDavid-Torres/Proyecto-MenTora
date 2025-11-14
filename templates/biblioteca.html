@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende más - Biblioteca Digital | MenTora</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600;700&display=swap');
+    
+    body {
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        background: linear-gradient(120deg, #181a2b 0%, #23272f 60%, #2a5298 100%);
+        color: #e0e7ef;
+        min-height: 100vh;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+    
+    .main-navbar {
+        background: linear-gradient(90deg, #181a2b 60%, #23272f 100%);
+        border-bottom: 2.5px solid #00fff1;
+        box-shadow: 0 4px 32px #00fff1a0;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        letter-spacing: 2px;
+        padding: 1rem 2rem;
+    }
+    
+    .navbar-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .navbar-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        color: #00fff1 !important;
+        text-shadow: 0 0 8px #00fff1, 0 0 2px #fff;
+        text-decoration: none;
+    }
+    
+    .navbar-links {
+        display: flex;
+        gap: 2.2rem;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .navbar-links li a {
+        color: #fff !important;
+        text-decoration: none;
+        background: none !important;
+        border: 1.5px solid transparent;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        letter-spacing: 1px;
+        transition: color 0.2s, border 0.2s, box-shadow 0.2s;
+    }
+    
+    .navbar-links li a:hover,
+    .navbar-links li a.active {
+        color: #00fff1 !important;
+        border: 1.5px solid #00fff1;
+        box-shadow: 0 0 12px #00fff1a0;
+        background: rgba(0,255,241,0.08) !important;
+    }
+    
+    .navbar-user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+    }
+    
+    .navbar-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 3px solid #00fff1;
+        background: #fff;
+        box-shadow: 0 2px 8px #00fff1a0;
+    }
+    
+    .navbar-username {
+        color: #00fff1;
+        font-weight: 600;
+    }
+    
+    .glass-card {
+        background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
+        border: 2.5px solid #00fff1;
+        box-shadow: 0 8px 32px #00fff1a0, 0 0 24px #00fff1;
+        color: #e0e7ef;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        border-radius: 18px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .biblioteca-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .biblioteca-title {
+        color: #00fff1;
+        text-shadow: 0 0 8px #00fff1;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: glow 1.5s infinite alternate;
+    }
+    
+    .biblioteca-subtitle {
+        color: #e0e7ef;
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+    }
+    
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto 3rem auto;
+        position: relative;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 2px solid #00fff1;
+        border-radius: 12px;
+        background: rgba(0,255,241,0.08);
+        color: #00fff1;
+        font-size: 1.1rem;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        outline: none;
+        transition: all 0.3s;
+    }
+    
+    .search-input:focus {
+        box-shadow: 0 0 20px #00fff1a0;
+        background: rgba(0,255,241,0.15);
+    }
+    
+    .search-input::placeholder {
+        color: #9ca3af;
+    }
+    
+    .categories-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .category-card {
+        background: rgba(0,255,241,0.08);
+        border: 2px solid #00fff1;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px #00fff1a0;
+        background: rgba(0,255,241,0.15);
+    }
+    
+    .category-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .category-title {
+        color: #00fff1;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .category-description {
+        color: #e0e7ef;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .category-count {
+        background: #00fff1;
+        color: #181a2b;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .resources-section {
+        margin-top: 3rem;
+    }
+    
+    .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .resource-card {
+        background: rgba(0,255,241,0.07);
+        border: 2px solid #00fff1;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .resource-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px #00fff1a0;
+        background: rgba(0,255,241,0.12);
+    }
+    
+    .resource-type {
+        background: #00fff1;
+        color: #181a2b;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    
+    .resource-title {
+        color: #00fff1;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .resource-description {
+        color: #e0e7ef;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+    
+    .resource-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
+        color: #181a2b;
+        font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+        font-weight: bold;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px #00fff1a0;
+        letter-spacing: 1px;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #00c3ff 60%, #00fff1 100%);
+        color: #fff;
+        transform: scale(1.05);
+        box-shadow: 0 4px 18px #00fff1cc;
+    }
+    
+    .back-button {
+        position: fixed;
+        top: 100px;
+        left: 20px;
+        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
+        color: #181a2b;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 2px 10px #00fff1a0;
+        z-index: 100;
+        transition: all 0.3s;
+    }
+    
+    .back-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px #00fff1cc;
+    }
+    
+    @keyframes glow {
+        from { text-shadow: 0 0 12px #00fff1, 0 0 2px #fff; }
+        to { text-shadow: 0 0 32px #00fff1, 0 0 8px #fff; }
+    }
+    
+    .hidden {
+        display: none !important;
+    }
+    
+    @media (max-width: 768px) {
+        .biblioteca-title {
+            font-size: 2.5rem;
+        }
+        
+        .categories-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .resources-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .navbar-links {
+            gap: 1rem;
+        }
+        
+        .navbar-links li a {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.9rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="main-navbar">
+        <div class="navbar-content">
+            <!-- Logo a la izquierda -->
+            <a href="/dashboard" class="navbar-logo">
+                <img src="/static/img/mentora.png" alt="MenTora Logo" style="height:52px;width:52px;border-radius:50%;background:#fff;border:3px solid #00fff1;box-shadow:0 2px 8px #00fff1a0;">
+                <span style="font-size:1.8rem;font-weight:700;">MenTora</span>
+            </a>
+            <!-- Links centrados -->
+            <ul class="navbar-links">
+                <li><a href="/games">Juegos</a></li>
+                <li><a href="/quiz">Retos</a></li>
+                <li><a href="/biblioteca" class="active">Aprende más</a></li>
+                <li><a href="/dashboard#logros">Logros</a></li>
+            </ul>
+            <!-- Usuario a la derecha -->
+            <div class="navbar-user">
+                <img src="{{ avatar_url }}" alt="avatar" class="navbar-avatar">
+                <span class="navbar-username">{{ username }}</span>
+                <a href="/dashboard" class="btn-primary" style="padding:0.5rem 1rem;font-size:0.9rem;">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Botón de regreso -->
+    <button class="back-button" onclick="window.history.back()" title="Volver">
+        ←
+    </button>
+
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+        <!-- Header de la biblioteca -->
+        <div class="biblioteca-header">
+            <h1 class="biblioteca-title">📚 Biblioteca Digital</h1>
+            <p class="biblioteca-subtitle">Explora recursos de aprendizaje para mejorar en juegos y retos</p>
+            
+            <!-- Buscador -->
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar recursos, temas, programación...">
+            </div>
+        </div>
+
+        <!-- Categorías principales -->
+        <div class="categories-container">
+            <div class="category-card" onclick="filterByCategory('programacion')">
+                <span class="category-icon">💻</span>
+                <h3 class="category-title">Programación</h3>
+                <p class="category-description">Aprende lenguajes, algoritmos y estructuras de datos</p>
+                <span class="category-count">12 recursos</span>
+            </div>
+            
+            <div class="category-card" onclick="filterByCategory('matematicas')">
+                <span class="category-icon">🧮</span>
+                <h3 class="category-title">Matemáticas</h3>
+                <p class="category-description">Fundamentos matemáticos y lógica</p>
+                <span class="category-count">12 recursos</span>
+            </div>
+            
+            <div class="category-card" onclick="filterByCategory('ciencias')">
+                <span class="category-icon">🔬</span>
+                <h3 class="category-title">Ciencias</h3>
+                <p class="category-description">Física, química y ciencias naturales</p>
+                <span class="category-count">8 recursos</span>
+            </div>
+            
+            <div class="category-card" onclick="filterByCategory('historia')">
+                <span class="category-icon">🏛️</span>
+                <h3 class="category-title">Historia</h3>
+                <p class="category-description">Eventos históricos y culturas</p>
+                <span class="category-count">6 recursos</span>
+            </div>
+            
+            <div class="category-card" onclick="filterByCategory('literatura')">
+                <span class="category-icon">📖</span>
+                <h3 class="category-title">Literatura</h3>
+                <p class="category-description">Obras clásicas y análisis literario</p>
+                <span class="category-count">10 recursos</span>
+            </div>
+            
+            <div class="category-card" onclick="filterByCategory('tecnologia')">
+                <span class="category-icon">⚡</span>
+                <h3 class="category-title">Tecnología</h3>
+                <p class="category-description">Innovaciones y tendencias tech</p>
+                <span class="category-count">9 recursos</span>
+            </div>
+        </div>
+
+        <!-- Sección de recursos -->
+        <div class="resources-section glass-card">
+            <h2 style="color:#00fff1;text-align:center;margin-bottom:2rem;font-size:2rem;">🎯 Recursos Disponibles</h2>
+            <div class="resources-grid" id="resourcesGrid">
+                <!-- Recursos de Programación -->
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Tutorial Interactivo</div>
+                    <h4 class="resource-title">Python para Principiantes</h4>
+                    <p class="resource-description">Aprende los fundamentos de Python: variables, funciones, bucles, listas, diccionarios y manejo de archivos con ejercicios prácticos.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 3 horas</span>
+                        <span>📈 Básico</span>
+                    </div>
+                    <a href="#" onclick="openResource('python-basico')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+                
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Guía Completa</div>
+                    <h4 class="resource-title">Algoritmos y Estructuras de Datos</h4>
+                    <p class="resource-description">Domina arrays, listas enlazadas, pilas, colas, árboles y algoritmos de ordenamiento: bubble sort, quicksort, mergesort.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 5 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" onclick="openResource('algoritmos')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+                
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Referencia Avanzada</div>
+                    <h4 class="resource-title">JavaScript ES6+ Moderno</h4>
+                    <p class="resource-description">Arrow functions, destructuring, async/await, promises, modules, clases y programación funcional en JavaScript.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 4 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" onclick="openResource('javascript-moderno')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Tutorial Práctico</div>
+                    <h4 class="resource-title">Java Fundamentos</h4>
+                    <p class="resource-description">Programación orientada a objetos, clases, herencia, polimorfismo, interfaces y manejo de excepciones en Java.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 6 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" onclick="openResource('java-fundamentos')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Guía Técnica</div>
+                    <h4 class="resource-title">C++ Avanzado</h4>
+                    <p class="resource-description">Punteros, memoria dinámica, templates, STL, programación de sistemas y optimización de rendimiento.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 8 horas</span>
+                        <span>📈 Avanzado</span>
+                    </div>
+                    <a href="#" onclick="openResource('cpp-avanzado')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Tutorial Web</div>
+                    <h4 class="resource-title">HTML5 y CSS3 Moderno</h4>
+                    <p class="resource-description">Estructura semántica, flexbox, grid, animaciones, responsive design y mejores prácticas de desarrollo web.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 4 horas</span>
+                        <span>📈 Básico</span>
+                    </div>
+                    <a href="#" onclick="openResource('html-css')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Frameworks</div>
+                    <h4 class="resource-title">React.js Fundamentos</h4>
+                    <p class="resource-description">Componentes, props, state, hooks (useState, useEffect), contexto y creación de aplicaciones web modernas.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 7 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" onclick="openResource('react-fundamentos')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Base de Datos</div>
+                    <h4 class="resource-title">SQL y Bases de Datos</h4>
+                    <p class="resource-description">Consultas SELECT, JOIN, subconsultas, normalización, índices y optimización de bases de datos relacionales.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 5 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" onclick="openResource('sql-databases')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Metodologías</div>
+                    <h4 class="resource-title">Git y Control de Versiones</h4>
+                    <p class="resource-description">Comandos básicos, branching, merging, resolución de conflictos, GitHub y flujos de trabajo colaborativos.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 3 horas</span>
+                        <span>📈 Básico</span>
+                    </div>
+                    <a href="#" onclick="openResource('git-control')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Patrones de Diseño</div>
+                    <h4 class="resource-title">Design Patterns</h4>
+                    <p class="resource-description">Singleton, Factory, Observer, Strategy, MVC, y otros patrones esenciales para código limpio y mantenible.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 6 horas</span>
+                        <span>📈 Avanzado</span>
+                    </div>
+                    <a href="#" onclick="openResource('design-patterns')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">API Development</div>
+                    <h4 class="resource-title">APIs REST y Flask</h4>
+                    <p class="resource-description">Creación de APIs REST, autenticación JWT, documentación con Swagger, pruebas y mejores prácticas.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 5 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" onclick="openResource('apis-rest')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <div class="resource-card" data-category="programacion">
+                    <div class="resource-type">Debugging</div>
+                    <h4 class="resource-title">Testing y Depuración</h4>
+                    <p class="resource-description">Unit testing, integration testing, TDD, herramientas de debugging y técnicas de resolución de problemas.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 4 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" onclick="openResource('testing-debug')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <!-- Recursos de Matemáticas -->
+                <div class="resource-card" data-category="matematicas">
+                    <div class="resource-type">Tutorial</div>
+                    <h4 class="resource-title">Álgebra Lineal Básica</h4>
+                    <p class="resource-description">Vectores, matrices, operaciones básicas y aplicaciones en programación.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 2.5 horas</span>
+                        <span>📈 Básico</span>
+                    </div>
+                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+                
+                <div class="resource-card" data-category="matematicas">
+                    <div class="resource-type">Ejercicios</div>
+                    <h4 class="resource-title">Cálculo Diferencial</h4>
+                    <p class="resource-description">Límites, derivadas y aplicaciones prácticas con ejercicios resueltos paso a paso.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 5 horas</span>
+                        <span>📈 Avanzado</span>
+                    </div>
+                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <!-- Recursos de Ciencias -->
+                <div class="resource-card" data-category="ciencias">
+                    <div class="resource-type">Tutorial</div>
+                    <h4 class="resource-title">Física Clásica</h4>
+                    <p class="resource-description">Mecánica newtoniana, energía, momento y movimiento con ejemplos prácticos.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 3 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+                
+                <div class="resource-card" data-category="ciencias">
+                    <div class="resource-type">Laboratorio</div>
+                    <h4 class="resource-title">Química Orgánica</h4>
+                    <p class="resource-description">Compuestos orgánicos, reacciones y nomenclatura con simulaciones virtuales.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 4 horas</span>
+                        <span>📈 Avanzado</span>
+                    </div>
+                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <!-- Recursos de Historia -->
+                <div class="resource-card" data-category="historia">
+                    <div class="resource-type">Documental</div>
+                    <h4 class="resource-title">Historia Universal</h4>
+                    <p class="resource-description">Desde las civilizaciones antiguas hasta la era moderna con líneas de tiempo interactivas.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 6 horas</span>
+                        <span>📈 Básico</span>
+                    </div>
+                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <!-- Recursos de Literatura -->
+                <div class="resource-card" data-category="literatura">
+                    <div class="resource-type">Análisis</div>
+                    <h4 class="resource-title">Literatura Clásica</h4>
+                    <p class="resource-description">Análisis de obras maestras: Don Quijote, Hamlet, Cien Años de Soledad y más.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 8 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+
+                <!-- Recursos de Tecnología -->
+                <div class="resource-card" data-category="tecnologia">
+                    <div class="resource-type">Tendencias</div>
+                    <h4 class="resource-title">Inteligencia Artificial</h4>
+                    <p class="resource-description">Fundamentos de IA, machine learning y aplicaciones en la vida cotidiana.</p>
+                    <div class="resource-meta">
+                        <span>⏱️ 4 horas</span>
+                        <span>📈 Intermedio</span>
+                    </div>
+                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad de búsqueda mejorada
+        const searchInput = document.getElementById('searchInput');
+        const resourcesGrid = document.getElementById('resourcesGrid');
+        let currentFilter = 'all';
+        
+        // Función de búsqueda en tiempo real
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            performSearch(searchTerm, currentFilter);
+        });
+        
+        // Función principal de búsqueda
+        function performSearch(searchTerm, categoryFilter = 'all') {
+            const resourceCards = resourcesGrid.querySelectorAll('.resource-card');
+            let visibleCount = 0;
+            
+            resourceCards.forEach(card => {
+                const title = card.querySelector('.resource-title').textContent.toLowerCase();
+                const description = card.querySelector('.resource-description').textContent.toLowerCase();
+                const type = card.querySelector('.resource-type').textContent.toLowerCase();
+                const category = card.getAttribute('data-category');
+                
+                // Criterios de búsqueda más amplios
+                const matchesSearch = !searchTerm || 
+                    title.includes(searchTerm) || 
+                    description.includes(searchTerm) || 
+                    type.includes(searchTerm) ||
+                    category.includes(searchTerm);
+                
+                const matchesCategory = categoryFilter === 'all' || category === categoryFilter;
+                
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'block';
+                    card.style.animationDelay = (visibleCount * 0.1) + 's';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Mostrar mensaje si no hay resultados
+            showNoResults(visibleCount === 0 && searchTerm);
+        }
+        
+        // Función para mostrar mensaje de "sin resultados"
+        function showNoResults(show) {
+            let noResultsMsg = document.getElementById('noResultsMessage');
+            
+            if (show && !noResultsMsg) {
+                noResultsMsg = document.createElement('div');
+                noResultsMsg.id = 'noResultsMessage';
+                noResultsMsg.style.cssText = `
+                    text-align: center;
+                    padding: 3rem;
+                    color: #9ca3af;
+                    font-size: 1.2rem;
+                    grid-column: 1 / -1;
+                `;
+                noResultsMsg.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                    <div>No se encontraron recursos para tu búsqueda.</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.5rem;">Intenta con otras palabras clave.</div>
+                `;
+                resourcesGrid.appendChild(noResultsMsg);
+            } else if (!show && noResultsMsg) {
+                noResultsMsg.remove();
+            }
+        }
+        
+        // Funcionalidad de filtrado por categoría mejorada
+        function filterByCategory(category) {
+            currentFilter = category;
+            const searchTerm = searchInput.value.toLowerCase();
+            performSearch(searchTerm, category);
+            
+            // Actualizar indicador visual de categoría activa
+            updateCategoryVisualFeedback(category);
+            
+            // Limpiar mensaje de sin resultados
+            showNoResults(false);
+            
+            // Scroll suave a la sección de recursos
+            document.querySelector('.resources-section').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+        
+        // Actualizar indicador visual de categoría activa
+        function updateCategoryVisualFeedback(activeCategory) {
+            const categoryCards = document.querySelectorAll('.category-card');
+            categoryCards.forEach(card => {
+                const cardTitle = card.querySelector('.category-title').textContent.toLowerCase();
+                const categoryMap = {
+                    'programación': 'programacion',
+                    'matemáticas': 'matematicas',
+                    'ciencias': 'ciencias',
+                    'historia': 'historia',
+                    'literatura': 'literatura',
+                    'tecnología': 'tecnologia'
+                };
+                
+                if (categoryMap[cardTitle] === activeCategory) {
+                    card.style.transform = 'translateY(-5px)';
+                    card.style.boxShadow = '0 10px 30px #00fff1a0';
+                    card.style.background = 'rgba(0,255,241,0.15)';
+                } else {
+                    card.style.transform = '';
+                    card.style.boxShadow = '';
+                    card.style.background = '';
+                }
+            });
+        }
+        
+        // Función para mostrar todos los recursos
+        function showAllResources() {
+            currentFilter = 'all';
+            searchInput.value = '';
+            performSearch('', 'all');
+            updateCategoryVisualFeedback('');
+            showNoResults(false);
+        }
+        
+        // Función para abrir recursos (preparada para futuras implementaciones)
+        function openResource(resourceId) {
+            // Mapeo de recursos a contenido específico
+            const resourceContent = {
+                'python-basico': {
+                    title: 'Python para Principiantes',
+                    content: `
+                        <h3>🐍 Fundamentos de Python</h3>
+                        <p><strong>Temario:</strong></p>
+                        <ul>
+                            <li>Variables y tipos de datos (int, str, float, bool)</li>
+                            <li>Operadores aritméticos y lógicos</li>
+                            <li>Estructuras de control (if, elif, else)</li>
+                            <li>Bucles (for, while)</li>
+                            <li>Listas, tuplas y diccionarios</li>
+                            <li>Funciones y parámetros</li>
+                            <li>Manejo de archivos básico</li>
+                        </ul>
+                        <p><strong>Ejercicios prácticos:</strong></p>
+                        <ul>
+                            <li>Calculadora básica</li>
+                            <li>Lista de tareas</li>
+                            <li>Juego de adivinanza de números</li>
+                        </ul>
+                    `
+                },
+                'algoritmos': {
+                    title: 'Algoritmos y Estructuras de Datos',
+                    content: `
+                        <h3>🔄 Algoritmos Fundamentales</h3>
+                        <p><strong>Estructuras de Datos:</strong></p>
+                        <ul>
+                            <li>Arrays y listas dinámicas</li>
+                            <li>Listas enlazadas (simples y dobles)</li>
+                            <li>Pilas (LIFO) y colas (FIFO)</li>
+                            <li>Árboles binarios y BST</li>
+                            <li>Grafos y recorridos</li>
+                        </ul>
+                        <p><strong>Algoritmos de Ordenamiento:</strong></p>
+                        <ul>
+                            <li>Bubble Sort - O(n²)</li>
+                            <li>Quick Sort - O(n log n)</li>
+                            <li>Merge Sort - O(n log n)</li>
+                            <li>Selection Sort - O(n²)</li>
+                        </ul>
+                        <p><strong>Búsqueda:</strong></p>
+                        <ul>
+                            <li>Búsqueda lineal - O(n)</li>
+                            <li>Búsqueda binaria - O(log n)</li>
+                        </ul>
+                    `
+                },
+                'javascript-moderno': {
+                    title: 'JavaScript ES6+ Moderno',
+                    content: `
+                        <h3>⚡ JavaScript Avanzado</h3>
+                        <p><strong>Características ES6+:</strong></p>
+                        <ul>
+                            <li>Let, const vs var (block scope)</li>
+                            <li>Arrow functions (() => {})</li>
+                            <li>Template literals (\`\$\{variable\}\`)</li>
+                            <li>Destructuring de objetos y arrays</li>
+                            <li>Spread operator (...)</li>
+                            <li>Modules (import/export)</li>
+                        </ul>
+                        <p><strong>Programación Asíncrona:</strong></p>
+                        <ul>
+                            <li>Promises y .then()</li>
+                            <li>Async/await</li>
+                            <li>Fetch API para HTTP requests</li>
+                            <li>Error handling con try/catch</li>
+                        </ul>
+                    `
+                }
+            };
+            
+            const resource = resourceContent[resourceId];
+            if (resource) {
+                showResourceModal(resource);
+            } else {
+                alert('¡Recurso en desarrollo! Pronto estará disponible.');
+            }
+        }
+        
+        // Modal para mostrar contenido de recursos
+        function showResourceModal(resource) {
+            // Crear modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                backdrop-filter: blur(5px);
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
+                border: 2.5px solid #00fff1;
+                border-radius: 18px;
+                max-width: 800px;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 2rem;
+                color: #e0e7ef;
+                box-shadow: 0 8px 32px #00fff1a0;
+            `;
+            
+            modalContent.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="color: #00fff1; margin: 0; text-shadow: 0 0 8px #00fff1;">${resource.title}</h2>
+                    <button onclick="this.closest('.resource-modal').remove()" style="
+                        background: #00fff1;
+                        color: #181a2b;
+                        border: none;
+                        border-radius: 50%;
+                        width: 40px;
+                        height: 40px;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">×</button>
+                </div>
+                <div style="line-height: 1.6;">
+                    ${resource.content}
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button onclick="this.closest('.resource-modal').remove()" style="
+                        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
+                        color: #181a2b;
+                        border: none;
+                        padding: 0.8rem 2rem;
+                        border-radius: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Cerrar</button>
+                </div>
+            `;
+            
+            modal.className = 'resource-modal';
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Cerrar modal al hacer clic fuera
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+        
+        // Funciones de utilidad
+        function addSearchSuggestions() {
+            const suggestions = [
+                'python', 'javascript', 'java', 'algoritmos', 'estructuras de datos',
+                'react', 'html', 'css', 'sql', 'git', 'patrones de diseño', 'api', 'testing'
+            ];
+            
+            searchInput.addEventListener('focus', function() {
+                // Aquí se pueden agregar sugerencias en el futuro
+            });
+        }
+        
+        // Animaciones de entrada para las cards
+        function addCardAnimations() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .resource-card {
+                    animation: fadeInUp 0.6s ease-out forwards;
+                }
+                
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            showAllResources();
+            addSearchSuggestions();
+            addCardAnimations();
+            
+            // Agregrar botón para limpiar filtros
+            const clearFiltersBtn = document.createElement('button');
+            clearFiltersBtn.textContent = 'Mostrar Todos';
+            clearFiltersBtn.style.cssText = `
+                background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
+                color: #181a2b;
+                border: none;
+                padding: 0.7rem 1.5rem;
+                border-radius: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 1rem;
+                font-size: 0.9rem;
+            `;
+            clearFiltersBtn.onclick = showAllResources;
+            
+            const searchContainer = document.querySelector('.search-container');
+            searchContainer.appendChild(clearFiltersBtn);
+        });
+        
+        // Atajos de teclado
+        document.addEventListener('keydown', function(e) {
+            // Ctrl + / para enfocar la búsqueda
+            if (e.ctrlKey && e.key === '/') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            
+            // Escape para limpiar búsqueda
+            if (e.key === 'Escape') {
+                if (document.querySelector('.resource-modal')) {
+                    document.querySelector('.resource-modal').remove();
+                } else {
+                    showAllResources();
+                    searchInput.blur();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

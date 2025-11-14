@@ -2,468 +2,1549 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MenTora | Desafía tu mente</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.SITE_NAME }} - Gamifica tu Aprendizaje</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
-        body {
-            margin: 0;
-            font-family: 'Poppins', 'Orbitron', Arial, sans-serif;
-            background: linear-gradient(120deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e7ef;
-            overflow-x: hidden;
-            min-height: 100vh;
+        :root {
+            --primary-color: #0a0e27;
+            --secondary-color: #1a237e;
+            --accent-color: #00e5ff;
+            --neon-blue: #00bcd4;
+            --neon-purple: #9c27b0;
+            --space-dark: #0d1421;
+            --cosmic-purple: #3f51b5;
+            --stellar-orange: #ff6f00;
+            --galaxy-pink: #e91e63;
+            --text-primary: #ffffff;
+            --text-secondary: #b0bec5;
+            --bg-primary: #0a0e27;
+            --bg-secondary: #1a237e;
+            --shadow-color: rgba(0, 229, 255, 0.3);
+            --border-radius: 15px;
+            --glass-effect: rgba(255, 255, 255, 0.1);
         }
-        nav {
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', 'Poppins', sans-serif;
+            background: radial-gradient(ellipse at bottom, #0d1421 0%, #0a0e27 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Estrellas animadas de fondo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, white, transparent),
+                radial-gradient(2px 2px at 40px 70px, white, transparent),
+                radial-gradient(1px 1px at 90px 40px, white, transparent),
+                radial-gradient(1px 1px at 130px 80px, white, transparent),
+                radial-gradient(2px 2px at 160px 30px, white, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: sparkle 20s linear infinite;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: translateX(0px) translateY(0px); }
+            50% { transform: translateX(-10px) translateY(-5px); }
+        }
+
+        .navbar {
+            background: rgba(10, 14, 39, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 229, 255, 0.2);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 2rem;
-            background: rgba(26,33,62,0.85);
-            border-bottom: 2px solid #00fff1;
-            box-shadow: 0 4px 32px rgba(0,255,241,0.08);
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            letter-spacing: 2px;
         }
-        nav h1 {
-            font-size: 2.1rem;
-            margin: 0;
-            color: #00fff1;
-            text-shadow: 0 0 8px #00fff1, 0 0 2px #fff;
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+            position: relative;
         }
-        nav a {
+
+        .logo::after {
+            content: '🚀';
+            position: absolute;
+            right: -30px;
+            top: 0;
+            font-size: 0.8em;
+            animation: rocket 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes rocket {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-5px) rotate(5deg); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
             text-decoration: none;
-            color: #fff;
-            margin-left: 1.2rem;
-            font-weight: bold;
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            letter-spacing: 1px;
-            transition: color 0.2s, text-shadow 0.2s;
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        nav a:hover {
-            color: #00fff1;
-            text-shadow: 0 0 8px #00fff1;
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+            transition: left 0.5s;
         }
-        .hero {
-    text-align: center;
-    padding: 2rem 2rem 2rem 2rem;  /* Cambié de 5rem a 2rem */
-    animation: fadeIn 1.2s;
-    position: relative;
-}
-        .hero h2 {
-            font-size: 3.6rem;
-            margin-bottom: 1.2rem;
-            color: #ffffffff;
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            text-shadow: 0 0 16px #767777ff, 0 0 2px #fff;
-            letter-spacing: 1px;
+
+        .nav-links a:hover::before {
+            left: 100%;
         }
-        .hero p {
-            font-size: 1.35rem;
-            max-width: 650px;
-            margin: 0 auto;
-            color: #e0e7ef;
-            text-shadow: 0 0 4px #00fff1;
+
+        .nav-links a:hover {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+            transform: translateY(-2px);
         }
-        .cta-buttons {
-            margin-top: 2.5rem;
-        }
-        .cta-buttons a {
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid;
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-weight: 600;
             text-decoration: none;
-            background: linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%);
-            color: #1a1a2e;
-            padding: 1rem 2.5rem;
-            border-radius: 40px;
-            font-weight: bold;
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            margin: 0 0.7rem;
-            font-size: 1.15rem;
-            box-shadow: 0 2px 18px #00fff1a0;
-            letter-spacing: 1px;
-            border: none;
-            transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
-        }
-        .cta-buttons a:hover {
-            background: linear-gradient(90deg, #00c3ff 60%, #00fff1 100%);
-            color: #fff;
-            transform: scale(1.08);
-            box-shadow: 0 4px 32px #00fff1cc;
-        }
-        .features-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Ocupa toda la altura de la pantalla */
-    background: #f9fafb; /* Color de fondo suave */
-}
-
-.features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    padding: 4rem 3rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
-
-.feature {
-    background: #fff;
-    border-radius: 16px;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.feature:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
-    border-color: rgba(99, 102, 241, 0.2);
-}
-
-.feature-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 1.5rem;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-}
-
-.feature h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #1a202c;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-.feature p {
-    font-size: 1.05rem;
-    color: #4a5568;
-    line-height: 1.7;
-    text-align: center;
-}
-
-        .testimonial {
-            background: rgba(0,255,241,0.09);
-            border-radius: 14px;
-            padding: 1.2rem 1.5rem;
-            min-width: 260px;
-            max-width: 320px;
-            margin: 0 0.5rem;
-            color: #fff;
-            font-style: italic;
-            box-shadow: 0 2px 10px #00fff133;
-            border: 1.5px solid #00fff1;
-        }
-        .testimonial .author {
-            margin-top: 0.7rem;
-            font-size: 1.05rem;
-            color: #00fff1;
-            font-style: normal;
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-        }
-        .scroll-down {
-            display: block;
-            margin: 2rem auto 0 auto;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(120deg, #00fff1 60%, #00c3ff 100%);
-            color: #1a1a2e;
-            font-size: 2.2rem;
-            text-align: center;
-            line-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             cursor: pointer;
-            animation: bounce 1.5s infinite;
-            border: none;
-            box-shadow: 0 2px 12px #00fff1a0;
-            transition: background 0.2s, color 0.2s, transform 0.15s;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
         }
-        .scroll-down:hover {
-            background: linear-gradient(90deg, #00c3ff 60%, #00fff1 100%);
-            color: #fff;
-            transform: scale(1.12);
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
+
+        .btn:hover::before {
+            left: 100%;
         }
-        footer {
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
+            color: white;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.5);
+            background: linear-gradient(45deg, var(--neon-blue), var(--accent-color));
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+        }
+
+        .hero {
+            margin-top: 100px;
+            padding: 6rem 2rem;
             text-align: center;
-            padding: 1.2rem;
-            font-size: 1rem;
-            background: rgba(26,33,62,0.85);
-            color: #00fff1;
-            letter-spacing: 1.5px;
-            border-top: 2px solid #00fff1;
-            font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-            text-shadow: 0 0 8px #00fff1;
+            color: var(--text-primary);
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.1) 0%, transparent 70%);
         }
-        /* Animaciones extra */
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%2300e5ff" opacity="0.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/></circle><circle cx="80" cy="30" r="1" fill="%23ff6f00" opacity="0.7"><animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/></circle><circle cx="30" cy="70" r="1.5" fill="%239c27b0" opacity="0.6"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/></circle></svg>') center/cover;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple), var(--stellar-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.2); }
+        }
+
+        .hero h1::after {
+            content: '🌌';
+            display: block;
+            font-size: 2rem;
+            margin-top: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .features {
+            padding: 5rem 2rem;
+            background: rgba(26, 35, 126, 0.3);
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scale(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--accent-color);
+            box-shadow: 0 20px 40px rgba(0, 229, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--space-dark) 0%, var(--primary-color) 100%);
+            color: var(--text-primary);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="10,10 15,25 30,25 18,35 23,50 10,40 -3,50 2,35 -10,25 5,25" fill="%2300e5ff" opacity="0.3"><animateTransform attributeName="transform" type="rotate" values="0 10 30;360 10 30" dur="20s" repeatCount="indefinite"/></polygon><polygon points="150,60 155,75 170,75 158,85 163,100 150,90 137,100 142,85 130,75 145,75" fill="%23ff6f00" opacity="0.4"><animateTransform attributeName="transform" type="rotate" values="0 150 80;360 150 80" dur="15s" repeatCount="indefinite"/></polygon></svg>') center/cover;
+            animation: cosmic-drift 30s linear infinite;
+        }
+
+        @keyframes cosmic-drift {
+            0% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(-20px) translateY(-10px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            background: var(--space-dark);
+            color: var(--text-primary);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 229, 255, 0.3);
+        }
+
+        /* Chatbot Styles - Tema Tecnonauta */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
+            border: 2px solid rgba(0, 229, 255, 0.5);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.8);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            background: var(--stellar-orange);
+            border: 3px solid var(--primary-color);
+            border-radius: 50%;
+            display: none;
+            animation: cosmic-pulse 2s infinite;
+        }
+
+        @keyframes cosmic-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 111, 0, 0.5); }
+            50% { transform: scale(1.2); box-shadow: 0 0 20px rgba(255, 111, 0, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 111, 0, 0.5); }
+        }
+
+        .chatbot-box {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 420px;
+            height: 650px;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 229, 255, 0.3);
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
+            color: white;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+        }
+
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chatbot-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 420px;
+            background: rgba(13, 20, 33, 0.8);
+        }
+
+        .welcome-message {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(156, 39, 176, 0.1) 100%);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .welcome-message h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .welcome-message p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .quick-btn {
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
+            color: white;
+            border: 1px solid rgba(0, 229, 255, 0.5);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        }
+
+        .quick-btn:hover {
+            background: linear-gradient(45deg, var(--neon-blue), var(--accent-color));
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+        }
+
+        .user-message, .bot-message {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .user-avatar, .bot-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            border: 2px solid rgba(0, 229, 255, 0.3);
+        }
+
+        .user-avatar {
+            background: linear-gradient(45deg, var(--neon-purple), var(--cosmic-purple));
+            color: white;
+        }
+
+        .bot-avatar {
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-blue));
+            color: white;
+        }
+
+        .message-bubble {
+            max-width: 250px;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.4;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .user-bubble {
+            background: linear-gradient(45deg, var(--neon-purple), var(--cosmic-purple));
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .bot-bubble {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--text-primary);
+            border-bottom-left-radius: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+        .quick-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .user-message, .bot-message {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .user-avatar, .bot-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .bot-avatar {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .message-bubble {
+            max-width: 250px;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+
+        .user-bubble {
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .bot-bubble {
+            background: rgba(26, 35, 126, 0.8);
+            color: var(--text-primary);
+            border-bottom-left-radius: 6px;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .chatbot-input-area {
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 229, 255, 0.3);
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+            background: rgba(10, 14, 39, 0.8);
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: rgba(26, 35, 126, 0.3);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            border: none;
+            background: none;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            max-height: 80px;
+            color: var(--text-primary);
+        }
+
+        .emoji-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 0.5rem;
+            padding: 0.2rem;
+        }
+
+        .send-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chatbot-box {
+                width: calc(100vw - 20px);
+                height: calc(100vh - 40px);
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones tecnonauta adicionales */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes float {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-10px);
-   
-} }
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Efectos hover para las features */
+        .feature:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
     </style>
 </head>
- 
-<body>
-            <!-- Fondo combinado: engranajes, circuitos, partículas y figuras humanoides -->
-            <svg class="gears-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:0.13;" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Engranajes -->
-                <g>
-                    <g>
-                        <circle cx="400" cy="300" r="70" stroke="#ffe066" stroke-width="8" fill="none"/>
-                        <g>
-                            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 400 300" to="360 400 300" dur="12s" repeatCount="indefinite"/>
-                            <rect x="390" y="220" width="20" height="30" rx="6" fill="#ffe066"/>
-                            <rect x="390" y="350" width="20" height="30" rx="6" fill="#ffe066"/>
-                            <rect x="320" y="290" width="30" height="20" rx="6" fill="#ffe066"/>
-                            <rect x="470" y="290" width="30" height="20" rx="6" fill="#ffe066"/>
-                        </g>
-                    </g>
-                    <g>
-                        <circle cx="1200" cy="700" r="50" stroke="#fab005" stroke-width="6" fill="none"/>
-                        <g>
-                            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 1200 700" to="-360 1200 700" dur="8s" repeatCount="indefinite"/>
-                            <rect x="1192" y="650" width="16" height="22" rx="4" fill="#fab005"/>
-                            <rect x="1192" y="728" width="16" height="22" rx="4" fill="#fab005"/>
-                            <rect x="1150" y="692" width="22" height="16" rx="4" fill="#fab005"/>
-                            <rect x="1228" y="692" width="22" height="16" rx="4" fill="#fab005"/>
-                        </g>
-                    </g>
-                    <g>
-                        <circle cx="900" cy="200" r="35" stroke="#fff" stroke-width="4" fill="none"/>
-                        <g>
-                            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 900 200" to="360 900 200" dur="6s" repeatCount="indefinite"/>
-                            <rect x="895" y="165" width="10" height="15" rx="3" fill="#fff"/>
-                            <rect x="895" y="220" width="10" height="15" rx="3" fill="#fff"/>
-                            <rect x="865" y="195" width="15" height="10" rx="3.5" fill="#fff"/>
-                            <rect x="920" y="195" width="15" height="10" rx="3.5" fill="#fff"/>
-                        </g>
-                    </g>
-                </g>
-                <!-- Circuitos animados -->
-                <g stroke="#ffe066" stroke-width="2">
-                    <polyline points="200,100 400,100 400,300 600,300"/>
-                    <polyline points="800,200 1000,200 1000,400 1200,400"/>
-                    <polyline points="1400,500 1600,500 1600,700 1800,700"/>
-                    <polyline points="300,800 500,800 500,1000 700,1000"/>
-                    <circle cx="400" cy="100" r="8" fill="#ffffffff">
-                        <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="1000" cy="200" r="8" fill="#ffffffff">
-                        <animate attributeName="r" values="8;14;8" dur="2.2s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="1600" cy="500" r="8" fill="#ffffffff">
-                        <animate attributeName="r" values="8;14;8" dur="2.4s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="500" cy="800" r="8" fill="#ffffffff">
-                        <animate attributeName="r" values="8;14;8" dur="2.1s" repeatCount="indefinite"/>
-                    </circle>
-                </g>
-                        <!-- Partículas suaves -->
-                        <g>
-                            <circle cx="300" cy="900" r="18" fill="#fff" opacity="0.13">
-                                <animate attributeName="cy" values="900;200;900" dur="12s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="1700" cy="200" r="12" fill="#ffffffff" opacity="0.13">
-                                <animate attributeName="cy" values="200;800;200" dur="10s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="800" cy="1000" r="10" fill="#ffffffff" opacity="0.13">
-                                <animate attributeName="cy" values="1000;400;1000" dur="14s" repeatCount="indefinite"/>
-                            </circle>
-                        </g>
-                        <!-- Figuras humanoides animadas (minimalistas) -->
-                        <g>
-                            <!-- Humanoide 1 -->
-                            <g>
-                                <circle cx="250" cy="400" r="22" fill="#ffffffff"/>
-                                <rect x="238" y="422" width="24" height="60" rx="12" fill="#ffffffff"/>
-                                <rect x="230" y="482" width="10" height="40" rx="5" fill="#ffffffff">
-                                    <animate attributeName="y" values="482;492;482" dur="2.5s" repeatCount="indefinite"/>
-                                </rect>
-                                <rect x="260" y="482" width="10" height="40" rx="5" fill="#ffffffff">
-                                    <animate attributeName="y" values="482;472;482" dur="2.5s" repeatCount="indefinite"/>
-                                </rect>
-                            </g>
-                            <!-- Humanoide 2 -->
-                            <g>
-                                <circle cx="1700" cy="800" r="18" fill="#fab005"/>
-                                <rect x="1690" y="818" width="20" height="48" rx="10" fill="#fab005"/>
-                                <rect x="1682" y="866" width="8" height="28" rx="4" fill="#fab005">
-                                    <animate attributeName="y" values="866;876;866" dur="2.2s" repeatCount="indefinite"/>
-                                </rect>
-                                <rect x="1710" y="866" width="8" height="28" rx="4" fill="#fab005">
-                                    <animate attributeName="y" values="866;856;866" dur="2.2s" repeatCount="indefinite"/>
-                                </rect>
-                            </g>
-                            <!-- Humanoide 3 -->
-                            <g>
-                                <circle cx="1100" cy="300" r="15" fill="#fff"/>
-                                <rect x="1092" y="315" width="16" height="38" rx="8" fill="#fff"/>
-                                <rect x="1086" y="353" width="7" height="20" rx="3.5" fill="#fff">
-                                    <animate attributeName="y" values="353;363;353" dur="2.8s" repeatCount="indefinite"/>
-                                </rect>
-                                <rect x="1111" y="353" width="7" height="20" rx="3.5" fill="#fff">
-                                    <animate attributeName="y" values="353;343;353" dur="2.8s" repeatCount="indefinite"/>
-                                </rect>
-                            </g>
-                        </g>
-            </svg>
 
-    <nav>
+<body>
+    <!-- Fondo combinado: engranajes, circuitos, partículas y figuras humanoides -->
+    <svg class="gears-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:0.13;" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Engranajes -->
+        <g>
+            <g transform="translate(100,100)">
+                <circle cx="0" cy="0" r="50" fill="#00fff1" opacity="0.6">
+                    <animateTransform attributeName="transform" type="rotate" dur="8s" repeatCount="indefinite" values="0;360"/>
+                </circle>
+                <circle cx="0" cy="0" r="40" fill="none" stroke="#fff" stroke-width="2"/>
+                <polygon points="-15,-40 15,-40 20,-50 -20,-50" fill="#00c3ff"/>
+                <polygon points="-15,40 15,40 20,50 -20,50" fill="#00c3ff"/>
+                <polygon points="-40,-15 -40,15 -50,20 -50,-20" fill="#00c3ff"/>
+                <polygon points="40,-15 40,15 50,20 50,-20" fill="#00c3ff"/>
+            </g>
+            <g transform="translate(300,200)">
+                <circle cx="0" cy="0" r="30" fill="#9c27b0" opacity="0.7">
+                    <animateTransform attributeName="transform" type="rotate" dur="6s" repeatCount="indefinite" values="360;0"/>
+                </circle>
+                <circle cx="0" cy="0" r="20" fill="none" stroke="#fff" stroke-width="1"/>
+                <polygon points="-10,-25 10,-25 12,-30 -12,-30" fill="#00fff1"/>
+                <polygon points="-10,25 10,25 12,30 -12,30" fill="#00fff1"/>
+                <polygon points="-25,-10 -25,10 -30,12 -30,-12" fill="#00fff1"/>
+                <polygon points="25,-10 25,10 30,12 30,-12" fill="#00fff1"/>
+            </g>
+            <g transform="translate(1600,300)">
+                <circle cx="0" cy="0" r="70" fill="#ff6f00" opacity="0.5">
+                    <animateTransform attributeName="transform" type="rotate" dur="10s" repeatCount="indefinite" values="0;360"/>
+                </circle>
+                <circle cx="0" cy="0" r="55" fill="none" stroke="#fff" stroke-width="3"/>
+                <polygon points="-20,-55 20,-55 25,-70 -25,-70" fill="#00c3ff"/>
+                <polygon points="-20,55 20,55 25,70 -25,70" fill="#00c3ff"/>
+                <polygon points="-55,-20 -55,20 -70,25 -70,-25" fill="#00c3ff"/>
+                <polygon points="55,-20 55,20 70,25 70,-25" fill="#00c3ff"/>
+            </g>
+        </g>
+        <!-- Circuitos animados -->
+        <g stroke="#ffe066" stroke-width="2">
+            <path d="M0,400 Q200,300 400,400 T800,400" fill="none" opacity="0.4">
+                <animate attributeName="stroke-dasharray" dur="3s" repeatCount="indefinite" values="0,1000;1000,0"/>
+            </path>
+            <path d="M500,200 L700,200 L700,400 L900,400" fill="none" opacity="0.3">
+                <animate attributeName="stroke-dasharray" dur="4s" repeatCount="indefinite" values="0,800;800,0"/>
+            </path>
+            <path d="M1200,100 Q1400,200 1600,100" fill="none" opacity="0.5">
+                <animate attributeName="stroke-dasharray" dur="2.5s" repeatCount="indefinite" values="0,600;600,0"/>
+            </path>
+        </g>
+    </svg>
+
+    <!-- Navbar -->
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; background: rgba(26,33,62,0.85); border-bottom: 2px solid #00fff1; box-shadow: 0 4px 32px rgba(0,255,241,0.08); font-family: 'Orbitron', 'Poppins', Arial, sans-serif; letter-spacing: 2px; position: relative; z-index: 100;">
         <div style="display: flex; align-items: center; gap: 0.7rem;">
-            <img src="/static/img/mentora1.png" alt="Logo MenTora" style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;">
-            <h1 style="margin: 0;"></h1>
+            <h1 style="font-size: 2.1rem; margin: 0; color: #00fff1; text-shadow: 0 0 8px #00fff1, 0 0 2px #fff;">MenTora 🚀</h1>
         </div>
         <div>
-            <a href="/login">Iniciar Sesión</a>
-            <a href="/register">Registrarse</a>
+            <a href="{{ url_for('login') }}" style="text-decoration: none; color: #fff; margin-left: 1.2rem; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; letter-spacing: 1px; transition: color 0.2s, text-shadow 0.2s;" onmouseover="this.style.color='#00fff1'; this.style.textShadow='0 0 8px #00fff1';" onmouseout="this.style.color='#fff'; this.style.textShadow='';">Iniciar Sesión</a>
+            <a href="{{ url_for('register') }}" style="text-decoration: none; color: #fff; margin-left: 1.2rem; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; letter-spacing: 1px; transition: color 0.2s, text-shadow 0.2s;" onmouseover="this.style.color='#00fff1'; this.style.textShadow='0 0 8px #00fff1';" onmouseout="this.style.color='#fff'; this.style.textShadow='';">Registrarse</a>
         </div>
     </nav>
 
-
-
-    <section class="hero">
-        <h2> ACTIVA TU MENTE</h2>
-        <p>Explora, compite y conquista desafíos mientras te diviertes. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
-        <div class="cta-buttons">
-            <a href="/register">COMENZAR</a>
-            <a href="/login">YA TENGO CUENTA </a>
+    <!-- Hero Section -->
+    <section class="hero" style="text-align: center; padding: 2rem 2rem 2rem 2rem; animation: fadeIn 1.2s; position: relative;">
+        <h2 style="font-size: 3.6rem; margin-bottom: 1.2rem; color: #ffffffff; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; text-shadow: 0 0 16px #767777ff, 0 0 2px #fff; letter-spacing: 1px;">ACTIVA TU MENTE</h2>
+        <p style="font-size: 1.35rem; max-width: 650px; margin: 0 auto; color: #e0e7ef; text-shadow: 0 0 4px #00fff1;">Explora, compite y conquista desafíos mientras te diviertes. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
+        <div class="cta-buttons" style="margin-top: 2.5rem;">
+            <a href="{{ url_for('register') }}" style="text-decoration: none; background: linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%); color: #1a1a2e; padding: 1rem 2.5rem; border-radius: 40px; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; margin: 0 0.7rem; font-size: 1.15rem; box-shadow: 0 2px 18px #00fff1a0; letter-spacing: 1px; border: none; transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s; display: inline-block;" onmouseover="this.style.background='linear-gradient(90deg, #00c3ff 60%, #00fff1 100%)'; this.style.color='#fff'; this.style.transform='scale(1.08)'; this.style.boxShadow='0 4px 32px #00fff1cc';" onmouseout="this.style.background='linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%)'; this.style.color='#1a1a2e'; this.style.transform='scale(1)'; this.style.boxShadow='0 2px 18px #00fff1a0';">
+                🚀 Comenzar Gratis
+            </a>
+            <a href="#caracteristicas" style="text-decoration: none; background: linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%); color: #1a1a2e; padding: 1rem 2.5rem; border-radius: 40px; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; margin: 0 0.7rem; font-size: 1.15rem; box-shadow: 0 2px 18px #00fff1a0; letter-spacing: 1px; border: none; transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s; display: inline-block;" onmouseover="this.style.background='linear-gradient(90deg, #00c3ff 60%, #00fff1 100%)'; this.style.color='#fff'; this.style.transform='scale(1.08)'; this.style.boxShadow='0 4px 32px #00fff1cc';" onmouseout="this.style.background='linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%)'; this.style.color='#1a1a2e'; this.style.transform='scale(1)'; this.style.boxShadow='0 2px 18px #00fff1a0';">
+                ℹ️ Saber Más
+            </a>
         </div>
 
         <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
-        <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 200px; width: 280px; animation: float 3s ease-in-out infinite;">
+            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 200px; width: 280px; animation: float 3s ease-in-out infinite;" onerror="this.style.display='none';">
         </div>
     </section>
 
-    <section class="features" id="features">
-        <div class="feature">
-            <h3>Retos Inteligentes</h3>
-            <p>Preguntas diseñadas para activar tu pensamiento crítico y curiosidad.</p>
-        </div>
-        <div class="feature">
-            <h3> Gamificación Real</h3>
-            <p>Sube de nivel, desbloquea logros y compite en rankings por área.</p>
-        </div>
-        <div class="feature">
-            <h3> Comunidad Activa</h3>
-            <p>Debate respuestas, comparte ideas y aprende en grupo.</p>
-        </div>
-        <div class="feature">
-            <h3>Tu Panel Personal</h3>
-            <p>Visualiza tu progreso, estadísticas y próximos desafíos.</p>
-        </div>
-        <div class="feature">
-            <h3> Retos diarios</h3>
-            <p>Un nuevo desafío cada día para mantenerte motivado y aprendiendo.</p>
-        </div>
-        <div class="feature">
-            <h3> Retos colaborativos</h3>
-            <p>Trabaja en equipo y resuelve retos grupales para ganar recompensas extra.</p>
+    <!-- Features -->
+    <section class="features" id="caracteristicas">
+        <div class="container">
+            <h2 class="section-title">¿Por qué elegir {{ config.SITE_NAME }}?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Gamificación Avanzada</h3>
+                    <p>Sistema de puntos, niveles y logros que convierte el aprendizaje en una experiencia emocionante y motivadora.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">�</div>
+                    <h3>Biblioteca Digital</h3>
+                    <p>Acceso a recursos educativos de alta calidad en programación, matemáticas, ciencias y más áreas del conocimiento.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Rankings Competitivos</h3>
+                    <p>Compite con estudiantes de todo el mundo y sube en los rankings mientras demuestras tus habilidades.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Chat en Tiempo Real</h3>
+                    <p>Conecta con otros estudiantes, resuelve dudas y forma grupos de estudio en nuestra comunidad activa.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>IA Integrada</h3>
+                    <p>Asistente inteligente que genera contenido personalizado y te ayuda en tu proceso de aprendizaje.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics Detallados</h3>
+                    <p>Seguimiento completo de tu progreso con estadísticas detalladas para optimizar tu rendimiento académico.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="testimonials">
-        <h3>Lo que dicen nuestros usuarios</h3>
-        <div class="testimonial-slider">
-            <div class="testimonial">
-                “¡MenTora me motiva a aprender todos los días! Los retos son adictivos.”
-                <div class="author">— Sofía, estudiante</div>
-            </div>
-            <div class="testimonial">
-                “La gamificación y los logros hacen que el aprendizaje sea divertido.”
-                <div class="author">— Carlos, ingeniero</div>
-            </div>
-            <div class="testimonial">
-                “La comunidad es muy activa y siempre aprendo algo nuevo.”
-                <div class="author">— Mariana, docente</div>
+    <!-- Stats -->
+    <section class="stats" id="estadisticas">
+        <div class="container">
+            <h2 class="section-title">Únete a Nuestra Comunidad</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">15,000+</div>
+                    <div class="stat-label">Estudiantes Activos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Profesores Registrados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">Retos Completados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99%</div>
+                    <div class="stat-label">Satisfacción</div>
+                </div>
             </div>
         </div>
     </section>
 
-
-    <footer>
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 1.2rem; font-size: 1rem; background: rgba(26,33,62,0.85); color: #00fff1; letter-spacing: 1.5px; border-top: 2px solid #00fff1; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; text-shadow: 0 0 8px #00fff1;">
         &copy; 2025 MenTora. Conocimiento que te reta.
     </footer>
 
-    <!-- ChatBot flotante -->
-    <div id="chatbot-container" style="position:fixed;bottom:32px;right:32px;z-index:1000;">
-        <div id="chatbot-box" style="display:none;background:#23272f;border-radius:18px;box-shadow:0 4px 32px rgba(44,62,80,0.18);width:340px;max-width:90vw;overflow:hidden;">
-            <div style="background:#2a5298;color:#ffe066;padding:0.8rem 1.2rem;font-weight:bold;display:flex;align-items:center;justify-content:space-between;">
-                <span> MenToraBot</span>
-                <button onclick="toggleChatbot()" style="background:none;border:none;color:#ffe066;font-size:1.3rem;cursor:pointer;">×</button>
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" id="chatbot-toggle" onclick="toggleChatbot()">
+        <i class="fas fa-comments"></i>
+        <div class="notification-dot" id="notificationDot"></div>
+    </button>
+
+    <div class="chatbot-box" id="chatbot-box">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-robot"></i>
+                MenToraBot
             </div>
-            <div id="chatbot-messages" style="height:260px;overflow-y:auto;padding:1rem;background:#23272f;font-size:1rem;"></div>
-            <form id="chatbot-form" style="display:flex;border-top:1px solid #2a5298;background:#23272f;" onsubmit="sendChatbotMessage(event)">
-                <input id="chatbot-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" style="flex:1;padding:0.7rem;border:none;background:#23272f;color:#ffe066;font-size:1rem;outline:none;">
-                <button type="submit" style="background:#ffe066;color:#2a5298;font-weight:bold;border:none;padding:0 1.2rem;font-size:1.1rem;cursor:pointer;">Enviar</button>
-            </form>
+            <div class="chatbot-actions">
+                <button class="action-btn" onclick="clearChat()" title="Limpiar chat">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="action-btn" onclick="toggleChatbot()" title="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
-        <button id="chatbot-toggle" onclick="toggleChatbot()" style="background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:bold;border:none;border-radius:50%;width:60px;height:60px;box-shadow:0 2px 12px rgba(255,224,102,0.18);font-size:2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-            💬
-        </button>
+        
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="welcome-message">
+                <h3>¡Hola! Soy MenToraBot 🤖</h3>
+                <p>Tu asistente personal en {{ config.SITE_NAME }}. Estoy aquí para ayudarte con cualquier pregunta sobre la plataforma, estudios o funcionalidades.</p>
+                <div class="quick-suggestions" id="quickSuggestions">
+                    <button class="quick-btn" onclick="sendQuickMessage('¿Cómo funciona?')">¿Cómo funciona?</button>
+                    <button class="quick-btn" onclick="sendQuickMessage('¿Qué puedo hacer?')">¿Qué puedo hacer?</button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Consejos de estudio')">Consejos</button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Ayuda')">Ayuda</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typing-indicator">
+            <div class="bot-avatar">🤖</div>
+            <div>
+                MenToraBot está escribiendo...
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        </div>
+        
+        <form onsubmit="sendChatbotMessage(event)" class="chatbot-input-area">
+            <div class="input-wrapper">
+                <textarea 
+                    id="chatbot-input" 
+                    class="chatbot-input" 
+                    placeholder="Escribe tu pregunta..."
+                    rows="1"
+                    maxlength="500"
+                ></textarea>
+                <button type="button" class="emoji-btn" onclick="toggleEmojiPicker()" title="Añadir emoji">
+                    😊
+                </button>
+            </div>
+            <button type="submit" class="send-btn" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
     </div>
+
     <script>
+    // Variables globales del chatbot
+    let chatbotOpen = false;
+    let isTyping = false;
+    let messageCount = 0;
+
+    // Base de conocimiento enriquecida de MenTora
+    const botResponses = {
+        // === RESPUESTAS PRINCIPALES DE NAVEGACIÓN ===
+        'como funciona': '🎯 **MenTora es una plataforma educativa gamificada donde los estudiantes aprenden de forma interactiva mediante juegos, retos y logros.**\n\n**¿Cómo funciona?**\n• **Resolver Retos Intelectuales:** Quiz interactivos en múltiples categorías (programación, matemáticas, ciencias, historia, literatura, tecnología)\n• **Sistema de Puntos:** Gana puntos por cada respuesta correcta y avanza en tu nivel\n• **Rankings Competitivos:** Compite con otros estudiantes y profesores en tiempo real\n• **Logros y Insignias:** Desbloquea badges especiales por tus logros académicos\n• **Biblioteca Digital:** Accede a recursos educativos organizados por temas\n• **Profesores Admin:** Los profesores pueden crear retos personalizados\n\n**"Gamifica tu aprendizaje"** significa que el aprendizaje se vuelve más divertido y motivante a través de dinámicas de juego, como niveles, puntos, retos y recompensas.\n\n¡Todo mientras te diviertes aprendiendo! 🚀',
+        
+        // === PREGUNTAS ESPECÍFICAS DE INICIO ===
+        'que es mentora': '🎓 **MenTora es una plataforma educativa gamificada donde los estudiantes aprenden de forma interactiva mediante juegos, retos y logros.**\n\nTransformamos el aprendizaje tradicional en una experiencia emocionante donde cada respuesta correcta te acerca más a dominar nuevos conocimientos.\n\n📱 **Características principales:**\n• Optimizada para dispositivos móviles\n• Acceso gratuito para estudiantes y profesores\n• Sistema de gamificación completo\n• Interacción en tiempo real\n• Biblioteca de recursos educativos\n\n¿Te gustaría saber cómo registrarte o qué puedes hacer en la plataforma?',
+        
+        'acceso gratuito': '💰 **¡Sí! MenTora ofrece acceso completamente gratuito para estudiantes y profesores.**\n\nNo necesitas pagar nada para:\n• Crear tu cuenta y perfil\n• Acceder a todos los juegos y retos\n• Usar la biblioteca de recursos\n• Participar en rankings\n• Ganar logros y puntos\n• Chatear con la comunidad\n\nEn el futuro podríamos agregar funciones avanzadas premium, pero el núcleo de la plataforma siempre será gratuito.\n\n¡Comienza tu aventura de aprendizaje sin costo alguno! 🚀',
+        
+        'movil': '📱 **¡Por supuesto! La plataforma está completamente optimizada para dispositivos móviles.**\n\nPuedes usar MenTora desde:\n• 📱 Tu smartphone (Android/iOS)\n• 💻 Tu computadora o laptop\n• 📟 Tablet\n• 🖥️ Cualquier dispositivo con navegador web\n\n**Ventajas del diseño móvil:**\n• Interfaz responsive que se adapta a tu pantalla\n• Navegación táctil optimizada\n• Carga rápida incluso con conexión lenta\n• Todas las funciones disponibles en cualquier dispositivo\n\n¡Aprende donde quieras, cuando quieras!',
+        
+        'que puedo hacer': '✨ **En MenTora tienes muchas opciones:**\n\n📚 **Sección "Aprende más":** Biblioteca digital con recursos de:\n• Python, JavaScript, Java, C++, HTML/CSS\n• Algoritmos y estructuras de datos\n• Patrones de diseño y APIs REST\n• Matemáticas, física, química\n• Historia, literatura y más\n\n🎮 **Juegos Educativos:** Retos interactivos creados por profesores\n\n📊 **Tu Dashboard Personal:**\n• Ver tu progreso y nivel actual\n• Estadísticas de rendimiento\n• Historial de actividades\n• Ranking de líderes\n• Notificaciones importantes\n\n🏆 **Sistema de Logros:** Colecciona insignias por tus logros\n\n💬 **Chat en Vivo:** Interactúa con otros estudiantes en tiempo real',
+        
+        'consejos estudio': '📚 **Consejos personalizados para maximizar tu aprendizaje en MenTora:**\n\n⏰ **Organización:**\n• Establece sesiones de estudio de 25-30 minutos (Técnica Pomodoro)\n• Usa la biblioteca de MenTora para repasar antes de los retos\n• Revisa tu progreso diariamente en el dashboard\n\n🎯 **Estrategia de Juego:**\n• Empieza con retos básicos para ganar confianza\n• Enfócate en una categoría a la vez (ej: programación)\n• Participa en retos diarios para mantener racha\n• Usa el ranking como motivación sana\n\n💡 **Para Programación:**\n• Practica con los recursos de Python, JavaScript y Java\n• Estudia algoritmos antes de intentar retos avanzados\n• Usa la sección de patrones de diseño\n\n🤝 **Comunidad:**\n• Participa en el chat en vivo para resolver dudas\n• Compite sanamente con compañeros\n• Comparte tus logros para mantener motivación',
+        
+        'registro': '📝 **¿Cómo registrarse en MenTora?**\n\n**Opción 1:** Haz clic en el botón **"Comenzar Gratis"** 🚀 en la página principal\n**Opción 2:** Usa el botón **"Registrarse"** en la esquina superior derecha\n\n**📋 Proceso de registro:**\n**Paso 1:** Completa tus datos básicos:\n• Nombre de usuario único\n• Email válido (recibirás confirmación)\n• Contraseña segura (mín. 8 caracteres)\n\n**Paso 2:** Elige tu rol:\n• 🎓 **Estudiante** - Acceso a juegos, retos y biblioteca\n• 👨‍🏫 **Profesor** - Panel administrativo + funciones de estudiante\n\n**Paso 3:** Personaliza tu perfil y avatar\n\n**✅ Al completar el registro tendrás acceso inmediato a:**\n• Dashboard personal con estadísticas\n• Biblioteca de recursos educativos\n• Primer reto de bienvenida\n• Sistema de puntos iniciado en 0\n• Chat en vivo con la comunidad\n\n**¡Es completamente gratis y toma menos de 2 minutos!** ⚡',
+        
+        'login': '🔐 **Proceso de inicio de sesión:**\n\n1. **Clic en "Iniciar Sesión"** (navbar superior derecho)\n2. **Ingresa credenciales:** Usuario y contraseña\n3. **¡Bienvenido a tu dashboard!** Donde verás:\n\n📊 **Panel Principal:**\n• Puntos actuales y nivel\n• Progreso hacia siguiente nivel\n• Logros desbloqueados recientes\n• Ranking actual entre usuarios\n\n🎯 **Reto Especial del Día:** Desafío diario con puntos extra\n\n🔔 **Notificaciones:** Mensajes importantes del sistema\n\n📜 **Historial:** Tus actividades recientes\n\n**¿Olvidaste tu contraseña?** Usa la opción de recuperación en la página de login',
+        
+        // === RESPUESTAS ESPECIALIZADAS POR ÁREA ===
+        'programacion': '💻 **Sección de Programación en MenTora:**\n\n📚 **Biblioteca de Recursos (12 recursos disponibles):**\n• **Python para Principiantes:** Variables, funciones, bucles, estructuras de datos\n• **JavaScript ES6+ Moderno:** Arrow functions, async/await, destructuring\n• **Java Fundamentos:** POO, herencia, polimorfismo, interfaces\n• **C++ Avanzado:** Punteros, memoria dinámica, templates, STL\n• **Algoritmos y Estructuras de Datos:** Arrays, listas, pilas, árboles\n• **HTML5 y CSS3:** Responsive design, flexbox, grid\n• **React.js:** Componentes, hooks, contexto\n• **APIs REST y Flask:** Desarrollo de servicios web\n• **Git y Control de Versiones:** Branching, merging, GitHub\n• **Patrones de Diseño:** Singleton, Factory, Observer\n• **Testing y Depuración:** Unit testing, TDD\n• **SQL y Bases de Datos:** Consultas, joins, optimización\n\n🎮 **Retos de Programación:**\n• Preguntas sobre sintaxis y conceptos\n• Análisis de algoritmos y complejidad\n• Debugging y resolución de problemas\n• Mejores prácticas y patrones',
+        
+        'matematicas': '🧮 **Matemáticas en MenTora:**\n\n📖 **Recursos Disponibles:**\n• **Álgebra Lineal Básica:** Vectores, matrices, operaciones\n• **Cálculo Diferencial:** Límites, derivadas, aplicaciones\n• **Estadística y Probabilidad:** Distribuciones, análisis de datos\n• **Matemáticas Discretas:** Lógica, combinatoria, grafos\n• **Geometría Analítica:** Coordenadas, ecuaciones de rectas\n\n🎯 **Tipos de Retos:**\n• Problemas de cálculo paso a paso\n• Aplicaciones prácticas en programación\n• Análisis de algoritmos (Big O)\n• Probabilidad en ciencias computacionales\n\n💡 **Tips:**\n• Practica con calculadoras interactivas\n• Revisa fórmulas antes de los retos\n• Conecta matemáticas con programación',
+        
+        'biblioteca': '📚 **Biblioteca Digital de MenTora - Tu Centro de Aprendizaje:**\n\n🔍 **Búsqueda Inteligente:**\n• Busca por tema, tecnología o nivel\n• Filtros por categoría (programación, matemáticas, etc.)\n• Sugerencias automáticas\n\n📱 **Categorías Principales:**\n• **💻 Programación (12 recursos):** Desde Python básico hasta patrones avanzados\n• **🧮 Matemáticas (8 recursos):** Álgebra, cálculo, estadística\n• **🔬 Ciencias (6 recursos):** Física, química, biología\n• **🏛️ Historia (5 recursos):** Mundial, culturas, civilizaciones\n• **📖 Literatura (7 recursos):** Análisis de obras clásicas\n• **⚡ Tecnología (9 recursos):** IA, blockchain, tendencias\n\n✨ **Características:**\n• Contenido interactivo con ejemplos\n• Niveles: Básico, Intermedio, Avanzado\n• Tiempo estimado de estudio\n• Recursos descargables\n• Actualizaciones constantes',
+        
+        'dashboard': '📊 **Tu Dashboard Personal - Centro de Control:**\n\n🎯 **¿Cómo gano puntos en MenTora?**\nGanas puntos completando juegos, retos y quizzes. También puedes recibir puntos extra por participar activamente en actividades especiales.\n\n🆙 **¿Qué significa mi nivel?**\nTu nivel refleja tu progreso general en la plataforma. A medida que acumulas puntos, tu nivel aumenta automáticamente.\n\n🏆 **¿Dónde puedo ver mis logros?**\nTus logros se muestran en la sección "🏆 Logros" dentro del dashboard. Cada logro representa un hito importante en tu aprendizaje.\n\n⚡ **¿Qué es el "Reto Especial del Día"?**\nEs una actividad única disponible por tiempo limitado para ganar puntos y recompensas adicionales. ¡Renueva cada 24 horas!\n\n🥇 **¿Cómo funciona el ranking de líderes?**\nEl ranking muestra a los estudiantes con más puntos y niveles dentro de la plataforma. Es una forma divertida de competir sanamente.\n\n💬 **¿Cómo puedo hablar con un profesor?**\nPuedes usar el botón de chat en vivo para comunicarte con un profesor o soporte técnico en tiempo real.\n\n👤 **¿Cómo cambio mi avatar o nombre?**\nHaz clic en "Editar Perfil" desde el menú del usuario en la esquina superior derecha.\n\n🔐 **¿Qué pasa si cierro sesión?**\nPerderás el acceso al panel y deberás iniciar sesión de nuevo para continuar. Tus datos y progreso se guardan automáticamente.',
+        
+        'juegos': '🎮 **Sección de Juegos y Retos:**\n\n🎯 **Tipos de Contenido:**\n• **Quiz Interactivos:** Preguntas de opción múltiple\n• **Retos de Programación:** Ejercicios de código\n• **Juegos Educativos:** Creados por profesores\n• **Desafíos Colaborativos:** Trabajo en equipo\n\n⭐ **Características:**\n• **Sistema de Puntos:** Gana puntos por respuestas correctas\n• **Cronómetro:** Retos contra tiempo\n• **Múltiples Intentos:** Practica hasta dominar\n• **Retroalimentación:** Explicaciones de respuestas\n\n🏅 **Logros Especiales:**\n• Racha de respuestas correctas\n• Completar categorías específicas\n• Participación en retos diarios\n• Tiempo récord en resolución\n\n📚 **Integración con Biblioteca:** Estudia antes de jugar para mejores resultados',
+        
+        'profesores': '👨‍🏫 **Panel del Profesor - Gestión Educativa Completa:**\n\n🎯 **¿Qué puedo hacer desde el panel de profesor?**\nPuedes gestionar tus quizzes, juegos creados y consultar el desempeño detallado de tus alumnos en tiempo real.\n\n➕ **¿Cómo agrego un nuevo quiz?**\nEn la sección "Mis Quizzes", usa el botón "Agregar Quiz" para crear uno nuevo. Incluye preguntas, respuestas y nivel de dificultad.\n\n📈 **¿Dónde veo los resultados de mis alumnos?**\nEn la tabla de "Alumnos inscritos en tu área" podrás consultar sus puntajes, correos y progreso individual.\n\n✏️ **¿Puedo modificar un quiz existente?**\nSí, selecciona el quiz que desees editar y usa el botón de edición correspondiente. Puedes cambiar preguntas, respuestas y configuraciones.\n\n🏷️ **¿Qué significa el área del profesor?**\nCada profesor pertenece a un área temática (por ejemplo, matemáticas, tecnología o inglés) y solo ve alumnos asociados a esa área específica.\n\n💬 **¿Puedo comunicarme con mis alumnos?**\nSí, puedes usar el chat integrado o las funciones de comunicación dentro del dashboard para contactar estudiantes.\n\n🔐 **¿Qué pasa si cierro sesión?**\nTu sesión se cerrará y deberás volver a iniciar sesión con tu cuenta de profesor. Todos tus datos se guardan automáticamente.\n\n📊 **Herramientas adicionales:**\n• Sistema de logros personalizables\n• Estadísticas detalladas de rendimiento\n• Generación automática de contenido con IA\n• Exportación de reportes y exámenes',
+        
+        'ayuda': '🆘 **Centro de Ayuda MenTora:**\n\n📞 **Soporte Técnico:**\n• **Chat en Vivo:** Habla con otros usuarios en tiempo real\n• **MenToraBot:** Asistente 24/7 (¡soy yo!)\n• **Email Soporte:** Para problemas técnicos complejos\n\n❓ **Preguntas Frecuentes:**\n• ¿Cómo restablecer contraseña?\n• ¿Cómo subir de nivel más rápido?\n• ¿Qué hacer si un reto no carga?\n• ¿Cómo acceder a recursos premium?\n\n📖 **Guías de Usuario:**\n• Tutorial de inicio para nuevos usuarios\n• Guía avanzada de la biblioteca\n• Manual para profesores\n• Mejores prácticas de estudio\n\n🔧 **Reportar Problemas:**\n• Bugs en la plataforma\n• Contenido incorrecto\n• Sugerencias de mejora\n• Solicitudes de nuevas funciones',
+        
+        'tecnologia': '⚡ **Sección de Tecnología Avanzada:**\n\n🤖 **Inteligencia Artificial:**\n• Fundamentos de Machine Learning\n• Redes neuronales básicas\n• Aplicaciones en la vida cotidiana\n• Ética en IA\n\n🔗 **Blockchain y Criptomonedas:**\n• Conceptos básicos de blockchain\n• Smart contracts\n• NFTs y aplicaciones\n\n☁️ **Cloud Computing:**\n• AWS, Azure, Google Cloud\n• Servicios en la nube\n• DevOps y deployment\n\n📱 **Desarrollo Móvil:**\n• React Native\n• Flutter\n• Ionic\n• App Store optimization',
+
+        // === RESPUESTA POR DEFECTO EXPANDIDA ===
+        'default': '🤔 **¡Excelente pregunta!** Como MenToraBot, el asistente oficial especializado con conocimiento completo de la plataforma, puedo ayudarte con absolutamente todo:\n\n**🏗️ ARQUITECTURA Y TECNOLOGÍA:**\n• Detalles técnicos: Flask, SQLAlchemy, Socket.IO, WebSockets\n• 10+ tablas de base de datos con relaciones complejas\n• APIs REST completas y endpoints especializados\n• Sistema de autenticación y seguridad avanzado\n• Integración de IA local para generación automática\n\n**🎓 SISTEMA EDUCATIVO COMPLETO:**\n• Quiz interactivos con múltiples tipos de pregunta\n• Biblioteca digital: 47+ recursos en 6 categorías principales\n• Sistema de juegos: programación, lógica, colaborativos\n• Generación automática de exámenes exportables\n• Analytics detallado de rendimiento estudiantil\n\n**🎮 GAMIFICACIÓN AVANZADA:**\n• 100 niveles con progresión exponencial balanceada\n• 50+ logros en 6 categorías diferentes\n• Sistema de puntos con múltiples fuentes\n• Rankings globales y por especialización\n• Eventos especiales y competencias estacionales\n\n**👥 GESTIÓN DE USUARIOS:**\n• Roles granulares: estudiante/profesor/admin\n• Perfiles completamente personalizables\n• Sistema de permisos y moderación automática\n• Herramientas administrativas completas\n• Analytics y reportes institucionales\n\n**💬 COMUNICACIÓN EN TIEMPO REAL:**\n• Chat con WebSockets y moderación IA\n• Sistema de notificaciones inteligente\n• Mensajes multimedia y formato rico\n• Grupos de estudio y mentorías\n\n**🔧 HERRAMIENTAS PARA PROFESORES:**\n• Panel administrativo con 15+ funcionalidades\n• Creación de contenido con editor visual\n• Sistema de logros personalizable\n• Estadísticas detalladas de estudiantes\n• Generación automática con IA local\n\n**🚀 ¡PREGÚNTAME LO QUE NECESITES!**\nTengo conocimiento exhaustivo de cada línea de código, cada tabla de la base de datos, cada funcionalidad y cada proceso de MenTora. ¡No hay pregunta demasiado técnica o demasiado específica para mí!'
+    };
+
+    // Función para alternar el chatbot
     function toggleChatbot() {
         const box = document.getElementById('chatbot-box');
         const btn = document.getElementById('chatbot-toggle');
-        if (box.style.display === 'none') {
-            box.style.display = 'block';
+        const notificationDot = document.getElementById('notificationDot');
+        
+        if (!chatbotOpen) {
+            box.style.display = 'flex';
             btn.style.display = 'none';
+            chatbotOpen = true;
+            notificationDot.style.display = 'none';
+            
+            // Focus en el input
+            setTimeout(() => {
+                document.getElementById('chatbot-input').focus();
+            }, 300);
         } else {
             box.style.display = 'none';
             btn.style.display = 'flex';
+            chatbotOpen = false;
         }
     }
+
+    // Función para limpiar el chat
+    function clearChat() {
+        const messages = document.getElementById('chatbot-messages');
+        const welcomeMessage = messages.querySelector('.welcome-message');
+        messages.innerHTML = '';
+        messages.appendChild(welcomeMessage);
+        messageCount = 0;
+        
+        // Mostrar sugerencias nuevamente
+        document.getElementById('quickSuggestions').style.display = 'flex';
+    }
+
+    // Función para enviar mensajes rápidos
+    function sendQuickMessage(message) {
+        document.getElementById('chatbot-input').value = message;
+        sendChatbotMessage(new Event('submit'));
+    }
+
+    // Función principal para enviar mensajes
     async function sendChatbotMessage(e) {
         e.preventDefault();
+        
+        if (isTyping) return;
+        
         const input = document.getElementById('chatbot-input');
         const messages = document.getElementById('chatbot-messages');
+        const sendBtn = document.querySelector('.send-btn');
         const userMsg = input.value.trim();
+        
         if (!userMsg) return;
-        messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:#ffe066;color:#2a5298;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;'>${userMsg}</span></div>`;
+        
+        // Ocultar sugerencias después del primer mensaje
+        if (messageCount === 0) {
+            document.getElementById('quickSuggestions').style.display = 'none';
+        }
+        
+        messageCount++;
+        
+        // Agregar mensaje del usuario
+        addUserMessage(userMsg);
+        
+        // Limpiar input y deshabilitar botón
         input.value = '';
-        messages.scrollTop = messages.scrollHeight;
-        // Llamar al backend
-        try {
-            const res = await fetch('/chatbot', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMsg })
-            });
-            const data = await res.json();
-            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#ffe066;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>${data.response}</span></div>`;
-            messages.scrollTop = messages.scrollHeight;
-        } catch (err) {
-            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#ffe066;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>Error de conexión con el bot.</span></div>`;
+        sendBtn.disabled = true;
+        
+        // Mostrar indicador de escritura
+        showTypingIndicator();
+        
+        // Generar respuesta del bot
+        setTimeout(async () => {
+            hideTypingIndicator();
+            
+            // Usar siempre respuesta local para mayor confiabilidad
+            console.log('Procesando mensaje:', userMsg);
+            const localResponse = getLocalResponse(userMsg);
+            console.log('Respuesta generada:', localResponse.substring(0, 100) + '...');
+            addBotMessage(localResponse);
+            
+            sendBtn.disabled = false;
+        }, Math.random() * 1000 + 800); // Simular tiempo de respuesta humano
+    }
+
+    // Función para obtener respuesta local enriquecida
+    function getLocalResponse(message) {
+        const msg = message.toLowerCase().trim();
+        console.log('🔍 Analizando mensaje:', msg);
+        
+        // === RESPUESTAS DIRECTAS SIMPLES ===
+        
+        // Saludos
+        if (msg.includes('hola') || msg.includes('hello') || msg.includes('hey') || msg.includes('buenos')) {
+            const hora = new Date().getHours();
+            let saludo = '👋 ¡Hola!';
+            if (hora >= 6 && hora < 12) saludo = '🌅 ¡Buenos días!';
+            else if (hora >= 12 && hora < 18) saludo = '☀️ ¡Buenas tardes!';  
+            else if (hora >= 18 || hora < 6) saludo = '🌙 ¡Buenas noches!';
+            
+            return `${saludo} Soy **MenToraBot**, tu asistente personal en la plataforma.\n\n¿En qué puedo ayudarte hoy? Puedes preguntarme sobre:\n• 📚 Cómo usar la biblioteca de recursos\n• 🎮 Juegos y retos disponibles\n• 📊 Tu progreso y estadísticas\n• 💻 Recursos de programación\n• 🧮 Materiales de matemáticas\n• 🏆 Sistema de logros y niveles\n• 💬 Chat en vivo con la comunidad\n\n¡Estoy aquí para hacer tu experiencia en MenTora increíble!`;
+        }
+        
+        // ¿Qué es MenTora?
+        if (msg.includes('que es mentora') || msg.includes('que es la plataforma') || msg.includes('explicame mentora')) {
+            console.log('✅ Detectado: que es mentora');
+            console.log('📋 Respuesta disponible:', botResponses['que es mentora'] ? 'SÍ' : 'NO');
+            return botResponses['que es mentora'] || 'Error: Respuesta no encontrada';
+        }
+        
+        // ¿Es gratis? / Precio
+        if (msg.includes('es gratis') || msg.includes('gratis') || msg.includes('pagar') || msg.includes('costo') || msg.includes('precio') || msg.includes('gratuito')) {
+            console.log('✅ Detectado: acceso gratuito');
+            console.log('📋 Respuesta disponible:', botResponses['acceso gratuito'] ? 'SÍ' : 'NO');
+            return botResponses['acceso gratuito'] || 'Error: Respuesta no encontrada';
+        }
+        
+        // ¿Cómo gano puntos?
+        if (msg.includes('como gano puntos') || msg.includes('ganar puntos') || msg.includes('conseguir puntos')) {
+            console.log('✅ Detectado: como gano puntos');
+            console.log('📋 Respuesta dashboard disponible:', botResponses.dashboard ? 'SÍ' : 'NO');
+            return botResponses.dashboard || 'Error: Respuesta dashboard no encontrada';
+        }
+        
+        // ¿Cómo funciona?
+        if (msg.includes('como funciona') || msg.includes('explicame') || msg.includes('gamifica')) {
+            console.log('✅ Detectado: como funciona');
+            return botResponses['como funciona'];
+        }
+        
+        // ¿Qué puedo hacer?
+        if (msg.includes('que puedo hacer') || msg.includes('que hay') || msg.includes('funcionalidades')) {
+            console.log('✅ Detectado: que puedo hacer');
+            return botResponses['que puedo hacer'];
+        }
+        
+        // Móvil / Dispositivos
+        if (msg.includes('movil') || msg.includes('telefono') || msg.includes('celular') || msg.includes('dispositivo') || msg.includes('tablet')) {
+            console.log('Detectado: movil');
+            return botResponses['movil'];
+        }
+        
+        // Ayuda
+        if (msg.includes('ayuda') || msg.includes('help') || msg.includes('auxilio')) {
+            console.log('Detectado: ayuda');
+            return botResponses.ayuda;
+        }
+        
+        // Consejos
+        if (msg.includes('consejos') || msg.includes('tips') || msg.includes('recomendaciones')) {
+            console.log('Detectado: consejos');
+            return botResponses['consejos estudio'];
+        }
+        
+        // Programación
+        if (msg.includes('programacion') || msg.includes('codigo') || msg.includes('python') || msg.includes('javascript')) {
+            console.log('Detectado: programacion');
+            return botResponses.programacion;
+        }
+        
+        // Matemáticas
+        if (msg.includes('matematicas') || msg.includes('mates') || msg.includes('calculo')) {
+            console.log('Detectado: matematicas');
+            return botResponses.matematicas;
+        }
+        
+        // Biblioteca
+        if (msg.includes('biblioteca') || msg.includes('recursos') || msg.includes('materiales')) {
+            console.log('Detectado: biblioteca');
+            return botResponses.biblioteca;
+        }
+        
+        // Dashboard y preguntas específicas de estudiantes
+        if (msg.includes('dashboard') || msg.includes('progreso') || msg.includes('como gano puntos') || 
+            msg.includes('que significa mi nivel') || msg.includes('donde veo logros') || 
+            msg.includes('reto especial') || msg.includes('ranking') || msg.includes('chat profesor') ||
+            msg.includes('cambio avatar') || msg.includes('editar perfil') || msg.includes('cierro sesion')) {
+            console.log('Detectado: dashboard');
+            return botResponses.dashboard;
+        }
+        
+        // Preguntas específicas de puntos y niveles
+        if (msg.includes('ganar puntos') || msg.includes('como subo nivel') || msg.includes('puntos extra')) {
+            console.log('Detectado: dashboard (puntos)');
+            return botResponses.dashboard;
+        }
+        
+        // Logros y ranking
+        if (msg.includes('logros') || msg.includes('ranking') || msg.includes('lider') || msg.includes('posicion')) {
+            console.log('Detectado: dashboard (logros)');
+            return botResponses.dashboard;
+        }
+        
+        // Juegos
+        if (msg.includes('juegos') || msg.includes('retos') || msg.includes('quiz')) {
+            console.log('Detectado: juegos');
+            return botResponses.juegos;
+        }
+        
+        // Profesores y panel docente
+        if (msg.includes('profesor') || msg.includes('admin') || msg.includes('docente') ||
+            msg.includes('panel profesor') || msg.includes('agregar quiz') || msg.includes('crear quiz') ||
+            msg.includes('resultados alumnos') || msg.includes('modificar quiz') || msg.includes('area profesor') ||
+            msg.includes('comunicarme alumnos') || msg.includes('gestionar') || msg.includes('ensenar')) {
+            console.log('Detectado: profesores');
+            return botResponses.profesores;
+        }
+        
+        // Específico para gestión de quizzes
+        if (msg.includes('quiz') && (msg.includes('crear') || msg.includes('editar') || msg.includes('modificar'))) {
+            console.log('Detectado: profesores (quiz)');
+            return botResponses.profesores;
+        }
+        
+        // Registro
+        if (msg.includes('registro') || msg.includes('registrarme') || msg.includes('crear cuenta')) {
+            console.log('Detectado: registro');
+            return botResponses.registro;
+        }
+        
+        // Login
+        if (msg.includes('login') || msg.includes('iniciar sesion') || msg.includes('entrar')) {
+            console.log('Detectado: login');
+            return botResponses.login;
+        }
+        
+        // Tecnología
+        if (msg.includes('tecnologia') || msg.includes('inteligencia artificial') || msg.includes('blockchain')) {
+            console.log('Detectado: tecnologia');
+            return botResponses.tecnologia;
+        }
+        
+        // Agradecimientos
+        if (msg.includes('gracias') || msg.includes('excelente') || msg.includes('perfecto')) {
+            return '😊 ¡De nada! Es un placer ayudarte.\n\nComo asistente de MenTora, mi objetivo es hacer tu experiencia de aprendizaje lo más fluida posible. \n\n¿Hay algo más en lo que pueda asistirte? Puedo ayudarte con:\n• 🔍 Encontrar recursos específicos\n• 📈 Optimizar tu progreso\n• 🎯 Estrategias de estudio\n• 🎮 Recomendaciones de retos\n\n¡Sigue explorando y aprendiendo!';
+        }
+        
+        // Despedidas
+        if (msg.includes('adios') || msg.includes('bye') || msg.includes('hasta luego')) {
+            return '👋 ¡Hasta luego! Fue un placer ayudarte.\n\n🎯 **Recuerda:**\n• Sigue practicando con los retos diarios\n• Explora la biblioteca para más conocimiento\n• Compite en los rankings para subir de nivel\n\n¡Nos vemos pronto en MenTora! 🚀\n\n*Tip: Siempre puedes volver a chatear conmigo cuando necesites ayuda.*';
+        }
+        
+        // Problemas técnicos
+        if (msg.includes('problema') || msg.includes('error') || msg.includes('no funciona')) {
+            return '🔧 **Soporte Técnico de MenTora**\n\n😔 Lamento escuchar que tienes problemas. Aquí tienes algunas soluciones:\n\n**🔄 Soluciones Rápidas:**\n• Refrescar la página (F5 o Ctrl+R)\n• Limpiar caché del navegador\n• Verificar tu conexión a internet\n• Intentar en modo incógnito\n\n**📱 Si persiste el problema:**\n• Intenta desde otro navegador\n• Verifica que JavaScript esté habilitado\n• Desactiva extensiones que puedan interferir\n\n**📞 Contacto Directo:**\nSi el problema continúa, contacta a nuestro equipo técnico con:\n• Descripción detallada del problema\n• Navegador y versión que usas\n• Pasos que realizaste antes del error\n\n¡Estamos aquí para ayudarte!';
+        }
+        
+        console.log('❓ Usando respuesta default para:', msg);
+        // Respuesta por defecto actualizada
+        const defaultResponse = '🤖 **¡Hola! Soy MenToraBot, tu asistente personal en MenTora**\n\n**📋 Preguntas sobre la plataforma:**\n• "¿Qué es MenTora?" - Conoce nuestra plataforma educativa\n• "¿Cómo funciona?" - Gamificación y dinámicas de aprendizaje\n• "¿Es gratis?" - Información sobre acceso gratuito\n• "¿Funciona en móvil?" - Compatibilidad con dispositivos\n• "¿Cómo me registro?" - Proceso paso a paso\n\n**🎮 Para estudiantes:**\n• "¿Cómo gano puntos?" - Sistema de puntuación\n• "¿Qué significa mi nivel?" - Progreso y niveles\n• "¿Dónde veo mis logros?" - Insignias y recompensas\n• "Reto especial del día" - Actividades diarias\n• "Ranking de líderes" - Competencia sana\n• "Cambiar avatar" - Personalización de perfil\n\n**👨‍🏫 Para profesores:**\n• "Panel de profesor" - Herramientas docentes\n• "Crear quiz" - Gestión de evaluaciones\n• "Resultados de alumnos" - Seguimiento académico\n• "Área del profesor" - Organización por materias\n\n**📚 Contenido educativo:**\n• **Programación** - Python, JavaScript, algoritmos\n• **Matemáticas** - Cálculo, álgebra, estadística\n• **Biblioteca** - Recursos y materiales\n• **Juegos** - Retos interactivos\n\n**💡 También puedo ayudarte con:**\n• Consejos de estudio\n• Soporte técnico\n• Chat en vivo\n• Inicio de sesión\n\n**¡Escribe cualquier tema y te daré información detallada! 🚀**';
+        console.log('📤 Retornando respuesta default');
+        return defaultResponse;
+    }
+
+    // Función para agregar mensaje del usuario
+    function addUserMessage(message) {
+        const messages = document.getElementById('chatbot-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'user-message';
+        messageDiv.innerHTML = `
+            <div class="user-avatar">👤</div>
+            <div class="message-bubble user-bubble">${escapeHtml(message)}</div>
+        `;
+        messages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    // Función para agregar mensaje del bot
+    function addBotMessage(message) {
+        const messages = document.getElementById('chatbot-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'bot-message';
+        messageDiv.innerHTML = `
+            <div class="bot-avatar">🤖</div>
+            <div class="message-bubble bot-bubble">${formatBotMessage(message)}</div>
+        `;
+        messages.appendChild(messageDiv);
+        scrollToBottom();
+        
+        // Mostrar notificación si el chat está cerrado
+        if (!chatbotOpen) {
+            document.getElementById('notificationDot').style.display = 'block';
         }
     }
+
+    // Función para mostrar indicador de escritura
+    function showTypingIndicator() {
+        isTyping = true;
+        document.getElementById('typing-indicator').style.display = 'flex';
+        scrollToBottom();
+    }
+
+    // Función para ocultar indicador de escritura
+    function hideTypingIndicator() {
+        isTyping = false;
+        document.getElementById('typing-indicator').style.display = 'none';
+    }
+
+    // Función para hacer scroll al final
+    function scrollToBottom() {
+        const messages = document.getElementById('chatbot-messages');
+        setTimeout(() => {
+            messages.scrollTop = messages.scrollHeight;
+        }, 100);
+    }
+
+    // Función para escapar HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Función para formatear mensajes del bot
+    function formatBotMessage(message) {
+        console.log('🎨 Formateando mensaje:', message.substring(0, 50) + '...');
+        let formatted = escapeHtml(message);
+        
+        // Convertir markdown básico a HTML
+        formatted = formatted
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **texto** -> <strong>texto</strong>
+            .replace(/\*(.*?)\*/g, '<em>$1</em>') // *texto* -> <em>texto</em>
+            .replace(/\n• /g, '<br>• ') // Bullets con salto de línea
+            .replace(/\n\n/g, '<br><br>') // Doble salto de línea
+            .replace(/\n/g, '<br>'); // Salto de línea simple
+        
+        console.log('✨ Mensaje formateado completado');
+        return formatted;
+    }
+
+    // Función para alternar picker de emojis (placeholder)
+    function toggleEmojiPicker() {
+        const emojis = ['😊', '😂', '🤔', '👍', '❤️', '🎉', '💡', '🔥', '💯', '👏'];
+        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+        const input = document.getElementById('chatbot-input');
+        input.value += randomEmoji;
+        input.focus();
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-focus en el input cuando se abre el chat
+        const input = document.getElementById('chatbot-input');
+        
+        // Detectar Enter para enviar
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatbotMessage(e);
+            }
+        });
+        
+        // Prevenir envío de formulario vacío
+        input.addEventListener('input', function() {
+            const sendBtn = document.querySelector('.send-btn');
+            sendBtn.disabled = !this.value.trim();
+        });
+        
+        // Cerrar chat con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && chatbotOpen) {
+                toggleChatbot();
+            }
+        });
+        
+        // Mostrar notificación inicial después de unos segundos
+        setTimeout(() => {
+            if (!chatbotOpen) {
+                document.getElementById('notificationDot').style.display = 'block';
+            }
+        }, 5000);
+    });
     </script>
 </body>
 </html>
-
