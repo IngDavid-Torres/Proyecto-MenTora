@@ -25,6 +25,12 @@ app.config['SITE_NAME'] = 'MenTora'
 db.init_app(app)
 socketio = SocketIO(app)
 
+# Activar recarga automática
+app.config['DEBUG'] = True
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
+
+
 # Función personalizada para manejar JSON correctamente
 @app.template_filter('safe_json')
 def safe_json_filter(data):
@@ -2004,3 +2010,4 @@ def edit_question(question_id):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     socketio.run(app, host='0.0.0.0', port=port, debug=False)
+

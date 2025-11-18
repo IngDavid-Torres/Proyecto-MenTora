@@ -6,465 +6,400 @@
     <title>{{ config.SITE_NAME }} - Gamifica tu Aprendizaje</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
+       
+    body {
+        margin: 0;
+        font-family: 'Poppins', 'Orbitron', Arial, sans-serif;
+        background: linear-gradient(120deg, #114c5f 0%, #114c5f 100%);
+        color: #638385ff;
+        overflow-x: hidden;
+        min-height: 100vh;
+        scroll-behavior: smooth;
+    }
+
+
+     nav {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       padding: 1.0rem 2rem;
+       background: #638385ff;
+       border-bottom: 2px solid #fff;
+       box-shadow: 0 4px 32px rgba(0,255,241,0.08);
+       font-family: 'Exo 2', sans-serif;
+       letter-spacing: 2px;
+       position: sticky;
+       top: 0;
+       z-index: 90;
+    }
+
+    nav h1 {
+       font-size: 2.1rem;
+       margin: 0;
+       color: #e0ffff;
+       text-shadow: 0 0 8px #e0ffff, 0 0 2px #fff;
+    }
+
+    .nav-links {
+       display: flex;
+       gap: 1.5rem;
+       align-items: center;
+    }
+
+    .nav-links a {
+       text-decoration: none;
+       color: #fff;
+       font-size: 1.05rem;
+       font-weight: 600;
+       transition: color 0.3s, text-shadow 0.3s;
+       letter-spacing: 1px;
+    }
+
+    .nav-links a:hover {
+       color: #e0ffff;
+       text-shadow: 0 0 8px #e0ffff;
+    }
+
+    .hero {
+       text-align: center;
+       padding: 2rem 2rem;
+       animation: fadeIn 1.2s;
+       position: relative;
+       z-index: 10;
+       min-height: 85vh;
+       display: flex;
+       flex-direction: column;
+       justify-content: center;
+   }
+
+    .hero h2 {
+       font-size: 3.6rem;
+       margin-bottom: 1.2rem;
+       color: #fff;
+       font-family: 'Exo 2', sans-serif;
+       text-shadow: 0 0 16px #767777, 0 0 2px #fff;
+       letter-spacing: 1px;
+    }
+
+    .hero p {
+       font-size: 1.35rem;
+       max-width: 650px;
+       margin: 0 auto;
+       color: #e0e7ef;
+       text-shadow: 0 0 4px #9cd2d3;
+    }
+
+    .cta-buttons {
+        margin-top: 2.5rem;
+   }
+
+    .cta-buttons a {
+       text-decoration: none;
+       background: linear-gradient(90deg, #fff 60%, #114c5f 100%);
+       color: #1a1a2e;
+       padding: 1rem 2.5rem;
+       border-radius: 40px;
+       font-weight: bold;
+       font-family: 'Exo 2', sans-serif;
+       margin: 0 0.7rem;
+       font-size: 1.15rem;
+       letter-spacing: 1px;
+       border: none;
+       transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+       display: inline-block;
+    }
+
+    .cta-buttons a:hover {
+       background: linear-gradient(90deg, #114c5f 60%, #9cd2d3 100%);
+       color: #fff;
+       transform: scale(1.08);
+       box-shadow: 0 4px 32px #9cd2d3;
+   }
+
+    /* SECTIONS */
+    section {
+        position: relative;
+        z-index: 10;
+    }
+
+   .section-title {
+        text-align: center;
+        font-size: 2.8rem;
+        color: #fff;
+        font-family: 'Exo 2', sans-serif;
+        margin-bottom: 3rem;
+        letter-spacing: 1px;
+    }
+
+
+   /* FEATURES */
+    .features-section {
+        padding: 5rem 2rem;
+         background: #114c5f;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .feature {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 18px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .feature:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(156, 210, 211, 0.4);
+        border-color: #9cd2d3;
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1.5rem;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(17, 76, 95, 0.3);
+        overflow: hidden; 
+    }
+
+
+    .feature-icon img {
+        width: 70%;
+        height: 70%;
+        object-fit: contain;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+
+    .feature h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #114c5f;
+        font-family: 'Exo 2', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .feature p {
+       font-size: 1.05rem;
+       color: #4a5568;
+       line-height: 1.7;
+       text-align: justify;
+    }
+
+
+    /* BENEFICIOS */
+    .beneficios-section {
+        background: #638385ff;
+        padding: 5rem 2rem;
+    }
+
+    .beneficios-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        gap: 2rem;
+    }
+
+    .beneficio-item {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .beneficio-item:hover {
+        transform: translateX(10px);
+        border-color: #9cd2d3;
+        box-shadow: 0 8px 24px rgba(156, 210, 211, 0.3);
+    }
+
+    .beneficio-number {
+        min-width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #114c5f, #638385ff);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #fff;
+        font-family: 'Exo 2', sans-serif;
+        box-shadow: 0 4px 12px rgba(17, 76, 95, 0.3);
+    }
+
+    .beneficio-content h3 {
+        font-size: 1.4rem;
+        color: #114c5f;
+        margin-bottom: 0.5rem;
+        font-family: 'Exo 2', sans-serif;
+    }
+
+    .beneficio-content p {
+        color: #4a5568;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* TESTIMONIOS */
+    .testimonials {
+        background: #114c5f;
+        padding: 5rem 2rem;
+        text-align: center;
+    }
+
+    .testimonial-slider {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        flex-wrap: wrap;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .testimonial {
+        background: rgba(99, 131, 133, 0.3);
+        border-radius: 14px;
+        padding: 2rem 1.5rem;
+        min-width: 260px;
+        max-width: 320px;
+        margin: 0;
+        color: #ffffffff;
+        font-style: italic;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border: 2px solid #9cd2d3;
+        transition: all 0.3s ease;
+    }
+
+    .testimonial:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(156, 210, 211, 0.3);
+       background: rgba(99, 131, 133, 0.5);
+   }
+
+    .testimonial .author {
+       margin-top: 1rem;
+       font-size: 1.05rem;
+       color: #9cd2d3;
+       font-style: normal;
+       font-family: 'Exo 2', sans-serif;
+       font-weight: 600;
+   }
+
+     /* Footer */ 
+    footer {
+       text-align: center;
+       padding: 2rem;
+       font-size: 1rem;
+       color: #ffffffff;
+       letter-spacing: 1.5px;
+         background: #114c5f;
+       font-family: 'Exo 2', sans-serif;
+       position: relative;
+       z-index: 20;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+   .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-links a {
+       color: #ffffffff;
+       text-decoration: none;
+       transition: all 0.3s ease;
+    }
+
+    .footer-links a:hover {
+       color: #fff;
+       text-shadow: 0 0 8px #9cd2d3;
+    }
+
+    .social-links {
+       display: flex;
+      justify-content: center;
+       gap: 1.5rem;
+       margin-bottom: 1.5rem;
+    }
+
+   .social-links a {
+    width: 40px;
+    height: 40px;
+    background: rgba(156, 210, 211, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffffff;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    }
     
-    <style>
-        :root {
-            --primary-color: #0a0e27;
-            --secondary-color: #1a237e;
-            --accent-color: #00e5ff;
-            --neon-blue: #00bcd4;
-            --neon-purple: #9c27b0;
-            --space-dark: #0d1421;
-            --cosmic-purple: #3f51b5;
-            --stellar-orange: #ff6f00;
-            --galaxy-pink: #e91e63;
-            --text-primary: #ffffff;
-            --text-secondary: #b0bec5;
-            --bg-primary: #0a0e27;
-            --bg-secondary: #1a237e;
-            --shadow-color: rgba(0, 229, 255, 0.3);
-            --border-radius: 15px;
-            --glass-effect: rgba(255, 255, 255, 0.1);
-        }
+    .social-links a:hover {
+    background: #9cd2d3;
+    color: #114c5f;
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(156, 210, 211, 0.4);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Orbitron', 'Poppins', sans-serif;
-            background: radial-gradient(ellipse at bottom, #0d1421 0%, #0a0e27 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: var(--text-primary);
-            overflow-x: hidden;
-            position: relative;
-        }
 
-        /* Estrellas animadas de fondo */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, white, transparent),
-                radial-gradient(2px 2px at 40px 70px, white, transparent),
-                radial-gradient(1px 1px at 90px 40px, white, transparent),
-                radial-gradient(1px 1px at 130px 80px, white, transparent),
-                radial-gradient(2px 2px at 160px 30px, white, transparent);
-            background-repeat: repeat;
-            background-size: 200px 100px;
-            animation: sparkle 20s linear infinite;
-            z-index: -1;
-            opacity: 0.5;
-        }
+    * TEXTO JUSTIFICADO */
+    p {
+    text-align: justify;
+    }
 
-        @keyframes sparkle {
-            0%, 100% { transform: translateX(0px) translateY(0px); }
-            50% { transform: translateX(-10px) translateY(-5px); }
-        }
 
-        .navbar {
-            background: rgba(10, 14, 39, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 229, 255, 0.3);
-            padding: 1rem 2rem;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 229, 255, 0.2);
-        }
-
-        .navbar-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-            position: relative;
-        }
-
-        .logo::after {
-            content: '🚀';
-            position: absolute;
-            right: -30px;
-            top: 0;
-            font-size: 0.8em;
-            animation: rocket 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes rocket {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-5px) rotate(5deg); }
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
-            padding: 0.8rem 1.5rem;
-            border-radius: var(--border-radius);
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-links a:hover::before {
-            left: 100%;
-        }
-
-        .nav-links a:hover {
-            background: rgba(0, 229, 255, 0.1);
-            border-color: var(--accent-color);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: 2px solid;
-            border-radius: var(--border-radius);
-            font-family: inherit;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
-            color: white;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.5);
-            background: linear-gradient(45deg, var(--neon-blue), var(--accent-color));
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--accent-color);
-            border-color: var(--accent-color);
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: var(--accent-color);
-            color: var(--primary-color);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
-        }
-
-        .hero {
-            margin-top: 100px;
-            padding: 6rem 2rem;
-            text-align: center;
-            color: var(--text-primary);
-            position: relative;
-            background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.1) 0%, transparent 70%);
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%2300e5ff" opacity="0.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/></circle><circle cx="80" cy="30" r="1" fill="%23ff6f00" opacity="0.7"><animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/></circle><circle cx="30" cy="70" r="1.5" fill="%239c27b0" opacity="0.6"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/></circle></svg>') center/cover;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple), var(--stellar-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
-            animation: textGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes textGlow {
-            0% { filter: brightness(1); }
-            100% { filter: brightness(1.2); }
-        }
-
-        .hero h1::after {
-            content: '🌌';
-            display: block;
-            font-size: 2rem;
-            margin-top: 1rem;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .hero p {
-            font-size: 1.4rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.9;
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .features {
-            padding: 5rem 2rem;
-            background: rgba(26, 35, 126, 0.3);
-            position: relative;
-            backdrop-filter: blur(10px);
-        }
-
-        .features::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
-            pointer-events: none;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.8rem;
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-            margin-bottom: 3rem;
-            color: var(--text-primary);
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 70%);
-            transform: scale(0);
-            transition: transform 0.5s ease;
-        }
-
-        .feature-card:hover::before {
-            transform: scale(1);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-15px);
-            border-color: var(--accent-color);
-            box-shadow: 0 20px 40px rgba(0, 229, 255, 0.3);
-        }
-
-        .feature-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            display: block;
-            position: relative;
-            z-index: 2;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            font-family: 'Orbitron', sans-serif;
-            position: relative;
-            z-index: 2;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            position: relative;
-            z-index: 2;
-        }
-
-        .stats {
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, var(--space-dark) 0%, var(--primary-color) 100%);
-            color: var(--text-primary);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stats::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="10,10 15,25 30,25 18,35 23,50 10,40 -3,50 2,35 -10,25 5,25" fill="%2300e5ff" opacity="0.3"><animateTransform attributeName="transform" type="rotate" values="0 10 30;360 10 30" dur="20s" repeatCount="indefinite"/></polygon><polygon points="150,60 155,75 170,75 158,85 163,100 150,90 137,100 142,85 130,75 145,75" fill="%23ff6f00" opacity="0.4"><animateTransform attributeName="transform" type="rotate" values="0 150 80;360 150 80" dur="15s" repeatCount="indefinite"/></polygon></svg>') center/cover;
-            animation: cosmic-drift 30s linear infinite;
-        }
-
-        @keyframes cosmic-drift {
-            0% { transform: translateX(0) translateY(0); }
-            50% { transform: translateX(-20px) translateY(-10px); }
-            100% { transform: translateX(0) translateY(0); }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        .stat-item {
-            padding: 2rem;
-            background: rgba(0, 229, 255, 0.1);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            border-radius: var(--border-radius);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--accent-color);
-            font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            opacity: 0.9;
-            color: var(--text-secondary);
-        }
-
-        .footer {
-            background: var(--space-dark);
-            color: var(--text-primary);
-            padding: 3rem 2rem 2rem;
-            text-align: center;
-            border-top: 1px solid rgba(0, 229, 255, 0.3);
-        }
+   /* RESPONSIVE */
+    @media (max-width: 900px) {
+    .hamburger {
+        display: flex;
+    }
+    .nav-right {
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background: white;
+        width: 200px;
+        flex-direction: column;
+        padding: 1rem;
+        display: none;
+    }
+    .nav-right a {
+        margin: 1rem 0;
+    }
+    }
 
         /* Chatbot Styles - Tema Tecnonauta */
         .chatbot-toggle {
@@ -473,8 +408,8 @@
             right: 30px;
             width: 70px;
             height: 70px;
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
-            border: 2px solid rgba(0, 229, 255, 0.5);
+            background: #114c5f;
+            border: 2px solid #114c5f;
             border-radius: 50%;
             color: white;
             font-size: 1.5rem;
@@ -484,12 +419,12 @@
             justify-content: center;
             z-index: 1000;
             transition: all 0.3s ease;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+            box-shadow: 0 0 30px #114c5f;
         }
 
         .chatbot-toggle:hover {
             transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 40px rgba(0, 229, 255, 0.8);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
         }
 
         .notification-dot {
@@ -511,335 +446,237 @@
             100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 111, 0, 0.5); }
         }
 
-        .chatbot-box {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 420px;
-            height: 650px;
-            background: rgba(10, 14, 39, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 229, 255, 0.3);
-            border-radius: var(--border-radius);
-            box-shadow: 0 0 50px rgba(0, 229, 255, 0.3);
-            display: none;
-            flex-direction: column;
-            z-index: 1001;
-            overflow: hidden;
-        }
+       /* CAJA PRINCIPAL */
+ .chatbot-box {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 420px;
+    height: 650px;
+    background: #ffffff;
+    border: 2px solid #114c5f;
+    border-radius: 18px;
+    box-shadow: 0 0 25px rgba(17, 76, 95, 0.25);
+    display: none;
+    flex-direction: column;
+    z-index: 1001;
+    overflow: hidden;
+ }
 
-        .chatbot-header {
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
-            color: white;
-            padding: 1.2rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            font-family: 'Orbitron', sans-serif;
-            border-bottom: 1px solid rgba(0, 229, 255, 0.3);
-        }
+  /* HEADER */
+  .chatbot-header {
+    background: #114c5f;
+    color: white;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255,255,255,0.25);
+  }
 
-        .chatbot-title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+   .chatbot-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+   }
 
-        .chatbot-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
+   .chatbot-actions {
+    display: flex;
+    gap: 0.5rem;
+   }
 
-        .action-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            cursor: pointer;
-            padding: 0.4rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
+   .action-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 6px;
+    transition: 0.3s ease;
+   }
 
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
+  .action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+   }
 
-        .chatbot-messages {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            max-height: 420px;
-            background: rgba(13, 20, 33, 0.8);
-        }
+  /* MENSAJES */
+  .chatbot-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background: #f8f9fa;
+  }
 
-        .welcome-message {
-            background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(156, 39, 176, 0.1) 100%);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            border-left: 4px solid var(--accent-color);
-        }
+  /* MENSAJE DE BIENVENIDA */
+  .welcome-message {
+    background: #ffffff;
+    border: 2px solid #114c5f;
+    padding: 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+ }
 
-        .welcome-message h3 {
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-            font-family: 'Orbitron', sans-serif;
-        }
+ .welcome-message h3 {
+    color: #114c5f;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
 
-        .welcome-message p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
+  .welcome-message p {
+    color: #333;
+    font-size: 0.9rem;
+  }
 
-        .quick-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
+   /* BOTONES RÁPIDOS */
+   .quick-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 
-        .quick-btn {
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-purple));
-            color: white;
-            border: 1px solid rgba(0, 229, 255, 0.5);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
-        }
+   .quick-btn {
+    background: #114c5f;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
 
-        .quick-btn:hover {
-            background: linear-gradient(45deg, var(--neon-blue), var(--accent-color));
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
-        }
+  .quick-btn:hover {
+    background: #0d3847;
+  }
 
-        .user-message, .bot-message {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            align-items: flex-start;
-        }
+  /* BURBUJAS DE MENSAJE */
+   .user-message, .bot-message {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+   }
 
-        .user-message {
-            justify-content: flex-end;
-        }
+   .user-message {
+    justify-content: flex-end;
+   }
 
-        .user-avatar, .bot-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-            border: 2px solid rgba(0, 229, 255, 0.3);
-        }
+  /* AVATARES */
+  .user-avatar, .bot-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
 
-        .user-avatar {
-            background: linear-gradient(45deg, var(--neon-purple), var(--cosmic-purple));
-            color: white;
-        }
+  .user-avatar {
+    background: #114c5f;
+  }
 
-        .bot-avatar {
-            background: linear-gradient(45deg, var(--accent-color), var(--neon-blue));
-            color: white;
-        }
+  .bot-avatar {
+    background: #4a6f75;
+  }
 
-        .message-bubble {
-            max-width: 250px;
-            padding: 0.75rem 1rem;
-            border-radius: 18px;
-            word-wrap: break-word;
-            line-height: 1.4;
-            font-size: 0.9rem;
-            border: 1px solid rgba(0, 229, 255, 0.2);
-        }
+  /* BURBUJAS */
+  .message-bubble {
+    max-width: 260px;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 0.9rem;
+   }
 
-        .user-bubble {
-            background: linear-gradient(45deg, var(--neon-purple), var(--cosmic-purple));
-            color: white;
-            border-bottom-right-radius: 6px;
-        }
+  .user-bubble {
+    background: #114c5f;
+    color: white;
+    border-bottom-right-radius: 6px;
+  }
 
-        .bot-bubble {
-            background: rgba(0, 229, 255, 0.1);
-            color: var(--text-primary);
-            border-bottom-left-radius: 6px;
-            backdrop-filter: blur(10px);
-        }
+  .bot-bubble {
+    background: #eaf3f4;
+    border: 1px solid #114c5f;
+    color: #114c5f;
+    border-bottom-left-radius: 6px;
+  }
 
-        .quick-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+  /* INDICADOR ESCRIBIENDO */
+  .typing-indicator {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    color: #114c5f;
+  }
 
-        .quick-btn:hover {
-            background: var(--primary-color);
-            transform: translateY(-1px);
-        }
+  .typing-dot {
+    width: 6px;
+    height: 6px;
+    background: #114c5f;
+    border-radius: 50%;
+    animation: typing 1.4s infinite ease-in-out;
+  }
 
-        .user-message, .bot-message {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            align-items: flex-start;
-        }
+  @keyframes typing {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+  }
 
-        .user-message {
-            justify-content: flex-end;
-        }
+  /* INPUT */
+  .chatbot-input-area {
+    padding: 1rem;
+    border-top: 2px solid #114c5f;
+    display: flex;
+    gap: 0.5rem;
+    background: #ffffff;
+  }
 
-        .user-avatar, .bot-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-        }
+  .input-wrapper {
+      flex: 1;
+    display: flex;
+    align-items: center;
+    background: #f1f5f6;
+    border: 1px solid #114c5f;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+   }
 
-        .user-avatar {
-            background: var(--primary-color);
-            color: white;
-        }
+   .chatbot-input {
+    flex: 1;
+    border: none;
+    background: none;
+    resize: none;
+    outline: none;
+    font-size: 0.9rem;
+    color: #114c5f;
+  }
 
-        .bot-avatar {
-            background: var(--accent-color);
-            color: white;
-        }
+   /* BOTÓN ENVIAR */
+   .send-btn {
+    background: #114c5f;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+   }
 
-        .message-bubble {
-            max-width: 250px;
-            padding: 0.75rem 1rem;
-            border-radius: 18px;
-            word-wrap: break-word;
-            line-height: 1.4;
-            font-size: 0.9rem;
-        }
+  .send-btn:hover:not(:disabled) {
+    background: #0d3847;
+  }
 
-        .user-bubble {
-            background: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 6px;
-        }
-
-        .bot-bubble {
-            background: rgba(26, 35, 126, 0.8);
-            color: var(--text-primary);
-            border-bottom-left-radius: 6px;
-            border: 1px solid rgba(0, 229, 255, 0.3);
-        }
-
-        .typing-indicator {
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 0.2rem;
-        }
-
-        .typing-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            animation: typing 1.4s infinite ease-in-out;
-        }
-
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-
-        .chatbot-input-area {
-            padding: 1rem;
-            border-top: 1px solid rgba(0, 229, 255, 0.3);
-            display: flex;
-            gap: 0.5rem;
-            align-items: flex-end;
-            background: rgba(10, 14, 39, 0.8);
-        }
-
-        .input-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            background: rgba(26, 35, 126, 0.3);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            border-radius: 25px;
-            padding: 0.5rem 1rem;
-        }
-
-        .chatbot-input {
-            flex: 1;
-            border: none;
-            background: none;
-            resize: none;
-            outline: none;
-            font-family: inherit;
-            font-size: 0.9rem;
-            max-height: 80px;
-            color: var(--text-primary);
-        }
-
-        .emoji-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            margin-left: 0.5rem;
-            padding: 0.2rem;
-        }
-
-        .send-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .send-btn:hover:not(:disabled) {
-            background: var(--primary-color);
-            transform: scale(1.1);
-        }
-
-        .send-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+  .send-btn:disabled {
+    background: #ccc;
+  }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -904,163 +741,531 @@
             box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
             border-color: rgba(99, 102, 241, 0.2);
         }
-    </style>
+
+        /* 🔵 OVERLAY */
+     .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.87);
+    z-index: 900;
+   }
+
+   /* 🔵 MODAL BOX */
+   .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+
+    /* 🔥 Corrección: que se adapte al texto */
+    max-height: 90vh;
+    overflow-y: auto;
+
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+  }
+
+     /* Evitar que el modal cause saltos de pantalla */
+   .modal:focus,
+   .modal *:focus {
+    outline: none;
+  }
+
+ @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  /* 🔵 BOTÓN CERRAR */
+   .close-modal {
+    float: right;
+    cursor: pointer;
+    font-size: 1.6rem;
+    color: #333;
+    transition: 0.3s;
+ }
+
+ .close-modal:hover {
+    color: #114c5f;
+ }
+
+ /* 🔵 CONTENIDO */
+ .modal-content h2 {
+    margin-bottom: 1rem;
+    color: #114c5f;
+    font-family: 'Exo 2', sans-serif;
+ }
+
+ .modal-content p,
+ .modal-content ul {
+    color: #333;
+    line-height: 1.6;
+    text-align: justify;
+ }
+
+ /* 🔵 EQUIPO */
+  .team {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .team-member {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .team-member img {
+    width: 85px;
+    margin-bottom: 0.7rem;
+  }
+
+  .team-member h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #114c5f;
+  }
+
+</style>
 </head>
 
 <body>
-    <!-- Fondo combinado: engranajes, circuitos, partículas y figuras humanoides -->
-    <svg class="gears-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:0.13;" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Engranajes -->
+    <svg class="gears-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;background:#638385ff;" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+    <g opacity="0.25" stroke="#000" fill="none">
         <g>
-            <g transform="translate(100,100)">
-                <circle cx="0" cy="0" r="50" fill="#00fff1" opacity="0.6">
-                    <animateTransform attributeName="transform" type="rotate" dur="8s" repeatCount="indefinite" values="0;360"/>
-                </circle>
-                <circle cx="0" cy="0" r="40" fill="none" stroke="#fff" stroke-width="2"/>
-                <polygon points="-15,-40 15,-40 20,-50 -20,-50" fill="#00c3ff"/>
-                <polygon points="-15,40 15,40 20,50 -20,50" fill="#00c3ff"/>
-                <polygon points="-40,-15 -40,15 -50,20 -50,-20" fill="#00c3ff"/>
-                <polygon points="40,-15 40,15 50,20 50,-20" fill="#00c3ff"/>
-            </g>
-            <g transform="translate(300,200)">
-                <circle cx="0" cy="0" r="30" fill="#9c27b0" opacity="0.7">
-                    <animateTransform attributeName="transform" type="rotate" dur="6s" repeatCount="indefinite" values="360;0"/>
-                </circle>
-                <circle cx="0" cy="0" r="20" fill="none" stroke="#fff" stroke-width="1"/>
-                <polygon points="-10,-25 10,-25 12,-30 -12,-30" fill="#00fff1"/>
-                <polygon points="-10,25 10,25 12,30 -12,30" fill="#00fff1"/>
-                <polygon points="-25,-10 -25,10 -30,12 -30,-12" fill="#00fff1"/>
-                <polygon points="25,-10 25,10 30,12 30,-12" fill="#00fff1"/>
-            </g>
-            <g transform="translate(1600,300)">
-                <circle cx="0" cy="0" r="70" fill="#ff6f00" opacity="0.5">
-                    <animateTransform attributeName="transform" type="rotate" dur="10s" repeatCount="indefinite" values="0;360"/>
-                </circle>
-                <circle cx="0" cy="0" r="55" fill="none" stroke="#fff" stroke-width="3"/>
-                <polygon points="-20,-55 20,-55 25,-70 -25,-70" fill="#00c3ff"/>
-                <polygon points="-20,55 20,55 25,70 -25,70" fill="#00c3ff"/>
-                <polygon points="-55,-20 -55,20 -70,25 -70,-25" fill="#00c3ff"/>
-                <polygon points="55,-20 55,20 70,25 70,-25" fill="#00c3ff"/>
+            <circle cx="400" cy="300" r="70" stroke-width="8"/>
+            <g>
+                <animateTransform attributeName="transform" type="rotate" from="0 400 300" to="360 400 300" dur="6s" repeatCount="indefinite"/>
+                <rect x="390" y="220" width="20" height="30" rx="6" fill="#000"/>
+                <rect x="390" y="350" width="20" height="30" rx="6" fill="#000"/>
+                <rect x="320" y="290" width="30" height="20" rx="6" fill="#000"/>
+                <rect x="470" y="290" width="30" height="20" rx="6" fill="#000"/>
             </g>
         </g>
-        <!-- Circuitos animados -->
-        <g stroke="#ffe066" stroke-width="2">
-            <path d="M0,400 Q200,300 400,400 T800,400" fill="none" opacity="0.4">
-                <animate attributeName="stroke-dasharray" dur="3s" repeatCount="indefinite" values="0,1000;1000,0"/>
-            </path>
-            <path d="M500,200 L700,200 L700,400 L900,400" fill="none" opacity="0.3">
-                <animate attributeName="stroke-dasharray" dur="4s" repeatCount="indefinite" values="0,800;800,0"/>
-            </path>
-            <path d="M1200,100 Q1400,200 1600,100" fill="none" opacity="0.5">
-                <animate attributeName="stroke-dasharray" dur="2.5s" repeatCount="indefinite" values="0,600;600,0"/>
-            </path>
+
+        <g>
+            <circle cx="1200" cy="700" r="50" stroke-width="6"/>
+            <g>
+                <animateTransform attributeName="transform" type="rotate" from="0 1200 700" to="-360 1200 700" dur="5s" repeatCount="indefinite"/>
+                <rect x="1192" y="650" width="16" height="22" rx="4" fill="#000"/>
+                <rect x="1192" y="728" width="16" height="22" rx="4" fill="#000"/>
+                <rect x="1150" y="692" width="22" height="16" rx="4" fill="#000"/>
+                <rect x="1228" y="692" width="22" height="16" rx="4" fill="#000"/>
+            </g>
         </g>
+    </g>
+
+    <g fill="#000" opacity="0.15">
+
+        <circle cx="300" cy="900" r="16">
+            <animate attributeName="cy" values="900;200;900" dur="8s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="16;24;16" dur="6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="1700" cy="200" r="12">
+            <animate attributeName="cy" values="200;800;200" dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="12;18;12" dur="5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="150" cy="1000" r="14">
+            <animate attributeName="cy" values="1000;300;1000" dur="12s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="14;22;14" dur="9s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="600" cy="1200" r="10">
+            <animate attributeName="cy" values="1200;200;1200" dur="11s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1000" cy="1100" r="18">
+            <animate attributeName="cy" values="1100;100;1100" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="18;26;18" dur="8s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1400" cy="950" r="20">
+            <animate attributeName="cy" values="950;300;950" dur="10s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1800" cy="1150" r="12">
+            <animate attributeName="cy" values="1150;400;1150" dur="13s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="900" cy="850" r="6">
+            <animate attributeName="cy" values="850;100;850" dur="16s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="400" cy="1040" r="5">
+            <animate attributeName="cy" values="1040;600;1040" dur="9s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1600" cy="300" r="7">
+            <animate attributeName="cy" values="300;900;300" dur="8s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1300" cy="100" r="9">
+            <animate attributeName="cy" values="100;700;100" dur="12s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="700" cy="150" r="11">
+            <animate attributeName="cy" values="150;950;150" dur="10s" repeatCount="indefinite"/>
+        </circle>
+
+    </g>
+    <g fill="#000" opacity="0.25">
+        <g>
+            <circle cx="250" cy="400" r="22"/>
+            <rect x="238" y="422" width="24" height="60" rx="12"/>
+            <rect x="230" y="482" width="10" height="40" rx="5">
+                <animate attributeName="y" values="482;492;482" dur="2.2s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="260" y="482" width="10" height="40" rx="5">
+                <animate attributeName="y" values="482;472;482" dur="2.2s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+        <g>
+            <circle cx="1700" cy="800" r="18"/>
+            <rect x="1690" y="818" width="20" height="48" rx="10"/>
+            <rect x="1682" y="866" width="8" height="28" rx="4">
+                <animate attributeName="y" values="866;876;866" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="1710" y="866" width="8" height="28" rx="4">
+                <animate attributeName="y" values="866;856;866" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+        <g>
+            <circle cx="1100" cy="300" r="15"/>
+            <rect x="1092" y="315" width="16" height="38" rx="8"/>
+            <rect x="1086" y="353" width="7" height="20" rx="3.5">
+                <animate attributeName="y" values="353;363;353" dur="2.8s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="1111" y="353" width="7" height="20" rx="3.5">
+                <animate attributeName="y" values="353;343;353" dur="2.8s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+        <g>
+            <circle cx="700" cy="600" r="20"/>
+            <rect x="690" y="620" width="20" height="52" rx="10"/>
+            <rect x="682" y="672" width="8" height="28" rx="4">
+                <animate attributeName="y" values="672;682;672" dur="2.4s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="710" y="672" width="8" height="28" rx="4">
+                <animate attributeName="y" values="672;662;672" dur="2.4s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+    </g>
     </svg>
 
-    <!-- Navbar -->
-    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; background: rgba(26,33,62,0.85); border-bottom: 2px solid #00fff1; box-shadow: 0 4px 32px rgba(0,255,241,0.08); font-family: 'Orbitron', 'Poppins', Arial, sans-serif; letter-spacing: 2px; position: relative; z-index: 100;">
+    <nav>
         <div style="display: flex; align-items: center; gap: 0.7rem;">
-            <h1 style="font-size: 2.1rem; margin: 0; color: #00fff1; text-shadow: 0 0 8px #00fff1, 0 0 2px #fff;">MenTora 🚀</h1>
+            <img src="/static/img/mentora1.png" alt="Logo MenTora" style="height: 90px; width: 100px; border-radius: 60%; object-fit: cover;">
         </div>
-        <div>
-            <a href="{{ url_for('login') }}" style="text-decoration: none; color: #fff; margin-left: 1.2rem; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; letter-spacing: 1px; transition: color 0.2s, text-shadow 0.2s;" onmouseover="this.style.color='#00fff1'; this.style.textShadow='0 0 8px #00fff1';" onmouseout="this.style.color='#fff'; this.style.textShadow='';">Iniciar Sesión</a>
-            <a href="{{ url_for('register') }}" style="text-decoration: none; color: #fff; margin-left: 1.2rem; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; letter-spacing: 1px; transition: color 0.2s, text-shadow 0.2s;" onmouseover="this.style.color='#00fff1'; this.style.textShadow='0 0 8px #00fff1';" onmouseout="this.style.color='#fff'; this.style.textShadow='';">Registrarse</a>
-        </div>
+        <div class="nav-links">
+            <a href="/">INICIO</a>
+            <a href="#caracteristicas">CARACTERÍSTICAS</a>
+            <a href="#beneficios">BENEFICIOS</a>
+            <a href="#testimonios">TESTIMONIOS</a>
+            <a href="/login">INICIAR SESIÓN</a>
+            <a href="/register">REGÍSTRATE</a>
+
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" style="text-align: center; padding: 2rem 2rem 2rem 2rem; animation: fadeIn 1.2s; position: relative;">
-        <h2 style="font-size: 3.6rem; margin-bottom: 1.2rem; color: #ffffffff; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; text-shadow: 0 0 16px #767777ff, 0 0 2px #fff; letter-spacing: 1px;">ACTIVA TU MENTE</h2>
-        <p style="font-size: 1.35rem; max-width: 650px; margin: 0 auto; color: #e0e7ef; text-shadow: 0 0 4px #00fff1;">Explora, compite y conquista desafíos mientras te diviertes. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
-        <div class="cta-buttons" style="margin-top: 2.5rem;">
-            <a href="{{ url_for('register') }}" style="text-decoration: none; background: linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%); color: #1a1a2e; padding: 1rem 2.5rem; border-radius: 40px; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; margin: 0 0.7rem; font-size: 1.15rem; box-shadow: 0 2px 18px #00fff1a0; letter-spacing: 1px; border: none; transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s; display: inline-block;" onmouseover="this.style.background='linear-gradient(90deg, #00c3ff 60%, #00fff1 100%)'; this.style.color='#fff'; this.style.transform='scale(1.08)'; this.style.boxShadow='0 4px 32px #00fff1cc';" onmouseout="this.style.background='linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%)'; this.style.color='#1a1a2e'; this.style.transform='scale(1)'; this.style.boxShadow='0 2px 18px #00fff1a0';">
-                🚀 Comenzar Gratis
-            </a>
-            <a href="#caracteristicas" style="text-decoration: none; background: linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%); color: #1a1a2e; padding: 1rem 2.5rem; border-radius: 40px; font-weight: bold; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; margin: 0 0.7rem; font-size: 1.15rem; box-shadow: 0 2px 18px #00fff1a0; letter-spacing: 1px; border: none; transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s; display: inline-block;" onmouseover="this.style.background='linear-gradient(90deg, #00c3ff 60%, #00fff1 100%)'; this.style.color='#fff'; this.style.transform='scale(1.08)'; this.style.boxShadow='0 4px 32px #00fff1cc';" onmouseout="this.style.background='linear-gradient(90deg, #ffffffff 60%, #00c3ff 100%)'; this.style.color='#1a1a2e'; this.style.transform='scale(1)'; this.style.boxShadow='0 2px 18px #00fff1a0';">
-                ℹ️ Saber Más
-            </a>
+    <section class="hero" id="inicio">
+        <h2>DESATA TU IMAGINACIÓN</h2>
+        <p>Sumérgete en desafíos épicos donde una línea de código es un movimiento estratégico. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
+        <div class="cta-buttons">
+            <a href="/register">EMPEZAR A CODIFICAR</a>
+            <a href="/login">CONTINUAR AVENTURA</a>
         </div>
-
         <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
-            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 200px; width: 280px; animation: float 3s ease-in-out infinite;" onerror="this.style.display='none';">
+            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 250px; width: 320px; animation: float 3s ease-in-out infinite;">
         </div>
     </section>
+     
 
-    <!-- Features -->
-    <section class="features" id="caracteristicas">
-        <div class="container">
-            <h2 class="section-title">¿Por qué elegir {{ config.SITE_NAME }}?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎮</div>
-                    <h3>Gamificación Avanzada</h3>
-                    <p>Sistema de puntos, niveles y logros que convierte el aprendizaje en una experiencia emocionante y motivadora.</p>
+    <section class="features-section" id="caracteristicas">
+    <h2 class="section-title">CARACTERÍSTICAS PRINCIPALES</h2>
+    <div class="features">
+
+        <div class="feature">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/brain.svg?color=%23114c5f" alt="icono cerebro">
+            </div>
+            <h3>Retos Inteligentes</h3>
+            <p>Preguntas diseñadas para activar tu pensamiento crítico y curiosidad.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/gamepad-variant.svg?color=%23114c5f" alt="icono juego">
+            </div>
+            <h3>Gamificación Real</h3>
+            <p>Sube de nivel, desbloquea logros y compite en rankings por área.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/account-group.svg?color=%23114c5f" alt="icono comunidad">
+            </div>
+            <h3>Comunidad Activa</h3>
+            <p>Debate respuestas, comparte ideas y aprende en grupo.</p>
+        </div>
+
+         <div class="feature">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/account-multiple-check.svg?color=%23114c5f" alt="icono colaborativo">
+            </div>
+            <h3>Retos Colaborativos</h3>
+            <p>Trabaja en equipo y resuelve retos grupales para ganar.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/view-dashboard.svg?color=%23114c5f" alt="icono panel">
+            </div>
+            <h3>Tu Panel Personal</h3>
+            <p>Visualiza tu progreso, estadísticas y próximos desafíos.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/calendar-month.svg?color=%23114c5f" alt="icono calendario">
+            </div>
+            <h3>Retos Diarios</h3>
+            <p>Un nuevo desafío cada día para mantenerte motivado.</p>
+        </div>
+
+    </div>
+    </section>
+
+    <section class="beneficios-section" id="beneficios">
+        <h2 class="section-title">¿POR QUÉ ELEGIR MENTORA?</h2>
+        <div class="beneficios-container">
+            <div class="beneficio-item">
+                <div class="beneficio-number">1</div>
+                <div class="beneficio-content">
+                    <h3>Aprendizaje Adaptativo</h3>
+                    <p>Nuestro sistema se adapta a tu ritmo y nivel, ofreciéndote retos personalizados que te mantienen en la zona de aprendizaje óptima.</p>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">�</div>
-                    <h3>Biblioteca Digital</h3>
-                    <p>Acceso a recursos educativos de alta calidad en programación, matemáticas, ciencias y más áreas del conocimiento.</p>
+            </div>
+
+            <div class="beneficio-item">
+                <div class="beneficio-number">2</div>
+                <div class="beneficio-content">
+                    <h3>Certificaciones Reconocidas</h3>
+                    <p>Obtén certificados avalados por la industria que demuestran tus habilidades y te ayudan a destacar en el mercado laboral.</p>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Rankings Competitivos</h3>
-                    <p>Compite con estudiantes de todo el mundo y sube en los rankings mientras demuestras tus habilidades.</p>
+            </div>
+
+            <div class="beneficio-item">
+                <div class="beneficio-number">3</div>
+                <div class="beneficio-content">
+                    <h3>Mentoría Personalizada</h3>
+                    <p>Acceso a expertos del sector que te guiarán en tu camino de aprendizaje y resolverán tus dudas en tiempo real.</p>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <h3>Chat en Tiempo Real</h3>
-                    <p>Conecta con otros estudiantes, resuelve dudas y forma grupos de estudio en nuestra comunidad activa.</p>
+            </div>
+
+            <div class="beneficio-item">
+                <div class="beneficio-number">4</div>
+                <div class="beneficio-content">
+                    <h3>Proyectos Reales</h3>
+                    <p>Trabaja en proyectos del mundo real que puedes agregar a tu portafolio profesional y mostrar a futuros empleadores.</p>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🤖</div>
-                    <h3>IA Integrada</h3>
-                    <p>Asistente inteligente que genera contenido personalizado y te ayuda en tu proceso de aprendizaje.</p>
+            </div>
+
+            <div class="beneficio-item">
+                <div class="beneficio-number">5</div>
+                <div class="beneficio-content">
+                    <h3>Acceso Ilimitado</h3>
+                    <p>Aprende a tu ritmo con acceso 24/7 a todo el contenido, actualizaciones constantes y nuevos cursos cada mes.</p>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Analytics Detallados</h3>
-                    <p>Seguimiento completo de tu progreso con estadísticas detalladas para optimizar tu rendimiento académico.</p>
+            </div>
+
+            <div class="beneficio-item">
+                <div class="beneficio-number">6</div>
+                <div class="beneficio-content">
+                    <h3>Red de Networking</h3>
+                    <p>Conecta con miles de estudiantes y profesionales, participa en eventos y construye relaciones valiosas para tu carrera.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats -->
-    <section class="stats" id="estadisticas">
-        <div class="container">
-            <h2 class="section-title">Únete a Nuestra Comunidad</h2>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">15,000+</div>
-                    <div class="stat-label">Estudiantes Activos</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Profesores Registrados</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">50,000+</div>
-                    <div class="stat-label">Retos Completados</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">99%</div>
-                    <div class="stat-label">Satisfacción</div>
-                </div>
+    <section class="testimonials" id="testimonios">
+        <h2 class="section-title">LO QUE DICEN NUESTROS USUARIOS</h2>
+        <div class="testimonial-slider">
+            <div class="testimonial">
+                "¡MenTora me motiva a aprender todos los días! Los retos son adictivos y he mejorado increíblemente mis habilidades."
+                <div class="author">— Sofía, estudiante.</div>
             </div>
+            <div class="testimonial">
+                "La gamificación y los logros hacen que el aprendizaje sea divertido. Conseguí mi primer trabajo tech gracias a MenTora."
+                <div class="author">— Edgar, ingeniero.</div>
+            </div>
+            <div class="testimonial">
+                "La comunidad es muy activa y siempre aprendo algo nuevo. Los proyectos reales me dieron el portafolio que necesitaba."
+                <div class="author">— Ivonne, docente.</div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer style="text-align: center; padding: 1.2rem; font-size: 1rem; background: rgba(26,33,62,0.85); color: #00fff1; letter-spacing: 1.5px; border-top: 2px solid #00fff1; font-family: 'Orbitron', 'Poppins', Arial, sans-serif; text-shadow: 0 0 8px #00fff1;">
-        &copy; 2025 MenTora. Conocimiento que te reta.
+    <section class="how-it-works" style="background:#638385ff; padding:5rem 2rem;">
+    <h2 class="section-title">¿CÓMO FUNCIONA?</h2>
+
+    <div style="
+        max-width:1100px;
+        margin:0 auto;
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+        gap:2rem;">
+        <div class="feature" style="text-align:center;">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/rocket-launch.svg?color=%23114c5f">
+            </div>
+            <h3>1. Elige tu Ruta</h3>
+            <p>Selecciona si quieres aprender lógica, algoritmos, Python, JavaScript o preparación para entrevistas técnicas.</p>
+        </div>
+
+        <div class="feature" style="text-align:center;">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/puzzle-star.svg?color=%23114c5f">
+            </div>
+            <h3>2. Completa Retos</h3>
+            <p>Resuelve desafíos interactivos que se adaptan automáticamente a tu nivel y estilo de aprendizaje.</p>
+        </div>
+
+        <div class="feature" style="text-align:center;">
+            <div class="feature-icon">
+                <img src="https://api.iconify.design/mdi/trophy.svg?color=%23114c5f">
+            </div>
+            <h3>3. Gana Experiencia</h3>
+            <p>Desbloquea logros, sube de nivel y construye tu portafolio con proyectos reales que podrás mostrar.</p>
+        </div>
+    </div>
+    </section>
+
+    <footer>
+    <div class="footer-content">
+    <div class="footer-links">
+    <a href="#" onclick="openModal('nosotros')">Sobre Nosotros</a>
+    <a href="#" onclick="openModal('privacidad')">Privacidad</a>
+    <a href="#" onclick="openModal('terminos')">Términos</a>
+    <a href="#" onclick="openModal('contacto')">Contacto</a>
+    <a href="#" onclick="openModal('equipo')">Equipo</a>
+    </div>
+
+    </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+        </div>
+
+        <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados</p>
+    </div>
     </footer>
 
-    <!-- Chatbot -->
+
+    <div id="modal-overlay" class="modal-overlay"></div>
+    <div id="modal-box" class="modal">
+    <div class="modal-content">
+        <span id="close-modal" class="close-modal">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+    </div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay"></div>
+
+    <div class="modal" id="modal-nosotros">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-nosotros">&times;</span>
+        <h2>Sobre Nosotros</h2>
+        <p>
+            MenTora es una plataforma diseñada para impulsar el aprendizaje basado en retos, 
+            combinando gamificación, educación y comunidad. Nuestro objetivo es ayudarte a 
+            mejorar tus habilidades sin importar tu nivel, de una forma divertida y estratégica.
+        </p>
+    </div>
+    </div>
+
+    <div class="modal" id="modal-privacidad">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-privacidad">&times;</span>
+        <h2>Política de Privacidad</h2>
+        <p>
+            Tus datos están protegidos. Solo utilizamos información esencial para mejorar 
+            tu experiencia dentro de la plataforma y nunca serán compartidos sin tu consentimiento.
+            Cumplimos con estándares GDPR y normativas internacionales.
+        </p>
+    </div>
+    </div>
+
+
+    <div class="modal" id="modal-terminos">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-terminos">&times;</span>
+        <h2>Términos y Condiciones</h2>
+        <p>
+            Al usar MenTora aceptas los lineamientos de uso responsable. 
+            El contenido está en constante mejora, y puede actualizarse sin previo aviso.
+        </p>
+    </div>
+    </div>
+
+    <div class="modal" id="modal-contacto">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-contacto">&times;</span>
+        <h2>Contacto</h2>
+        <p>¿Tienes dudas, sugerencias o problemas? Escríbenos:</p>
+        <ul>
+            <li>Email: soporte@mentora.com</li>
+            <li>Teléfono: +52 000 000 0000</li>
+            <li>Horario: Lunes a Viernes 9:00–18:00</li>
+        </ul>
+    </div>
+    </div>
+
+
+    <div class="modal" id="modal-equipo">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-equipo">&times;</span>
+        <h2>Nuestro Equipo</h2>
+
+        <div class="team">
+            <div class="team-member">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <h3>Ivone</h3>
+                <p>Fundadora y Diseñadora UX/UI</p>
+            </div>
+
+            <div class="team-member">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <h3>Marco</h3>
+                <p>Desarrollador Full Stack</p>
+            </div>
+
+            <div class="team-member">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <h3>Sofía</h3>
+                <p>Directora de Contenido Educativo</p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
     <button class="chatbot-toggle" id="chatbot-toggle" onclick="toggleChatbot()">
         <i class="fas fa-comments"></i>
         <div class="notification-dot" id="notificationDot"></div>
@@ -1084,7 +1289,7 @@
         
         <div class="chatbot-messages" id="chatbot-messages">
             <div class="welcome-message">
-                <h3>¡Hola! Soy MenToraBot 🤖</h3>
+                <h3>¡Hola! Soy MenToraBot</h3>
                 <p>Tu asistente personal en {{ config.SITE_NAME }}. Estoy aquí para ayudarte con cualquier pregunta sobre la plataforma, estudios o funcionalidades.</p>
                 <div class="quick-suggestions" id="quickSuggestions">
                     <button class="quick-btn" onclick="sendQuickMessage('¿Cómo funciona?')">¿Cómo funciona?</button>
@@ -1116,9 +1321,6 @@
                     rows="1"
                     maxlength="500"
                 ></textarea>
-                <button type="button" class="emoji-btn" onclick="toggleEmojiPicker()" title="Añadir emoji">
-                    😊
-                </button>
             </div>
             <button type="submit" class="send-btn" disabled>
                 <i class="fas fa-paper-plane"></i>
@@ -1126,7 +1328,7 @@
         </form>
     </div>
 
-    <script>
+<script>
     // Variables globales del chatbot
     let chatbotOpen = false;
     let isTyping = false;
@@ -1545,6 +1747,212 @@
             }
         }, 5000);
     });
-    </script>
+
+
+   // CONTENIDOS DE CADA MODAL
+   const modalData = {
+    "nosotros": {
+        title: "Sobre MenTora",
+        text: `
+            <div style="padding: 10px;">
+                <h2>Nuestra Misión y Visión</h2>
+                <p>
+                    Somos <strong>MenTora</strong>, una plataforma de EdTech innovadora comprometida con la 
+                    <strong>transformación del aprendizaje profesional</strong>. Nuestra misión es desatar el
+                     potencial de cada usuario a través de una metodología de <strong>aprendizaje basado en retos</strong>
+                      (Challenge-Based Learning) altamente gamificada.
+                </p>
+                <p>
+                    Nuestra visión es ser la plataforma líder a nivel global en el desarrollo de habilidades críticas del
+                     siglo XXI (pensamiento crítico, resolución de problemas complejos, y creatividad), ofreciendo una experiencia
+                      inmersiva, social y estratégicamente divertida. Fundada en la premisa de que <strong>aprender haciendo</strong>
+                       es el camino más efectivo, nos dedicamos a construir un ecosistema donde la educación y la práctica profesional 
+                       convergen.
+                </p>
+                <p>
+                    Nos enfocamos en el diseño de experiencias que simulan escenarios del mundo real, 
+                    preparando a nuestros usuarios no solo con conocimientos, sino con la <strong>capacidad de aplicarlos</strong> 
+                    bajo presión y en colaboración con una comunidad de pares y expertos.
+                </p>
+            </div>
+        `
+    },
+    "privacidad": {
+        title: "Política de Privacidad (Aviso de Privacidad)",
+        text: `
+            <div style="padding: 10px;">
+                <h2>Última Actualización: 17 de Noviembre de 2025</h2>
+
+                <h3>1. Recopilación de Información Personal</h3>
+                <p>
+                    MenTora (referida en adelante como "la Plataforma") recaba información que usted nos proporciona
+                     directamente al crear una cuenta, participar en desafíos, o interactuar con la comunidad. Esta 
+                     información puede incluir:
+                </p>
+                <ul>
+                    <li><strong>Datos de Identificación:</strong> Nombre completo, correo electrónico, nombre de usuario y contraseña (cifrada).</li>
+                    <li><strong>Datos de Uso y Desempeño:</strong> Progreso en retos, puntuaciones, insignias obtenidas, y actividad dentro de los foros.</li>
+                    <li><strong>Datos Técnicos:</strong> Dirección IP, tipo de dispositivo, sistema operativo, y datos de navegación (a través de cookies).</li>
+                </ul>
+
+                <h3>2. Finalidad del Tratamiento de Datos</h3>
+                <p>
+                    Sus datos son tratados con los siguientes propósitos principales:
+                </p>
+                <ol>
+                    <li><strong>Proveer y Mejorar el Servicio:</strong> Administrar su cuenta, personalizar su experiencia de aprendizaje, 
+                    y mejorar la funcionalidad de la Plataforma.</li>
+                    <li><strong>Comunicación:</strong> Enviar notificaciones sobre el progreso, actualizaciones del servicio y responder a 
+                    solicitudes de soporte.</li>
+                    <li><strong>Análisis Interno:</strong> Realizar análisis estadísticos y de rendimiento para optimizar la metodología 
+                    educativa y los contenidos de los retos.</li>
+                </ol>
+
+                <h3>3. Compartición y Transferencia de Datos</h3>
+                <p>
+                    <strong>MenTora NO vende ni alquila su información personal.</strong> Sus datos solo serán compartidos en 
+                    los siguientes escenarios limitados:
+                </p>
+                <ul>
+                    <li><strong>Proveedores de Servicios:</strong> Con terceros que nos ayudan a operar la Plataforma (ej. 
+                    alojamiento web, análisis de datos), quienes están obligados a mantener la confidencialidad.</li>
+                    <li><strong>Cumplimiento Legal:</strong> Cuando sea requerido por ley, orden judicial o para proteger 
+                    nuestros derechos legales o la seguridad de otros usuarios.</li>
+                </ul>
+
+                <h3>4. Derechos del Usuario (ARCO)</h3>
+                <p>
+                    Usted tiene derecho en todo momento a acceder, rectificar, cancelar u oponerse al tratamiento de sus 
+                    datos personales (<strong>Derechos ARCO</strong>). Para ejercer estos derechos, por favor envíe una 
+                    solicitud formal a <a href="">mentora@gmail.com</a>.
+                </p>
+                
+                <h3>5. Uso de Cookies y Tecnologías de Rastreo</h3>
+                <p>
+                    Utilizamos cookies y tecnologías similares para rastrear la actividad en nuestro 
+                    servicio y mantener cierta información. Las cookies pueden ser esenciales (para el funcionamiento), 
+                    de rendimiento (para estadísticas) o de funcionalidad (para recordar preferencias). Al usar la Plataforma,
+                     usted acepta el uso de estas tecnologías.
+                </p>
+                
+                <p style="margin-top: 20px; font-size: 0.9em; color: #555;">
+                    <em>MenTora se reserva el derecho de modificar esta Política de Privacidad en cualquier 
+                    momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la Plataforma. 
+                    Le recomendamos revisar esta sección periódicamente.</em>
+                </p>
+            </div>
+        `
+    },
+    "terminos": {
+        title: "Términos y Condiciones de Uso",
+        text: `
+            <div style="padding: 10px;">
+                <h2>Acuerdo de Uso de la Plataforma</h2>
+                <p>
+                    Al acceder o utilizar los servicios de <strong>MenTora</strong>, usted acepta quedar sujeto a los presentes
+                     Términos y Condiciones. Si no está de acuerdo con alguna parte de los términos, no debe utilizar la Plataforma.
+                </p>
+
+                <h3>1. Elegibilidad y Cuentas de Usuario</h3>
+                <p>
+                    El uso de la Plataforma está disponible solo para personas que puedan formar contratos legalmente vinculantes. 
+                    Usted es <strong>responsable</strong> de mantener la confidencialidad de su contraseña y de todas las actividades
+                     que ocurran bajo su cuenta.
+                </p>
+
+                <h3>2. Uso Prohibido</h3>
+                <p>
+                    Queda <strong>estrictamente prohibido</strong>: (a) el uso de la Plataforma para cualquier fin ilegal;
+                     (b) la publicación de contenido ofensivo, difamatorio o que viole derechos de propiedad intelectual; 
+                     (c) el intento de interferir con el funcionamiento adecuado de la Plataforma. El incumplimiento resultará 
+                     en la baja inmediata de la cuenta.
+                </p>
+
+                <h3>3. Propiedad Intelectual</h3>
+                <p>
+                    Todo el contenido de <strong>MenTora</strong>, incluyendo el diseño de los retos, el software, los gráficos y 
+                    el material educativo, es propiedad exclusiva de MenTora o de sus licenciantes y está protegido por derechos 
+                    de autor. Usted solo tiene licencia para el uso personal y no comercial del contenido.
+                </p>
+            </div>
+        `
+    },
+    "contacto": {
+        title: "Información de Contacto",
+        text: `
+            <div style="padding: 10px;">
+                <p>Para consultas generales, soporte técnico o preguntas sobre su cuenta, por favor contáctenos a través de los siguientes medios:</p>
+                <p><strong>Email de Soporte:</strong> <a href="">mentora@gmail.com</a></p>
+                <p><strong>Teléfono:</strong> +52 5619174545 (Horario: Lunes a Viernes, 9:00 - 17:00 CST)</p>
+                <p><strong>Dirección Postal:</strong> Instituto Tecnologíco Nacional de México.</p>
+            </div>
+        `
+    },
+    "equipo": {
+        title: "Conoce a Nuestro Equipo",
+        text: `
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; padding: 20px;">
+                <div style="text-align:center; min-width: 150px;">
+                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
+                    <h4>David Iván Torres Martínez</h4>
+                    <p><strong>Fundador del Proyecto</strong></p>
+                    <p style="font-size: 0.9em; color: #555;">Lider con pensamiento estratégico, capacidad para coordinar la ejecución y experiencia sólida en desarrollo backend.</p>
+                </div>
+                <div style="text-align:center; min-width: 150px;">
+                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
+                    <h4>Karla Ivonne Romero Gonzalez</h4>
+                    <p><strong>Diseñadora UX/UI </strong></p>
+                    <p style="font-size: 0.9em; color: #555;">Especialista en desarrollo frontend, con enfoque técnico en diseño de interacción y arquitectura visual.</p>
+                </div>
+                <div style="text-align:center; min-width: 150px;">
+                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
+                    <h4>Perla Ramos Santillan</h4>
+                    <p><strong>Analista de QA</strong></p>
+                    <p style="font-size: 0.9em; color: #555;">Especialista en pruebas de software con experiencia en verificación, documentación y análisis de resultados..</p>
+                </div>
+            </div>
+        `
+    }
+  };
+   let lastScroll = 0;
+
+   // FUNCIÓN PARA ABRIR MODAL
+   function openModal(type) {
+    // Guardamos la posición EXACTA antes de abrir
+    lastScroll = window.scrollY;
+
+    document.getElementById("modal-title").innerHTML = modalData[type].title;
+    document.getElementById("modal-text").innerHTML = modalData[type].text;
+
+    document.getElementById("modal-box").style.display = "block";
+    document.getElementById("modal-overlay").style.display = "block";
+
+    // Evita que la página se mueva
+    document.body.style.overflow = "hidden";
+   }
+
+   // FUNCIÓN PARA CERRAR MODAL
+   function cerrarModal() {
+    const modal = document.getElementById("modal-box");
+    const overlay = document.getElementById("modal-overlay");
+
+    // Volvemos a permitir scroll en la página
+    document.body.style.overflow = "auto";
+
+    modal.style.display = "none";
+    overlay.style.display = "none";
+
+    //  Regresar EXACTAMENTE al punto donde el usuario estaba
+    setTimeout(() => {
+        window.scrollTo({
+            top: lastScroll,
+            behavior: "instant"   // No animado, sin saltos
+        });
+    }, 1);
+   }
+
+   document.getElementById("close-modal").onclick = cerrarModal;
+   document.getElementById("modal-overlay").onclick = cerrarModal;
+</script>
 </body>
 </html>
