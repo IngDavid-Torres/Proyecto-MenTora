@@ -3,289 +3,793 @@
 <head>
     <meta charset="UTF-8">
     <title>Iniciar Sesión | MenTora</title>
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
-    body {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap" rel="stylesheet">
+<style>
+    * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
         font-family: 'Poppins', 'Orbitron', Arial, sans-serif;
-        background: linear-gradient(120deg, #1a1a2e 0%, #16213e 100%);
-        color: #e0e7ef;
-        min-height: 100vh;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .navbar {
-        width: 100vw;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background: rgba(26,33,62,0.95);
-        color: #00fff1;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start; /* Move content to the left */
-        padding: 0.7rem 2.5rem;
-        z-index: 10;
-        border-bottom: 2px solid #00fff1;
-        box-shadow: 0 2px 18px #00fff1a0;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-        letter-spacing: 2px;
-    }
-    .navbar .logo {
-        font-size: 1.45rem;
-        font-weight: bold;
-        letter-spacing: 2px;
-        color: #00fff1;
-        text-shadow: 0 0 8px #00fff1, 0 0 2px #fff;
-        margin-right: 1.2rem; /* Add space between logo and nav-links */
-    }
-    .navbar .nav-links a {
+        background: #5f7f81;
         color: #fff;
-        text-decoration: none;
-        margin-left: 0.5rem; /* Move button more to the left */
-        font-weight: 600;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-        letter-spacing: 1px;
-        transition: color 0.2s, text-shadow 0.2s;
-    }
-    .navbar .nav-links a:hover {
-        color: #00fff1;
-        text-shadow: 0 0 8px #00fff1;
-    }
-    .footer {
-        width: 100vw;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        background: rgba(26,33,62,0.95);
-        color: #00fff1;
-        text-align: center;
-        padding: 0.7rem 0;
-        font-size: 1rem;
-        letter-spacing: 1.5px;
-        z-index: 10;
-        border-top: 2px solid #00fff1;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-        text-shadow: 0 0 8px #00fff1;
-    }
-    .particles {
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        pointer-events: none;
-        z-index: 0;
-    }
-    .login-container {
-        background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
-        padding: 2.5rem 2rem 2rem 2rem;
-        border-radius: 20px;
-        width: 370px;
-        box-shadow: 0 8px 32px #00fff133;
-        border: 2px solid #00fff1;
-        position: relative;
-        z-index: 1;
-        animation: fadeInUp 1.1s;
-    }
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(40px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .alert-mentora {
-        background: linear-gradient(90deg, #00fff1, #00c3ff);
-        color: #1a1a2e;
-        font-weight: bold;
-        border-radius: 10px;
-        padding: 0.8rem 1.2rem;
-        margin-bottom: 1.2rem;
-        text-align: center;
-        box-shadow: 0 2px 12px #00fff1a0;
-        animation: slideDown 1s;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-    }
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        font-size: 2.1rem;
-        letter-spacing: 2px;
-        color: #00fff1;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-        text-shadow: 0 0 8px #00fff1;
-    }
-    form {
+        overflow-x: hidden;
+        min-height: 100vh;
+        scroll-behavior: smooth;
         display: flex;
         flex-direction: column;
     }
-    label {
-        margin-bottom: 0.3rem;
-        font-weight: bold;
-        color: #00fff1;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
+
+    /* SVG Background */
+    .gears-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        background: #5f7f81;
     }
-    input {
-        padding: 0.6rem;
-        margin-bottom: 1rem;
-        border: none;
-        border-radius: 8px;
+
+    /* Navigation */
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: #5f7f81;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+        font-family: 'Exo 2', sans-serif;
+        letter-spacing: 2px;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+
+    .logo-container img {
+        height: 60px;
+        width: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    nav h1 {
+        font-size: 1.8rem;
+        margin: 0;
+        color: #e0ffff;
+        text-shadow: 0 0 8px #e0ffff, 0 0 2px #fff;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: #fff;
         font-size: 1rem;
-        background: rgba(255,255,255,0.18);
-        color: #00fff1;
-        box-shadow: 0 1px 4px #00fff133;
-        transition: box-shadow 0.2s, border 0.2s;
-        border: 1.5px solid #00fff1;
-        font-family: 'Poppins', Arial, sans-serif;
-    }
-    input:focus {
-        outline: none;
-        box-shadow: 0 0 0 2px #00fff1;
-        border: 2px solid #00fff1;
-        background: #23243a;
-        color: #fff;
-    }
-    button {
-        padding: 0.8rem;
-        background: linear-gradient(90deg, #00fff1, #00c3ff);
-        color: #1a1a2e;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.1rem;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
+        font-weight: 600;
+        transition: color 0.3s, text-shadow 0.3s;
         letter-spacing: 1px;
-        transition: background 0.3s, color 0.2s, transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 2px 12px #00fff1a0;
     }
-    button:hover {
-        background: linear-gradient(90deg, #00c3ff, #00fff1);
-        color: #fff;
-        transform: scale(1.05);
-        box-shadow: 0 4px 24px #00fff1cc;
+
+    .nav-links a:hover {
+        color: #e0ffff;
+        text-shadow: 0 0 8px #e0ffff;
     }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background: #fff;
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+
+    /* Main Content */
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Login Container */
+    .login-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2.5rem;
+        border-radius: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 450px;
+        position: relative;
+        z-index: 20;
+    }
+
+    .login-container h2 {
+        color: #5f7f81;
+        font-family: 'Exo 2', sans-serif;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .login-container label {
+        color: #5f7f81;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-container input {
+    padding: 0.9rem;
+    border: 2px solid #5f7f81;
+    border-radius: 8px;
+    font-size: 1rem; /* fuerza el mismo tamaño SIEMPRE */
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    background: #fff;
+    width: 100%; /* opcional, asegura consistencia */
+    box-sizing: border-box;
+    margin-top: 0.3rem;
+ }
+
+    .login-container input:focus {
+        outline: none;
+        border-color: #ffffffff;
+        box-shadow: 0 0 10px rgba(224, 255, 255, 0.5);
+    }
+
+    .login-container button {
+        text-decoration: none;
+       background: linear-gradient(80deg, #fff 5%, #114c5f 100%);
+       color: #1a1a2e;
+       padding: 1rem 2.5rem;
+       border-radius: 40px;
+       font-weight: bold;
+       font-family: 'Exo 2', sans-serif;
+       margin: 0 0.7rem;
+       font-size: 1.15rem;
+       letter-spacing: 1px;
+       border: none;
+       transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+       display: inline-block;
+    }
+
+    .login-container button:hover {
+       background: linear-gradient(90deg, #114c5f 60%, #9cd2d3 100%);
+       color: #fff;
+       transform: scale(1.08);
+       box-shadow: 0 4px 32px #9cd2d3;
+    }
+
     .register-link {
         text-align: center;
-        margin-top: 1.2rem;
-        font-size: 1rem;
-        color: #00fff1;
-        font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
+        margin-top: 1.5rem;
+        color: #5f7f81;
+        font-size: 0.95rem;
     }
+
     .register-link a {
-        color: #00fff1;
-        text-decoration: underline;
-        font-weight: bold;
+        color: #4a6668;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s;
     }
+
     .register-link a:hover {
-        color: #fff;
-        text-shadow: 0 0 8px #00fff1;
+        color: #114c5f;
+        text-shadow: 0 0 8px #e0ffff;
     }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 2rem;
+        font-size: 0.95rem;
+        color: #fff;
+        letter-spacing: 1.5px;
+         background: #114c5f;
+        font-family: 'Exo 2', sans-serif;
+        position: relative;
+        z-index: 20;
+        margin-top: auto;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-links a {
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .footer-links a:hover {
+        color: #e0ffff;
+        text-shadow: 0 0 8px #e0ffff;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .social-links a {
+        width: 40px;
+        height: 40px;
+        background: rgba(224, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .social-links a:hover {
+        background: #e0ffff;
+        color: #4a6668;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(224, 255, 255, 0.4);
+    }
+
+   /* 🔵 OVERLAY */
+     .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.87);
+    z-index: 900;
+   }
+
+   /* 🔵 MODAL BOX */
+   .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+
+    /* 🔥 Corrección: que se adapte al texto */
+    max-height: 90vh;
+    overflow-y: auto;
+
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+  }
+
+     /* Evitar que el modal cause saltos de pantalla */
+   .modal:focus,
+   .modal *:focus {
+    outline: none;
+  }
+
+ @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  /* 🔵 BOTÓN CERRAR */
+   .close-modal {
+    float: right;
+    cursor: pointer;
+    font-size: 1.6rem;
+    color: #333;
+    transition: 0.3s;
+ }
+
+ .close-modal:hover {
+    color: #114c5f;
+ }
+
+ /* 🔵 CONTENIDO */
+ .modal-content h2 {
+    margin-bottom: 1rem;
+    color: #114c5f;
+    font-family: 'Exo 2', sans-serif;
+ }
+
+ .modal-content p,
+ .modal-content ul {
+    color: #333;
+    line-height: 1.6;
+    text-align: justify;
+ }
+
+ /* 🔵 EQUIPO */
+  .team {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .team-member {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .team-member img {
+    width: 85px;
+    margin-bottom: 0.7rem;
+  }
+
+  .team-member h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #114c5f;
+  }
+  
+    /* Loading Modal */
+    #alert-mentora-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44, 62, 80, 0.55);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
     .loader {
         border: 6px solid #f3f3f3;
-        border-top: 6px solid #00fff1;
+        border-top: 6px solid #5f7f81;
         border-radius: 50%;
-        width: 48px;
-        height: 48px;
+        width: 50px;
+        height: 50px;
         animation: spin 1s linear infinite;
     }
+
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+
     @keyframes glow {
-        from { text-shadow: 0 0 12px #00fff1, 0 0 2px #fff; }
-        to { text-shadow: 0 0 32px #00fff1, 0 0 8px #fff; }
+        from { opacity: 0.8; }
+        to { opacity: 1; }
     }
-    </style>
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        nav {
+            padding: 1rem;
+        }
+
+        .logo-container img {
+            height: 50px;
+            width: 50px;
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 80px;
+            right: -100%;
+            background: rgba(95, 127, 129, 0.98);
+            width: 250px;
+            flex-direction: column;
+            padding: 2rem 1rem;
+            gap: 1.5rem;
+            transition: right 0.3s ease;
+            border-radius: 0 0 0 15px;
+            box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links.active {
+            right: 0;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+
+        .login-container {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        .login-container h2 {
+            font-size: 1.6rem;
+        }
+
+        .footer-links {
+            gap: 1rem;
+        }
+
+        .footer-links a {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .login-container {
+            padding: 1.5rem;
+        }
+
+        .login-container h2 {
+            font-size: 1.4rem;
+        }
+
+        .login-container input,
+        .login-container button {
+            padding: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            padding: 1.5rem 1rem;
+            font-size: 0.85rem;
+        }
+    }
+
+     section {
+        position: relative;
+        z-index: 10;
+    }
+ 
+    .section-title {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #fff;
+    font-family: 'Exo 2', sans-serif;
+    margin-top: 3rem; 
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+  }
+</style>
 </head>
+<body>
 
-<body style="padding-top:60px; padding-bottom:50px;">
+<svg class="gears-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;background:#638385ff;" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+    <g opacity="0.25" stroke="#000" fill="none">
+        <g>
+            <circle cx="400" cy="300" r="70" stroke-width="8"/>
+            <g>
+                <animateTransform attributeName="transform" type="rotate" from="0 400 300" to="360 400 300" dur="6s" repeatCount="indefinite"/>
+                <rect x="390" y="220" width="20" height="30" rx="6" fill="#000"/>
+                <rect x="390" y="350" width="20" height="30" rx="6" fill="#000"/>
+                <rect x="320" y="290" width="30" height="20" rx="6" fill="#000"/>
+                <rect x="470" y="290" width="30" height="20" rx="6" fill="#000"/>
+            </g>
+        </g>
 
-    <!-- Barra de navegación -->
-    <nav class="navbar">
-        <div class="logo" style="display:flex; align-items:center; gap:0.7rem; margin-right:1.2rem;">
-            <img src="/static/img/mentora.png" alt="MenTora Logo" style="height:60px; width:60px; border-radius:50%; background:#fff; border:2px solid #00fff1; box-shadow:0 1px 4px #00fff1a0;">
-            <span style="font-size:1.25rem; font-weight:bold; color:#00fff1; letter-spacing:1px;"></span>
+        <g>
+            <circle cx="1200" cy="700" r="50" stroke-width="6"/>
+            <g>
+                <animateTransform attributeName="transform" type="rotate" from="0 1200 700" to="-360 1200 700" dur="5s" repeatCount="indefinite"/>
+                <rect x="1192" y="650" width="16" height="22" rx="4" fill="#000"/>
+                <rect x="1192" y="728" width="16" height="22" rx="4" fill="#000"/>
+                <rect x="1150" y="692" width="22" height="16" rx="4" fill="#000"/>
+                <rect x="1228" y="692" width="22" height="16" rx="4" fill="#000"/>
+            </g>
+        </g>
+    </g>
+
+    <g fill="#000" opacity="0.15">
+
+        <circle cx="300" cy="900" r="16">
+            <animate attributeName="cy" values="900;200;900" dur="8s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="16;24;16" dur="6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="1700" cy="200" r="12">
+            <animate attributeName="cy" values="200;800;200" dur="7s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="12;18;12" dur="5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="150" cy="1000" r="14">
+            <animate attributeName="cy" values="1000;300;1000" dur="12s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="14;22;14" dur="9s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="600" cy="1200" r="10">
+            <animate attributeName="cy" values="1200;200;1200" dur="11s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1000" cy="1100" r="18">
+            <animate attributeName="cy" values="1100;100;1100" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="18;26;18" dur="8s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1400" cy="950" r="20">
+            <animate attributeName="cy" values="950;300;950" dur="10s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1800" cy="1150" r="12">
+            <animate attributeName="cy" values="1150;400;1150" dur="13s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="900" cy="850" r="6">
+            <animate attributeName="cy" values="850;100;850" dur="16s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="400" cy="1040" r="5">
+            <animate attributeName="cy" values="1040;600;1040" dur="9s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1600" cy="300" r="7">
+            <animate attributeName="cy" values="300;900;300" dur="8s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="1300" cy="100" r="9">
+            <animate attributeName="cy" values="100;700;100" dur="12s" repeatCount="indefinite"/>
+        </circle>
+
+        <circle cx="700" cy="150" r="11">
+            <animate attributeName="cy" values="150;950;150" dur="10s" repeatCount="indefinite"/>
+        </circle>
+
+    </g>
+    <g fill="#000" opacity="0.25">
+        <g>
+            <circle cx="250" cy="400" r="22"/>
+            <rect x="238" y="422" width="24" height="60" rx="12"/>
+            <rect x="230" y="482" width="10" height="40" rx="5">
+                <animate attributeName="y" values="482;492;482" dur="2.2s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="260" y="482" width="10" height="40" rx="5">
+                <animate attributeName="y" values="482;472;482" dur="2.2s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+        <g>
+            <circle cx="1700" cy="800" r="18"/>
+            <rect x="1690" y="818" width="20" height="48" rx="10"/>
+            <rect x="1682" y="866" width="8" height="28" rx="4">
+                <animate attributeName="y" values="866;876;866" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="1710" y="866" width="8" height="28" rx="4">
+                <animate attributeName="y" values="866;856;866" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+        <g>
+            <circle cx="1100" cy="300" r="15"/>
+            <rect x="1092" y="315" width="16" height="38" rx="8"/>
+            <rect x="1086" y="353" width="7" height="20" rx="3.5">
+                <animate attributeName="y" values="353;363;353" dur="2.8s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="1111" y="353" width="7" height="20" rx="3.5">
+                <animate attributeName="y" values="353;343;353" dur="2.8s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+        <g>
+            <circle cx="700" cy="600" r="20"/>
+            <rect x="690" y="620" width="20" height="52" rx="10"/>
+            <rect x="682" y="672" width="8" height="28" rx="4">
+                <animate attributeName="y" values="672;682;672" dur="2.4s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="710" y="672" width="8" height="28" rx="4">
+                <animate attributeName="y" values="672;662;672" dur="2.4s" repeatCount="indefinite"/>
+            </rect>
+        </g>
+
+    </g>
+</svg>
+    
+    <nav>
+        <div class="logo-container">
+           <img src="/static/img/mentora1.png" alt="Logo MenTora">
         </div>
-        <div class="nav-links">
-            <a href="/">Inicio</a>
+        <div class="nav-links" id="navLinks">
+            <a href="/">INICIO</a>
+            <a href="/login">INICIAR SESIÓN</a>
+            <a href="/register">REGÍSTRATE</a>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
     </nav>
 
+     <section>
+        <h2 class="section-title">¡BIENVENIDO DE NUEVO!</h2>  
+     </section> 
 
-    <canvas class="particles"></canvas>
-
-    <div class="login-container">
-        <div id="alert-mentora-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(44,62,80,0.55); z-index:1000; justify-content:center; align-items:center;">
-            <div style="background:linear-gradient(120deg,#00fff1 0%,#16213e 100%); color:#1a1a2e; border-radius:22px; padding:2.2rem 2.5rem; box-shadow:0 4px 32px #00fff1a0, 0 0 24px #00fff1; display:flex; flex-direction:column; align-items:center; border:2.5px solid #00fff1; position:relative; overflow:hidden;">
-                <div style="font-size:2.1rem; font-weight:bold; margin-bottom:1.1rem; font-family:'Orbitron','Poppins',Arial,sans-serif; color:#00fff1; letter-spacing:2px; text-shadow:0 0 12px #00fff1,0 0 2px #fff;">
-                    <span style="display:inline-block; animation:glow 1.2s infinite alternate;">Entrando a MenTora</span>
+    <main>
+        <div class="login-container">
+            <h2>INICIAR SESIÓN</h2>
+            <form id="loginForm" method="POST" action="/login" autocomplete="off">
+                <div>
+                    <label for="username">Usuario: </label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
                 </div>
-                <div style="margin-bottom:1.2rem; color:#fff; font-family:'Poppins','Orbitron',Arial,sans-serif; font-size:1.1rem; text-shadow:0 0 8px #00fff1;">¡Prepárate para aprender jugando!</div>
-                <div class="loader" style="margin-bottom:0.7rem; border-top:6px solid #fff; border-right:6px solid #00fff1; border-bottom:6px solid #00c3ff; border-left:6px solid #00fff1; box-shadow:0 0 16px #00fff1;"></div>
-                <div style="font-size:1.1rem; color:#fab005; font-family:'Orbitron','Poppins',Arial,sans-serif; letter-spacing:1px; text-shadow:0 0 8px #00fff1;">Cargando...</div>
-                <div style="position:absolute; top:-30px; right:-30px; width:80px; height:80px; background:radial-gradient(circle,#00fff1 0%,transparent 70%); opacity:0.25;"></div>
-                <div style="position:absolute; bottom:-30px; left:-30px; width:80px; height:80px; background:radial-gradient(circle,#00fff1 0%,transparent 70%); opacity:0.18;"></div>
+                <div>
+                    <label for="password">Contraseña: </label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" id="btnEntrar">INICIAR</button>
+            </form>
+            <div class="register-link">
+                ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
             </div>
         </div>
-    <div id="alert-error" class="alert-mentora" style="display:none; background:linear-gradient(90deg,#ff6b6b,#f06595);color:#fff;"></div>
-        <h2>Iniciar Sesión</h2>
-        <form id="loginForm" method="POST" action="/login" autocomplete="off">
-            <label for="username">Usuario</label>
-            <input type="text" id="username" name="username" required autocomplete="username">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" required autocomplete="current-password">
-            <button type="submit" id="btnEntrar">Entrar</button>
-        </form>
-        <div class="register-link">
-            ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
-        </div>
+    </main>
+     <br>
+
+  <footer>
+    <div class="footer-content">
+    <div class="footer-links">
+    <a href="#" onclick="openModal('nosotros')">Sobre Nosotros</a>
+    <a href="#" onclick="openModal('privacidad')">Privacidad</a>
+    <a href="#" onclick="openModal('terminos')">Términos</a>
+    <a href="#" onclick="openModal('contacto')">Contacto</a>
+    <a href="#" onclick="openModal('equipo')">Equipo</a>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        &copy; 2025 MenTora | Aprende jugando. Todos los derechos reservados.
+    </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+        </div>
+
+        <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados</p>
+    </div>
     </footer>
 
-    <script>
-    // Partículas animadas sutiles en el fondo
-    const canvas = document.querySelector('.particles');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-    for (let i = 0; i < 32; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            r: 1.5 + Math.random() * 2.5,
-            dx: (Math.random() - 0.5) * 0.4,
-            dy: (Math.random() - 0.5) * 0.4,
-            alpha: 0.15 + Math.random() * 0.15
-        });
-    }
-    function drawParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-            ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
-            ctx.fill();
-            p.x += p.dx;
-            p.y += p.dy;
-            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-        }
-        requestAnimationFrame(drawParticles);
-    }
-    drawParticles();
 
+    <div id="modal-overlay" class="modal-overlay"></div>
+    <div id="modal-box" class="modal">
+    <div class="modal-content">
+        <span id="close-modal" class="close-modal">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+    </div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay"></div>
+
+    <div class="modal" id="modal-nosotros">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-nosotros">&times;</span>
+        <h2>Sobre Nosotros</h2>
+        <p>
+            MenTora es una plataforma diseñada para impulsar el aprendizaje basado en retos, 
+            combinando gamificación, educación y comunidad. Nuestro objetivo es ayudarte a 
+            mejorar tus habilidades sin importar tu nivel, de una forma divertida y estratégica.
+        </p>
+    </div>
+    </div>
+
+    <div class="modal" id="modal-privacidad">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-privacidad">&times;</span>
+        <h2>Política de Privacidad</h2>
+        <p>
+            Tus datos están protegidos. Solo utilizamos información esencial para mejorar 
+            tu experiencia dentro de la plataforma y nunca serán compartidos sin tu consentimiento.
+            Cumplimos con estándares GDPR y normativas internacionales.
+        </p>
+    </div>
+    </div>
+
+    <div class="modal" id="modal-terminos">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-terminos">&times;</span>
+        <h2>Términos y Condiciones</h2>
+        <p>
+            Al usar MenTora aceptas los lineamientos de uso responsable. 
+            El contenido está en constante mejora, y puede actualizarse sin previo aviso.
+        </p>
+    </div>
+    </div>
+
+    <div class="modal" id="modal-contacto">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-contacto">&times;</span>
+        <h2>Contacto</h2>
+        <p>¿Tienes dudas, sugerencias o problemas? Escríbenos:</p>
+        <ul>
+            <li>Email: soporte@mentora.com</li>
+            <li>Teléfono: +52 000 000 0000</li>
+            <li>Horario: Lunes a Viernes 9:00–18:00</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="modal" id="modal-equipo">
+    <div class="modal-content">
+        <span class="close-modal" data-close="modal-equipo">&times;</span>
+        <h2>Nuestro Equipo</h2>
+
+        <div class="team">
+            <div class="team-member">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <h3>Ivone</h3>
+                <p>Fundadora y Diseñadora UX/UI</p>
+            </div>
+
+            <div class="team-member">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <h3>Marco</h3>
+                <p>Desarrollador Full Stack</p>
+            </div>
+
+            <div class="team-member">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <h3>Sofía</h3>
+                <p>Directora de Contenido Educativo</p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="alert-mentora-modal">
+        <div style="background:linear-gradient(120deg,#e0ffff 0%,#fff 100%); color:#114c5f; border-radius:22px; padding:2.2rem 2.5rem; box-shadow:0 4px 32px #114c5f; display:flex; flex-direction:column; align-items:center; border:2.5px solid  #114c5f">
+            <div style="font-size:2.1rem; font-weight:bold; margin-bottom:1.1rem; font-family: 'Poppins', 'Orbitron', Arial, sans-serif; color: #114c5f; letter-spacing:2px;">
+                <span style="display:inline-block; animation:glow 1.2s infinite alternate;">ENTRANDO A MENTORA</span>
+            </div>
+            <div style="margin-bottom:1.2rem; color:#4a6668; font-family:'Poppins',sans-serif; font-size:1.1rem;">¡Prepárate para aprender jugando!</div>
+            <div class="loader" style="margin-bottom:0.7rem;"></div>
+            <div style="font-size:1.1rem; color:#5f7f81; font-family:'Orbitron',sans-serif; letter-spacing:1px;">Cargando...</div>
+        </div>
+    </div>
+    <div id="alert-error" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#ff4d4d; color:#fff; padding:1rem 2rem; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:1001; font-family:'Poppins',sans-serif; font-weight:600;">
+        Usuario o contraseña incorrectos
+    </div>
+
+<script>
     // Lógica de login AJAX y alertas
     const loginForm = document.getElementById('loginForm');
     const btnEntrar = document.getElementById('btnEntrar');
@@ -339,7 +843,226 @@
             alertError.style.display = 'block';
         }
     });
-    </script>
+
+   document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado');
+    
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    
+    console.log('Hamburger:', hamburger);
+    console.log('NavLinks:', navLinks);
+
+    if (hamburger && navLinks) {
+        console.log('Elementos encontrados');
+        
+        hamburger.addEventListener('click', function(e) {
+            console.log('Click en hamburger');
+            navLinks.classList.toggle('active');
+            console.log('Clases después del toggle:', navLinks.className);
+        });
+    } else {
+        console.log('ERROR: No se encontraron los elementos');
+    }
+   });
+
+
+   
+   // CONTENIDOS DE CADA MODAL
+   const modalData = {
+    "nosotros": {
+        title: "Sobre MenTora",
+        text: `
+            <div style="padding: 10px;">
+                <h2>Nuestra Misión y Visión</h2>
+                <p>
+                    Somos <strong>MenTora</strong>, una plataforma de EdTech innovadora comprometida con la 
+                    <strong>transformación del aprendizaje profesional</strong>. Nuestra misión es desatar el
+                     potencial de cada usuario a través de una metodología de <strong>aprendizaje basado en retos</strong>
+                      (Challenge-Based Learning) altamente gamificada.
+                </p>
+                <p>
+                    Nuestra visión es ser la plataforma líder a nivel global en el desarrollo de habilidades críticas del
+                     siglo XXI (pensamiento crítico, resolución de problemas complejos, y creatividad), ofreciendo una experiencia
+                      inmersiva, social y estratégicamente divertida. Fundada en la premisa de que <strong>aprender haciendo</strong>
+                       es el camino más efectivo, nos dedicamos a construir un ecosistema donde la educación y la práctica profesional 
+                       convergen.
+                </p>
+                <p>
+                    Nos enfocamos en el diseño de experiencias que simulan escenarios del mundo real, 
+                    preparando a nuestros usuarios no solo con conocimientos, sino con la <strong>capacidad de aplicarlos</strong> 
+                    bajo presión y en colaboración con una comunidad de pares y expertos.
+                </p>
+            </div>
+        `
+    },
+    "privacidad": {
+        title: "Política de Privacidad (Aviso de Privacidad)",
+        text: `
+            <div style="padding: 10px;">
+                <h2>Última Actualización: 17 de Noviembre de 2025</h2>
+
+                <h3>1. Recopilación de Información Personal</h3>
+                <p>
+                    MenTora (referida en adelante como "la Plataforma") recaba información que usted nos proporciona
+                     directamente al crear una cuenta, participar en desafíos, o interactuar con la comunidad. Esta 
+                     información puede incluir:
+                </p>
+                <ul>
+                    <li><strong>Datos de Identificación:</strong> Nombre completo, correo electrónico, nombre de usuario y contraseña (cifrada).</li>
+                    <li><strong>Datos de Uso y Desempeño:</strong> Progreso en retos, puntuaciones, insignias obtenidas, y actividad dentro de los foros.</li>
+                    <li><strong>Datos Técnicos:</strong> Dirección IP, tipo de dispositivo, sistema operativo, y datos de navegación (a través de cookies).</li>
+                </ul>
+
+                <h3>2. Finalidad del Tratamiento de Datos</h3>
+                <h3>3. Compartición y Transferencia de Datos</h3>
+                <p>
+                    <strong>MenTora NO vende ni alquila su información personal.</strong> Sus datos solo serán compartidos en 
+                    los siguientes escenarios limitados:
+                </p>
+                <ul>
+                    <li><strong>Proveedores de Servicios:</strong> Con terceros que nos ayudan a operar la Plataforma (ej. 
+                    alojamiento web, análisis de datos), quienes están obligados a mantener la confidencialidad.</li>
+                    <li><strong>Cumplimiento Legal:</strong> Cuando sea requerido por ley, orden judicial o para proteger 
+                    nuestros derechos legales o la seguridad de otros usuarios.</li>
+                </ul>
+
+                <h3>4. Derechos del Usuario (ARCO)</h3>
+                <p>
+                    Usted tiene derecho en todo momento a acceder, rectificar, cancelar u oponerse al tratamiento de sus 
+                    datos personales (<strong>Derechos ARCO</strong>). Para ejercer estos derechos, por favor envíe una 
+                    solicitud formal a <a href="">mentora@gmail.com</a>.
+                </p>
+                
+                <h3>5. Uso de Cookies y Tecnologías de Rastreo</h3>
+                <p>
+                    Utilizamos cookies y tecnologías similares para rastrear la actividad en nuestro 
+                    servicio y mantener cierta información. Las cookies pueden ser esenciales (para el funcionamiento), 
+                    de rendimiento (para estadísticas) o de funcionalidad (para recordar preferencias). Al usar la Plataforma,
+                     usted acepta el uso de estas tecnologías.
+                </p>
+                
+                <p style="margin-top: 20px; font-size: 0.9em; color: #555;">
+                    <em>MenTora se reserva el derecho de modificar esta Política de Privacidad en cualquier 
+                    momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la Plataforma. 
+                    Le recomendamos revisar esta sección periódicamente.</em>
+                </p>
+            </div>
+        `
+    },
+    "terminos": {
+        title: "Términos y Condiciones de Uso",
+        text: `
+            <div style="padding: 10px;">
+                <h2>Acuerdo de Uso de la Plataforma</h2>
+                <p>
+                    Al acceder o utilizar los servicios de <strong>MenTora</strong>, usted acepta quedar sujeto a los presentes
+                     Términos y Condiciones. Si no está de acuerdo con alguna parte de los términos, no debe utilizar la Plataforma.
+                </p>
+
+                <h3>1. Elegibilidad y Cuentas de Usuario</h3>
+                <p>
+                    El uso de la Plataforma está disponible solo para personas que puedan formar contratos legalmente vinculantes. 
+                    Usted es <strong>responsable</strong> de mantener la confidencialidad de su contraseña y de todas las actividades
+                     que ocurran bajo su cuenta.
+                </p>
+
+                <h3>2. Uso Prohibido</h3>
+                <p>
+                    Queda <strong>estrictamente prohibido</strong>: (a) el uso de la Plataforma para cualquier fin ilegal;
+                     (b) la publicación de contenido ofensivo, difamatorio o que viole derechos de propiedad intelectual; 
+                     (c) el intento de interferir con el funcionamiento adecuado de la Plataforma. El incumplimiento resultará 
+                     en la baja inmediata de la cuenta.
+                </p>
+
+                <h3>3. Propiedad Intelectual</h3>
+                <p>
+                    Todo el contenido de <strong>MenTora</strong>, incluyendo el diseño de los retos, el software, los gráficos y 
+                    el material educativo, es propiedad exclusiva de MenTora o de sus licenciantes y está protegido por derechos 
+                    de autor. Usted solo tiene licencia para el uso personal y no comercial del contenido.
+                </p>
+            </div>
+        `
+    },
+    "contacto": {
+        title: "Información de Contacto",
+        text: `
+            <div style="padding: 10px;">
+                <p>Para consultas generales, soporte técnico o preguntas sobre su cuenta, por favor contáctenos a través de los siguientes medios:</p>
+                <p><strong>Email de Soporte:</strong> <a href="">mentora@gmail.com</a></p>
+                <p><strong>Teléfono:</strong> +52 5619174545 (Horario: Lunes a Viernes, 9:00 - 17:00 CST)</p>
+                <p><strong>Dirección Postal:</strong> Instituto Tecnologíco Nacional de México.</p>
+            </div>
+        `
+    },
+    "equipo": {
+        title: "Conoce a Nuestro Equipo",
+        text: `
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; padding: 20px;">
+                <div style="text-align:center; min-width: 150px;">
+                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
+                    <h4>David Iván Torres Martínez</h4>
+                    <p><strong>Fundador del Proyecto</strong></p>
+                    <p style="font-size: 0.9em; color: #555;">Lider con pensamiento estratégico, capacidad para coordinar la ejecución y experiencia sólida en desarrollo backend.</p>
+                </div>
+                <div style="text-align:center; min-width: 150px;">
+                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
+                    <h4>Karla Ivonne Romero Gonzalez</h4>
+                    <p><strong>Diseñadora UX/UI </strong></p>
+                    <p style="font-size: 0.9em; color: #555;">Especialista en desarrollo frontend, con enfoque técnico en diseño de interacción y arquitectura visual.</p>
+                </div>
+                <div style="text-align:center; min-width: 150px;">
+                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
+                    <h4>Perla Ramos Santillan</h4>
+                    <p><strong>Analista de QA</strong></p>
+                    <p style="font-size: 0.9em; color: #555;">Especialista en pruebas de software con experiencia en verificación, documentación y análisis de resultados..</p>
+                </div>
+            </div>
+        `
+    }
+  };
+   let lastScroll = 0;
+
+   // FUNCIÓN PARA ABRIR MODAL
+   function openModal(type) {
+    // Guardamos la posición EXACTA antes de abrir
+    lastScroll = window.scrollY;
+
+    document.getElementById("modal-title").innerHTML = modalData[type].title;
+    document.getElementById("modal-text").innerHTML = modalData[type].text;
+
+    document.getElementById("modal-box").style.display = "block";
+    document.getElementById("modal-overlay").style.display = "block";
+
+    // Evita que la página se mueva
+    document.body.style.overflow = "hidden";
+   }
+
+   // FUNCIÓN PARA CERRAR MODAL
+   function cerrarModal() {
+    const modal = document.getElementById("modal-box");
+    const overlay = document.getElementById("modal-overlay");
+
+    // Volvemos a permitir scroll en la página
+    document.body.style.overflow = "auto";
+
+    modal.style.display = "none";
+    overlay.style.display = "none";
+
+    //  Regresar EXACTAMENTE al punto donde el usuario estaba
+    setTimeout(() => {
+        window.scrollTo({
+            top: lastScroll,
+            behavior: "instant"   // No animado, sin saltos
+        });
+    }, 1);
+   }
+
+   document.getElementById("close-modal").onclick = cerrarModal;
+   document.getElementById("modal-overlay").onclick = cerrarModal;
+
+</script>
+
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div id="login-error-msg" style="display:none;">{{ messages[0] }}</div>

@@ -9,59 +9,142 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
-       
-    body {
+      
+    * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }  
+   
+    body {
         font-family: 'Poppins', 'Orbitron', Arial, sans-serif;
-        background: linear-gradient(120deg, #114c5f 0%, #114c5f 100%);
-        color: #638385ff;
+        background: #5f7f81;
+        color: #fff;
         overflow-x: hidden;
         min-height: 100vh;
         scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
     }
 
 
-     nav {
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       padding: 1.0rem 2rem;
-       background: #638385ff;
-       border-bottom: 2px solid #fff;
-       box-shadow: 0 4px 32px rgba(0,255,241,0.08);
-       font-family: 'Exo 2', sans-serif;
-       letter-spacing: 2px;
-       position: sticky;
-       top: 0;
-       z-index: 90;
+  /* Navigation */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #5f7f81;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+    font-family: 'Exo 2', sans-serif;
+    letter-spacing: 2px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .logo-container img {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+   .nav-links a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.3s, text-shadow 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .nav-links a:hover {
+    color: #e0ffff;
+    text-shadow: 0 0 8px #e0ffff;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+
+   /* RESPONSIVE */
+   @media (max-width: 768px) {
+    nav {
+        padding: 1rem;
     }
 
-    nav h1 {
-       font-size: 2.1rem;
-       margin: 0;
-       color: #e0ffff;
-       text-shadow: 0 0 8px #e0ffff, 0 0 2px #fff;
+    .logo-container img {
+        height: 50px;
+        width: 50px;
     }
 
     .nav-links {
-       display: flex;
-       gap: 1.5rem;
-       align-items: center;
+        position: fixed;  /* Cambiado de absolute a fixed */
+        top: 80px;
+        right: -100%;
+        background: rgba(95, 127, 129, 0.98);
+        width: 250px;
+        flex-direction: column;
+        padding: 2rem 1rem;
+        gap: 1.5rem;
+        transition: right 0.3s ease;
+        border-radius: 0 0 0 15px;
+        box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.3);
+        z-index: 100;  /* Agregado z-index */
     }
 
-    .nav-links a {
-       text-decoration: none;
-       color: #fff;
-       font-size: 1.05rem;
-       font-weight: 600;
-       transition: color 0.3s, text-shadow 0.3s;
-       letter-spacing: 1px;
+    .nav-links.active {
+        right: 0 !important;  /* Agregado !important por si hay conflicto */
     }
 
-    .nav-links a:hover {
-       color: #e0ffff;
-       text-shadow: 0 0 8px #e0ffff;
+    .hamburger {
+        display: flex;
+        z-index: 101;  /* Para que esté siempre visible */
     }
+
+    .login-container {
+        padding: 2rem;
+        margin: 1rem;
+    }
+
+    .login-container h2 {
+        font-size: 1.6rem;
+    }
+
+    .footer-links {
+        gap: 1rem;
+    }
+
+    .footer-links a {
+        font-size: 0.85rem;
+    }
+  }
+
 
     .hero {
        text-align: center;
@@ -835,10 +918,15 @@
     font-size: 1.2rem;
     color: #114c5f;
   }
-
+   
+    nav h1 {
+    order: 2;
+    }
+    .nav-links {
+    order: 1;
+    }
 </style>
 </head>
-
 <body>
     <svg class="gears-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;background:#638385ff;" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
     <g opacity="0.25" stroke="#000" fill="none">
@@ -964,29 +1052,32 @@
 
     </g>
     </svg>
-
+      
     <nav>
-        <div style="display: flex; align-items: center; gap: 0.7rem;">
-            <img src="/static/img/mentora1.png" alt="Logo MenTora" style="height: 90px; width: 100px; border-radius: 60%; object-fit: cover;">
-        </div>
-        <div class="nav-links">
-            <a href="/">INICIO</a>
-            <a href="#caracteristicas">CARACTERÍSTICAS</a>
-            <a href="#beneficios">BENEFICIOS</a>
-            <a href="#testimonios">TESTIMONIOS</a>
-            <a href="/login">INICIAR SESIÓN</a>
-            <a href="/register">REGÍSTRATE</a>
-
+    <div class="logo-container">
+        <img src="/static/img/mentora1.png" alt="Logo MenTora">
+    </div>
+    <div class="nav-links" id="navLinks">
+        <a href="/">INICIO</a>
+        <a href="#caracteristicas">CARACTERÍSTICAS</a>
+        <a href="#beneficios">BENEFICIOS</a>
+        <a href="#testimonios">TESTIMONIOS</a>
+        <a href="/login">INICIAR SESIÓN</a>
+        <a href="/register">REGÍSTRATE</a>
+    </div>
     <div class="hamburger" id="hamburger">
-        <span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
     </nav>
-
+  
     <section class="hero" id="inicio">
         <h2>DESATA TU IMAGINACIÓN</h2>
         <p>Sumérgete en desafíos épicos donde una línea de código es un movimiento estratégico. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
         <div class="cta-buttons">
             <a href="/register">EMPEZAR A CODIFICAR</a>
+            
             <a href="/login">CONTINUAR AVENTURA</a>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
@@ -1796,18 +1887,6 @@
                 </ul>
 
                 <h3>2. Finalidad del Tratamiento de Datos</h3>
-                <p>
-                    Sus datos son tratados con los siguientes propósitos principales:
-                </p>
-                <ol>
-                    <li><strong>Proveer y Mejorar el Servicio:</strong> Administrar su cuenta, personalizar su experiencia de aprendizaje, 
-                    y mejorar la funcionalidad de la Plataforma.</li>
-                    <li><strong>Comunicación:</strong> Enviar notificaciones sobre el progreso, actualizaciones del servicio y responder a 
-                    solicitudes de soporte.</li>
-                    <li><strong>Análisis Interno:</strong> Realizar análisis estadísticos y de rendimiento para optimizar la metodología 
-                    educativa y los contenidos de los retos.</li>
-                </ol>
-
                 <h3>3. Compartición y Transferencia de Datos</h3>
                 <p>
                     <strong>MenTora NO vende ni alquila su información personal.</strong> Sus datos solo serán compartidos en 
@@ -1953,6 +2032,29 @@
 
    document.getElementById("close-modal").onclick = cerrarModal;
    document.getElementById("modal-overlay").onclick = cerrarModal;
+
+   document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado');
+    
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    
+    console.log('Hamburger:', hamburger);
+    console.log('NavLinks:', navLinks);
+
+    if (hamburger && navLinks) {
+        console.log('Elementos encontrados');
+        
+        hamburger.addEventListener('click', function(e) {
+            console.log('Click en hamburger');
+            navLinks.classList.toggle('active');
+            console.log('Clases después del toggle:', navLinks.className);
+        });
+    } else {
+        console.log('ERROR: No se encontraron los elementos');
+    }
+   });
+
 </script>
 </body>
 </html>
