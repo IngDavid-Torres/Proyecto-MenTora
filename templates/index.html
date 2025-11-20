@@ -28,34 +28,39 @@
     }
 
 
-  /* Navigation */
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: #5f7f81;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
-    font-family: 'Exo 2', sans-serif;
-    letter-spacing: 2px;
-    position: sticky;
-    top: 0;
-    z-index: 90;
-  }
+   nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: #5f7f81;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+        font-family: 'Exo 2', sans-serif;
+        letter-spacing: 2px;
+        position: sticky;
+        top: 0;
+        height: 80px;       
+        padding: 0 2rem;       
+        z-index: 90;
+    }
 
-  .logo-container {
+    .logo-container {
+       padding-top: 8px;
+    height: 100%;           /* Igual a la altura del nav */
+    width: 80px;            /* Ajusta el ancho que quieras */
     display: flex;
     align-items: center;
-    gap: 0.7rem;
-  }
+    justify-content: center;
+    overflow: hidden;       /* Evita que se deforme */        
 
-  .logo-container img {
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
+    }
+
+    .logo-container img {
+     height: 100%;           
+    width: auto;           
+    object-fit: cover;   
+    }
 
   .nav-links {
     display: flex;
@@ -1263,7 +1268,7 @@
             <a href="#"><i class="fab fa-x-twitter"></i></a>
         </div>
 
-        <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados</p>
+        <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados.</p>
     </div>
     </footer>
 
@@ -1392,7 +1397,7 @@
         </div>
         
         <div class="typing-indicator" id="typing-indicator">
-            <div class="bot-avatar">🤖</div>
+            <div class="bot-avatar"></div>
             <div>
                 MenToraBot está escribiendo...
                 <div class="typing-dots">
@@ -2057,4 +2062,4 @@
 
 </script>
 </body>
-</html>
+</html> 

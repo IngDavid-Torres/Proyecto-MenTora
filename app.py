@@ -366,7 +366,8 @@ def biblioteca():
         app.logger.error(f"Error en biblioteca: {str(e)}")
         flash('Error al cargar la biblioteca.', 'error')
         return redirect(url_for('dashboard'))
-
+    
+    
 # Reto activo
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
@@ -424,6 +425,29 @@ def quiz():
         return redirect(url_for('dashboard'))
 
     return render_template('quiz.html', question=question)
+
+
+@app.route('/noticias')
+def noticias():
+    """Noticiero de programación con actualizaciones tech."""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    try:
+        user = User.query.get(session['user_id'])
+        if not user:
+            flash('Usuario no encontrado.', 'error')
+            return redirect(url_for('login'))
+        
+        return render_template('noticias.html',
+                             username=user.username,
+                             avatar_url=user.avatar_url,
+                             theme=session.get('theme', user.theme if user.theme else 'default'))
+    except Exception as e:
+        app.logger.error(f"Error en noticias: {str(e)}")
+        flash('Error al cargar las noticias.', 'error')
+        return redirect(url_for('dashboard'))
+    
 
 
 @app.route('/admin', methods=['GET'])

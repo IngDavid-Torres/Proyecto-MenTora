@@ -36,8 +36,7 @@
         background: #5f7f81;
     }
 
-    /* Navigation */
-    nav {
+     nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -49,20 +48,26 @@
         letter-spacing: 2px;
         position: sticky;
         top: 0;
+        height: 80px;       
+        padding: 0 2rem;       
         z-index: 90;
     }
 
     .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
+       padding-top: 8px;
+    height: 100%;           /* Igual a la altura del nav */
+    width: 80px;            /* Ajusta el ancho que quieras */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;       /* Evita que se deforme */        
+
     }
 
     .logo-container img {
-        height: 60px;
-        width: 60px;
-        border-radius: 50%;
-        object-fit: cover;
+     height: 100%;           
+    width: auto;           
+    object-fit: cover;   
     }
 
     nav h1 {
@@ -414,8 +419,9 @@
         }
 
         .logo-container img {
-            height: 50px;
-            width: 50px;
+            height: 100%;           
+    width: auto;           
+    object-fit: cover; 
         }
 
         nav h1 {
@@ -1123,4 +1129,4 @@
 
 </script>
 </body>
-</html>
+</html>   

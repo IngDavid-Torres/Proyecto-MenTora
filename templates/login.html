@@ -49,21 +49,28 @@
         letter-spacing: 2px;
         position: sticky;
         top: 0;
+        height: 80px;       
+        padding: 0 2rem;       
         z-index: 90;
     }
 
     .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
+    padding-top: 8px;
+    height: 100%;           
+    width: 80px;           
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;            
+
     }
 
     .logo-container img {
-        height: 60px;
-        width: 60px;
-        border-radius: 50%;
-        object-fit: cover;
+     height: 100%;           
+    width: auto;           
+    object-fit: cover;   
     }
+
 
     nav h1 {
         font-size: 1.8rem;
@@ -1070,4 +1077,4 @@
         {% endwith %}
 
 </body>
-</html>
+</html>   
