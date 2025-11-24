@@ -56,7 +56,7 @@
 
     .nav-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: center;
     }
 
@@ -73,7 +73,7 @@
     color: #e0ffff;
     text-shadow: 0 0 8px #e0ffff;
    }
-
+  
   .hamburger {
     display: none;
     flex-direction: column;
@@ -100,7 +100,6 @@
         width: auto;
     }
 
-    /* Mobile slide-in panel using transform for smoother performance */
     .nav-links {
         position: fixed;
         top: 0;
@@ -111,40 +110,21 @@
         transform: translateX(100%);
         background: rgba(95, 127, 129, 0.98);
         flex-direction: column;
-        padding: 4.5rem 1.2rem 2rem 1.2rem; /* leave space for top nav */
+        padding: 4rem 1.2rem 2rem 1.2rem;
         gap: 1.5rem;
         transition: transform 0.28s ease;
         border-radius: 0 0 0 12px;
         box-shadow: -8px 8px 28px rgba(0, 0, 0, 0.3);
         z-index: 100;
         align-items: flex-start;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
     }
 
-    /* Visible state */
+ 
     .nav-links.active {
         transform: translateX(0) !important;
     }
 
-    /* Make nav links full-width, touch friendly and clearly visible */
-    .nav-links a {
-        display: block;
-        width: 100%;
-        color: #fff;
-        font-size: 1.05rem;
-        padding: 0.65rem 0;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-        text-decoration: none;
-    }
 
-    .nav-links a:focus, .nav-links a:hover {
-        color: #e0ffff;
-        text-shadow: 0 0 8px #e0ffff;
-        outline: none;
-    }
-
-    /* Make hamburger visible and touch-friendly */
     .hamburger {
         display: flex;
         z-index: 101;
@@ -173,7 +153,6 @@
         transition: transform 0.25s ease, opacity 0.2s ease;
     }
 
-    /* Open state animation */
     .hamburger.open span:nth-child(1) {
         transform: translateY(6px) rotate(45deg);
     }
@@ -184,7 +163,7 @@
         transform: translateY(-6px) rotate(-45deg);
     }
 
-    /* Overlay behind mobile menu */
+
     .nav-overlay {
         position: fixed;
         inset: 0;
@@ -270,6 +249,42 @@
        border: none;
        transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
        display: inline-block;
+    }
+
+    /* Make CTA buttons responsive: wrap and stack on small screens */
+    .cta-buttons {
+        display: flex;
+        gap: 0.9rem;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-buttons a {
+        flex: 0 1 auto;
+        min-width: 160px;
+        text-align: center;
+        padding: 0.9rem 1.6rem;
+    }
+
+    @media (max-width: 520px) {
+        .cta-buttons {
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .cta-buttons a {
+            width: 100%;
+            max-width: 340px;
+            padding: 0.95rem 1.2rem;
+            margin: 0;
+        }
+        .hero h2 {
+            font-size: 2.2rem;
+        }
+        .hero p {
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
     }
 
     .cta-buttons a:hover {
@@ -418,6 +433,75 @@
         font-size: 1.1rem;
     }
 
+:root{
+  --reveal-duration: 700ms;
+  --reveal-ease: cubic-bezier(.15,.9,.35,1);
+  --reveal-distance: 22px;
+  --reveal-scale: 0.995;
+  --reveal-blur: 6px;
+  --reveal-stagger-gap: 80ms;
+}
+
+.reveal{
+  opacity: 0;
+  transform: translateY(var(--reveal-distance)) scale(var(--reveal-scale));
+  filter: blur(var(--reveal-blur));
+  transition:
+    opacity var(--reveal-duration) var(--reveal-ease),
+    transform var(--reveal-duration) var(--reveal-ease),
+    filter calc(var(--reveal-duration) / 1.15) var(--reveal-ease);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  /* Optional: improve layered rendering */
+  transform-origin: 50% 50%;
+}
+
+/* Active state — clean and crisp */
+.reveal.is-revealed{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* For upward reveal (element comes into view from top) */
+.reveal[data-direction="up"]{
+  transform: translateY(calc(var(--reveal-distance) * -1)) scale(var(--reveal-scale));
+}
+.reveal[data-direction="up"].is-revealed{
+  transform: translateY(0) scale(1);
+}
+
+/* horizontal variants */
+.reveal[data-direction="left"]{ transform: translateX(calc(var(--reveal-distance) * -1)) scale(var(--reveal-scale)); }
+.reveal[data-direction="right"]{ transform: translateX(var(--reveal-distance)) scale(var(--reveal-scale)); }
+
+/* stagger children when parent has data-stagger */
+.reveal[data-stagger] > *{
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 520ms var(--reveal-ease), transform 520ms var(--reveal-ease);
+  will-change: opacity, transform;
+}
+.reveal.is-revealed[data-stagger] > *{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* small helper delays (you can also rely on JS dynamic stagger) */
+.reveal-delay-100 { transition-delay: 100ms; }
+.reveal-delay-200 { transition-delay: 200ms; }
+.reveal-delay-300 { transition-delay: 300ms; }
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce){
+  .reveal,
+  .reveal[data-stagger] > * {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
 
 
 /* TESTIMONIOS */
@@ -1382,3 +1466,27 @@
 }
 
 
+.nav-links .nav-btn {
+    background: #fff;
+    color: #114c5f;      
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
+    margin-left: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    box-shadow: 0 0 0 transparent;
+    transition: all 0.35s ease;
+     gap: 1rem;
+}
+
+.nav-links .nav-btn:hover {
+    background: #e8f7ff;      
+    color: #0b3946;             
+    box-shadow: 0 6px 14px rgba(255,255,255,0.4);
+    transform: translateY(-2px);
+}
+
+.nav-links .nav-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 0 0 transparent;
+}

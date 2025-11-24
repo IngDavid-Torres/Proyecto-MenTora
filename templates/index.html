@@ -19,18 +19,17 @@
             <a href="#quesomos">¿QUÉ SOMOS?</a>
             <a href="#caracteristicas">CARACTERÍSTICAS</a>
             <a href="#beneficios">BENEFICIOS</a>
-            <a href="/login">INICIAR SESIÓN</a>
-            <a href="/register">REGÍSTRATE</a>
+            <a href="/login" class="nav-btn">INICIAR SESIÓN</a>
+            <a href="/register" class="nav-btn">REGÍSTRATE</a>
         </div>
-        <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
+        <div class="hamburger" id="hamburger">
             <span></span>
             <span></span>
             <span></span>
-        </button>
+        </div>
     </nav>
-    <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
   
-    <section class="hero" id="inicio">
+    <section class="hero reveal" id="inicio">
         <h2>DESATA TU IMAGINACIÓN</h2>
         <p>Sumérgete en desafíos épicos donde una línea de código es un movimiento estratégico. 
         ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
@@ -43,7 +42,7 @@
         </div>
     </section>
 
-    <section class="platform-preview">
+    <section class="platform-preview reveal">
         <h2 class="section-title">EXPLORA LA PLATAFORMA</h2>
         <p class="preview-subtitle"> Descubre cómo luce MenTora por dentro. Visualiza tu dashboard, 
         retos interactivos, sistema de logros y más. Una experiencia para tu aprendizaje.</p>
@@ -90,7 +89,7 @@
     <div class="preview-indicators" id="previewDots"></div>
     </section>
 
-    <section class="sobre-mentora-section" id="quesomos">
+    <section class="sobre-mentora-section reveal" id="quesomos">
     <h2 class="section-title" id="quesomos">¡CONOCE MÁS SOBRE NOSOTROS!</h2>
     <div class="sobre-container">
 
@@ -118,7 +117,7 @@
     </div>
    </section>
 
-    <section class="features-section" id="caracteristicas">
+    <section class="features-section reveal" id="caracteristicas">
     <h2 class="section-title">CARACTERÍSTICAS PRINCIPALES</h2>
     <div class="features">
         <div class="feature">
@@ -166,7 +165,7 @@
         </div>
     </div>
     </section>
-    <section class="beneficios-section" id="beneficios">
+    <section class="beneficios-section reveal" id="beneficios">
     <h2 class="section-title">¿POR QUÉ ELEGIR MENTORA?</h2>
     <div class="beneficios-container">
 
@@ -224,7 +223,7 @@
     </div>
     </section>
 
-    <section class="testimonials" id="testimonios">
+    <section class="testimonials reveal" id="testimonios">
     <h2 class="section-title">LO QUE DICEN NUESTROS USUARIOS</h2>
     
     <div class="testimonial-slider">
@@ -267,7 +266,7 @@
     </div>
     </section>
 
-    <section class="how-it-works" style="padding:5rem 2rem;">
+    <section class="how-it-works reveal" style="padding:5rem 2rem;">
     <h2 class="section-title">¿CÓMO FUNCIONA?</h2>
 
     <div style="
@@ -302,7 +301,7 @@
     </div>
     </section>
 
-    <footer>
+    <footer class="reveal">
     <div class="footer-content">
     <div class="footer-links">
     <a href="#" onclick="openModal('nosotros')">Sobre Nosotros</a>
@@ -435,5 +434,7 @@
         </form>
     </div>
     <script defer src="{{ url_for('static', filename='js/script_index.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/reveal.js') }}"></script>
 </body>
 </html> 
