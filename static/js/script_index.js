@@ -25,26 +25,25 @@
         text: `
             <div style="padding: 10px;">
                 <h2>Actualización: 17 de Noviembre de 2025</h2>
-<br>
-<h3 style="color:#114c5f;">1. Recopilación de Información Personal</h3>
-<p>
-    MenTora (referida en adelante como "la Plataforma") recaba información que usted nos proporciona
-    directamente al crear una cuenta, participar en desafíos o interactuar con la comunidad. Esta 
-    información puede incluir:
-</p>
+            <br>
+            <h3 style="color:#114c5f;">1. Recopilación de Información Personal</h3>
+            <p> MenTora (referida en adelante como "la Plataforma") recaba información que usted nos proporciona
+            directamente al crear una cuenta, participar en desafíos o interactuar con la comunidad. Esta 
+            información puede incluir:
+           </p>
 
-<ul style="margin-left: 50px;">
-    <li><strong>Datos de Identificación:</strong> Nombre completo, correo electrónico, nombre de usuario y contraseña (cifrada).</li>
-    <li><strong>Datos de Uso y Desempeño:</strong> Progreso en retos, puntuaciones, insignias obtenidas, participación en cursos, comentarios en foros y cualquier interacción dentro de la Plataforma.</li>
-    <li><strong>Datos Técnicos:</strong> Dirección IP, tipo de dispositivo, sistema operativo, fecha y hora de acceso,  
-        y datos de navegación recopilados mediante cookies y tecnologías similares.</li>
-    <li><strong>Datos Opcionales:</strong> Preferencias educativas, áreas de interés, o información que usted proporcione voluntariamente para personalizar su experiencia.</li>
-</ul>
+           <ul style="margin-left: 50px;">
+           <li><strong>Datos de Identificación:</strong> Nombre completo, correo electrónico, nombre de usuario y contraseña (cifrada).</li>
+           <li><strong>Datos de Uso y Desempeño:</strong> Progreso en retos, puntuaciones, insignias obtenidas, participación en cursos, comentarios en foros y cualquier interacción dentro de la Plataforma.</li>
+           <li><strong>Datos Técnicos:</strong> Dirección IP, tipo de dispositivo, sistema operativo, fecha y hora de acceso,  
+            y datos de navegación recopilados mediante cookies y tecnologías similares.</li>
+          <li><strong>Datos Opcionales:</strong> Preferencias educativas, áreas de interés, o información que usted proporcione voluntariamente para personalizar su experiencia.</li>
+        </ul>
 
-<br>
+        <br>
 
-<h3 style="color:#114c5f;">2. Finalidad del Tratamiento de Datos</h3>
-<p>
+        <h3 style="color:#114c5f;">2. Finalidad del Tratamiento de Datos</h3>
+        <p>
     Los datos recopilados son utilizados con los siguientes fines:
 </p>
 
@@ -441,3 +440,135 @@ document.addEventListener('keydown', (e) => {
   });
 
 })();
+
+  // Lógica de login 
+    const loginForm = document.getElementById('loginForm');
+    const btnEntrar = document.getElementById('btnEntrar');
+    const alertMentoraModal = document.getElementById('alert-mentora-modal');
+    const alertError = document.getElementById('alert-error');
+
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        alertError.style.display = 'none';
+        const formData = new FormData(loginForm);
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+            if (response.ok) {
+                let res;
+                try {
+                    res = await response.json();
+                } catch (err) {
+                    alertError.textContent = 'Usuario o contraseña incorrectos';
+                    alertError.style.display = 'block';
+                    return;
+                }
+                if (res.success) {
+                    alertMentoraModal.style.display = 'flex';
+                    setTimeout(() => {
+                        window.location.href = res.redirect || '/dashboard';
+                    }, 4000);
+                } else {
+                    alertError.textContent = res.message || 'Usuario o contraseña incorrectos';
+                    alertError.style.display = 'block';
+                }
+            } else {
+                alertError.textContent = 'Usuario o contraseña incorrectos';
+                alertError.style.display = 'block';
+            }
+        } catch (err) {
+            alertError.textContent = 'Error de conexión. Intenta de nuevo.';
+            alertError.style.display = 'block';
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const errorMsg = document.getElementById('login-error-msg');
+        if (errorMsg) {
+            alertError.textContent = errorMsg.textContent || 'Usuario o contraseña incorrectos';
+            alertError.style.display = 'block';
+        }
+    });
+
+   document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado');
+    
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    
+    console.log('Hamburger:', hamburger);
+    console.log('NavLinks:', navLinks);
+
+    if (hamburger && navLinks) {
+        console.log('Elementos encontrados');
+        
+        hamburger.addEventListener('click', function(e) {
+            console.log('Click en hamburger');
+            navLinks.classList.toggle('active');
+            console.log('Clases después del toggle:', navLinks.className);
+        });
+    } else {
+        console.log('ERROR: No se encontraron los elementos');
+    }
+   });
+
+    // Registro dinámico 
+    const registerForm = document.getElementById('registerForm');
+    const alertSuccess = document.getElementById('alert-success');
+    if(registerForm) {
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(registerForm);
+            const data = Object.fromEntries(formData.entries());
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: formData
+                });
+                if(response.ok) {
+                    const res = await response.json();
+                    if(res.success) {
+                        alertSuccess.style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 1800);
+                    } else {
+                        alertSuccess.style.display = 'none';
+                        alert(res.message || 'Error en el registro.');
+                    }
+                } else {
+                    alertSuccess.style.display = 'none';
+                    alert('Error en el registro.');
+                }
+            } catch (err) {
+                alertSuccess.style.display = 'none';
+                alert('Error de conexión.');
+            }
+        });
+    }
+
+     
+   document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado');
+    
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    
+    console.log('Hamburger:', hamburger);
+    console.log('NavLinks:', navLinks);
+
+    if (hamburger && navLinks) {
+        console.log('Elementos encontrados');
+        
+        hamburger.addEventListener('click', function(e) {
+            console.log('Click en hamburger');
+            navLinks.classList.toggle('active');
+            console.log('Clases después del toggle:', navLinks.className);
+        });
+    } else {
+        console.log('ERROR: No se encontraron los elementos');
+    }
+   });

@@ -7,9 +7,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
-</head>
+</head> 
 <body>
-    {% include 'background_svg.html' %}   
+    {% include 'background_svg.html' %}     
     <nav>
         <div class="logo-container">
             <img src="/static/img/mentora1.png" alt="Logo MenTora">
@@ -321,56 +321,6 @@
         <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados.</p>
     </div>
     </footer>
-
-
-    <div id="modal-overlay" class="modal-overlay"></div>
-    <div id="modal-box" class="modal">
-    <div class="modal-content">
-        <span id="close-modal" class="close-modal">&times;</span>
-        <h2 id="modal-title"></h2>
-        <div id="modal-text"></div>
-    </div>
-    </div>
-
-    <div id="modal-overlay" class="modal-overlay"></div>
-
-    <div class="modal" id="modal-nosotros">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-nosotros">&times;</span>
-        <h2>Sobre Nosotros</h2>
-    </div>
-    </div>
-
-    <div class="modal" id="modal-privacidad">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-privacidad">&times;</span>
-        <h2>Política de Privacidad</h2>
-    </div>
-    </div>
-
-
-    <div class="modal" id="modal-terminos">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-terminos">&times;</span>
-        <h2>Términos y Condiciones</h2>
-    </div>
-    </div>
-
-    <div class="modal" id="modal-contacto">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-contacto">&times;</span>
-        <h2>Contacto</h2>
-    </div>
-    </div>
-
-
-    <div class="modal" id="modal-equipo">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-equipo">&times;</span>
-        <h2>Nuestro Equipo</h2>
-    </div>
-    </div>
-
 
     <button class="chatbot-toggle" id="chatbot-toggle" onclick="toggleChatbot()">
         <i class="fas fa-comments"></i>

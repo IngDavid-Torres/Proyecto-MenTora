@@ -89,6 +89,7 @@
     transition: 0.3s;
    }
 
+
    @media (max-width: 768px) {
     nav {
         padding: 0.6rem 1rem;
@@ -1448,10 +1449,6 @@
         padding: 1.5rem;
     }
 
-    .sobre-mentora-section .section-title {
-              font-size: 2.8rem;
-    }
-
     .sobre-content h3 {
         font-size: 1.3rem;
     }
@@ -1464,7 +1461,6 @@
         height: 150px;
     }
 }
-
 
 .nav-links .nav-btn {
     background: #fff;
@@ -1490,3 +1486,439 @@
     transform: translateY(0);
     box-shadow: 0 0 0 transparent;
 }
+
+
+ #alert-mentora-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44, 62, 80, 0.55);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader {
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #5f7f81;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes glow {
+        from { opacity: 0.8; }
+        to { opacity: 1; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        nav {
+            padding: 1rem;
+        }
+
+        .logo-container img {
+            height: 50px;
+            width: 50px;
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 80px;
+            right: -100%;
+            background: rgba(95, 127, 129, 0.98);
+            width: 250px;
+            flex-direction: column;
+            padding: 2rem 1rem;
+            gap: 1.5rem;
+            transition: right 0.3s ease;
+            border-radius: 0 0 0 15px;
+            box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links.active {
+            right: 0;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+
+        .login-container {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        .login-container h2 {
+            font-size: 1.6rem;
+        }
+
+        .footer-links {
+            gap: 1rem;
+        }
+
+        .footer-links a {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .login-container {
+            padding: 1.5rem;
+        }
+
+        .login-container h2 {
+            font-size: 1.4rem;
+        }
+
+        .login-container input,
+        .login-container button {
+            padding: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            padding: 1.5rem 1rem;
+            font-size: 0.85rem;
+        }
+    }
+
+     section {
+        position: relative;
+        z-index: 10;
+    }
+ 
+    .section-title {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #fff;
+    font-family: 'Exo 2', sans-serif;
+    margin-top: 3rem; 
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+  }
+
+      /* Main Content */
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Login Container */
+    .login-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2.5rem;
+        border-radius: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 450px;
+        position: relative;
+        z-index: 20;
+    }
+
+    .login-container h2 {
+        color: #5f7f81;
+        font-family: 'Exo 2', sans-serif;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .login-container label {
+        color: #5f7f81;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-container input {
+    padding: 0.9rem;
+    border: 2px solid #5f7f81;
+    border-radius: 8px;
+    font-size: 1rem; /* fuerza el mismo tamaño SIEMPRE */
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    background: #fff;
+    width: 100%; /* opcional, asegura consistencia */
+    box-sizing: border-box;
+    margin-top: 0.3rem;
+ }
+
+    .login-container input:focus {
+        outline: none;
+        border-color: #ffffffff;
+        box-shadow: 0 0 10px rgba(224, 255, 255, 0.5);
+    }
+
+    .login-container button {
+        text-decoration: none;
+       background: linear-gradient(80deg, #fff 5%, #114c5f 100%);
+       color: #1a1a2e;
+       padding: 1rem 2.5rem;
+       border-radius: 40px;
+       font-weight: bold;
+       font-family: 'Exo 2', sans-serif;
+       margin: 0 0.7rem;
+       font-size: 1.15rem;
+       letter-spacing: 1px;
+       border: none;
+       transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+       display: inline-block;
+    }
+
+    .login-container button:hover {
+       background: linear-gradient(90deg, #114c5f 60%, #9cd2d3 100%);
+       color: #fff;
+       transform: scale(1.08);
+       box-shadow: 0 4px 32px #9cd2d3;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #5f7f81;
+        font-size: 0.95rem;
+    }
+
+    .register-link a {
+        color: #4a6668;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .register-link a:hover {
+        color: #114c5f;
+        text-shadow: 0 0 8px #e0ffff;
+    }
+
+    
+
+
+/* --------------------------- */
+/*   MODAL DE BIENVENIDA      */
+/* --------------------------- */
+
+.mentora-modal {
+    position: fixed;
+    inset: 0;
+    background: #114c5f;
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    animation: fadeIn 0.35s ease forwards;
+}
+
+/* Caja principal */
+.mentora-box {
+    background: #114c5f;
+    padding: 2.6rem 2.8rem;
+    border-radius: 18px;
+    border: 2px solid #114c5f;
+    box-shadow: 0 6px 20px rgba(17, 76, 95, 0.15);
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    animation: scaleIn 0.45s ease forwards;
+}
+
+/* Título */
+.mentora-title {
+    font-family: 'Poppins','Orbitron',sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.8rem;
+}
+
+/* Subtítulo */
+.mentora-sub {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.05rem;
+    color: #ffffff;
+    margin-bottom: 1.4rem;
+    opacity: 0.85;
+}
+
+/* Loader minimalista */
+.mentora-loader {
+    width: 34px;
+    height: 34px;
+    border: 3px solid #d0e4e7;
+    border-top-color: #114c5f;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+/* Texto "Cargando..." */
+.mentora-loading-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: #114c5f;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+/* --------------------------- */
+/*        ANIMACIONES          */
+/* --------------------------- */
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+
+/* --------------------------- */
+/*       ALERTA DE ERROR       */
+/* --------------------------- */
+
+.mentora-error {
+    display: none;
+    position: fixed;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff4d4d;
+    color: #fff;
+    padding: 0.9rem 2rem;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    z-index: 1001;
+    animation: slideDown 0.35s ease;
+}
+
+
+/* Animación de flotación suave */
+@keyframes floatSoft {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* Estilo para la imagen del modal */
+.mentora-img {
+    width: 340px;
+    height: 270px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 1rem;  /* Centrado + pequeño margen abajo */
+    animation: floatSoft 3s ease-in-out infinite;
+}
+
+
+
+  /* Alerta de éxito */
+  .alert-success {
+    background: linear-gradient(135deg, #5cb85c 0%, #4cae4c 100%);
+    color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(92, 184, 92, 0.3);
+    animation: slideDown 0.5s ease;
+   }
+
+   @keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+   }
+
+  /* Estilos para el select */
+  .login-container select {
+    padding: 0.9rem;
+    border: 2px solid #5f7f81;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    background: #fff;
+    cursor: pointer;
+    color: #333;
+  }
+
+   .login-container select:focus {
+    outline: none;
+    border-color: #e0ffff;
+    box-shadow: 0 0 10px rgba(224, 255, 255, 0.5);
+   }
+
+   .login-container select option {
+    padding: 0.5rem;
+    background: #fff;
+    color: #333;
+   }
+
+   /* Ajuste para los divs contenedores */
+  .login-container form > div {
+    display: flex;
+    flex-direction: column;
+   }
+
+  /* Clase register-link (igual que login-link) */
+  .register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #5f7f81;
+    font-size: 0.95rem;
+   }
+
+   .register-link a {
+    color: #4a6668;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .register-link a:hover {
+    color: #114c5f;
+    text-shadow: 0 0 8px #e0ffff;
+  }
