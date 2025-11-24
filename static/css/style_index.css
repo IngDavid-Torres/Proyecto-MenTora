@@ -232,11 +232,11 @@
        text-shadow: 0 0 4px #9cd2d3;
     }
 
-    .cta-buttons {
+    .cta-buttonss {
         margin-top: 2.5rem;
    }
 
-    .cta-buttons a {
+    .cta-buttonss a {
        text-decoration: none;
        background: linear-gradient(90deg, #fff 60%, #114c5f 100%);
        color: #1a1a2e;
@@ -253,7 +253,7 @@
     }
 
     /* Make CTA buttons responsive: wrap and stack on small screens */
-    .cta-buttons {
+    .cta-buttonss {
         display: flex;
         gap: 0.9rem;
         justify-content: center;
@@ -261,7 +261,7 @@
         flex-wrap: wrap;
     }
 
-    .cta-buttons a {
+    .cta-buttonss a {
         flex: 0 1 auto;
         min-width: 160px;
         text-align: center;
@@ -269,11 +269,11 @@
     }
 
     @media (max-width: 520px) {
-        .cta-buttons {
+        .cta-buttonss {
             flex-direction: column;
             gap: 0.6rem;
         }
-        .cta-buttons a {
+        .cta-buttonss a {
             width: 100%;
             max-width: 340px;
             padding: 0.95rem 1.2rem;
@@ -288,7 +288,7 @@
         }
     }
 
-    .cta-buttons a:hover {
+    .cta-buttonss a:hover {
        background: linear-gradient(90deg, #114c5f 60%, #9cd2d3 100%);
        color: #fff;
        transform: scale(1.08);
@@ -319,7 +319,9 @@
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 2rem;
         max-width: 1200px;
-        margin: 0 auto;
+        margin-top: 3rem;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .feature {
@@ -331,6 +333,9 @@
         transition: all 0.3s ease;
         cursor: pointer;
         border: 2px solid transparent;
+          margin-top: 3rem;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .feature:hover {
@@ -382,7 +387,9 @@
 
     .beneficios-container {
         max-width: 1000px;
-        margin: 0 auto;
+       margin-top: 3rem;
+        margin-left: auto;
+        margin-right: auto;
         display: grid;
         gap: 2rem;
     }
@@ -520,7 +527,9 @@
     flex-wrap: wrap;
     gap: 2rem;
     max-width: 1200px;
-    margin: 0 auto;
+      margin-top: 3rem;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .testimonial {
@@ -529,7 +538,7 @@
     padding: 2rem 1.5rem;
     min-width: 260px;
     max-width: 320px;
-    margin: 0;
+
     color:#114c5f;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -1922,3 +1931,214 @@
     color: #114c5f;
     text-shadow: 0 0 8px #e0ffff;
   }
+
+
+
+
+
+/* ============================================================
+    SECCIÓN PROFESORES INICIO (NUEVA SECCIÓN)
+   ============================================================ */
+
+.profesores-inicio {
+    padding: 4rem 2rem;
+    margin-top: 4rem;
+}
+
+.profesores-inicio .section-title {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.profesores-subtitle {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.1rem;
+    opacity: 0.9;
+    text-align: justify;
+}
+
+/* GRID */
+.profesores-inicio-grid {
+    max-width: 1200px;
+    margin: 3rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+/* TARJETAS */
+.prof-box {
+    background: #ffffff10;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 1px solid #ffffff15;
+}
+
+/* Hover */
+.prof-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 12px 35px rgba(0,0,0,0.25);
+}
+
+/* Iconos */
+.prof-icon i {
+    font-size: 60px;
+    color: #114c5f;
+    margin-bottom: 1rem;
+}
+
+/* Título */
+.prof-box h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+/* Texto */
+.prof-box p {
+    opacity: 0.85;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+         font-size: 1.1rem;
+}
+
+/* BOTÓN EXCLUSIVO PROFESORES-INICIO */
+.prof-btn {
+     display: inline-block;
+    padding: 1rem 2rem;
+    background: #114c5f;
+    color: white;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .25s ease;
+}
+
+.prof-btn:hover {
+    background: #0e3b47;
+}
+
+
+
+/* ============================================================
+   SECCIÓN PROFESORES (GRAN BLOQUE)
+   ============================================================ */
+
+.profesores-section {
+    padding: 5rem 2rem;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    margin: 4rem auto;
+}
+
+/* Título */
+.profesores-section .section-title {
+    text-align: center;
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+/* Descripción */
+.profesores-desc {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.1rem;
+    opacity: 0.9;
+    text-align: justify;
+}
+
+/* GRID */
+.profesores-grid {
+    max-width: 1100px;
+    margin: 3rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* TARJETAS */
+.prof-card {
+    background: #ffffff0f;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    transition: transform .25s ease, box-shadow .25s ease;
+    border: 1px solid #ffffff15;
+    backdrop-filter: blur(6px);
+}
+
+/* Hover */
+.prof-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+/* CONTENEDOR DEL ICONO */
+.feature-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* EL ICONO */
+.feature-icon i,
+.feature-icon img {
+    font-size: 35px; /* o 30px si prefieres */
+    color: #114c5f;
+    display: block;
+}
+
+
+/* Títulos */
+.prof-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Texto */
+.prof-card p {
+    opacity: 0.85;
+    margin-bottom: 0;
+    text-align: justify;
+         font-size: 1.1rem;
+}
+
+
+
+/* ============================================================
+   BOTÓN EXCLUSIVO DE LA SECCIÓN PROFESORES
+   (ANTES .cta-buttons — AHORA AISLADO)
+   ============================================================ */
+.cta-teacher-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem;
+    width: 100%;
+}
+
+.cta-teacher-btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: #114c5f;
+    color: white;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .25s ease;
+}
+
+.cta-teacher-btn:hover {
+    background: #0e3b47;
+}
