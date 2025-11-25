@@ -83,19 +83,20 @@ with app.app_context():
     db.create_all()
     print("✅ Tablas creadas correctamente.")
 
+   
     admin = User.query.filter_by(username='admin').first()
     if admin:
-        admin.password = generate_password_hash('admin123')
-        admin.email = 'admin@mentora.com'
+        admin.password = None  
+        admin.email = None  
         admin.area = 'general'
         admin.is_admin = True
         db.session.commit()
-        print("🔐 Usuario admin actualizado.")
+        print("🔐 Usuario admin actualizado (oculto email y contraseña).")
     else:
         admin_user = User(
             username='admin',
-            email='admin@mentora.com',
-            password=generate_password_hash('admin123'),
+            email=None, 
+            password=None,  
             area='general',
             is_admin=True,
             points=0,
@@ -103,14 +104,14 @@ with app.app_context():
         )
         db.session.add(admin_user)
         db.session.commit()
-        print("👑 Usuario administrador creado.")
+        print("👑 Usuario administrador creado (oculto email y contraseña).")
 
-# Ruta principal
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Registro de usuario
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -174,7 +175,6 @@ def register():
 
     return render_template('register.html')
 
-# Inicio de sesión
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
@@ -184,7 +184,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         ip = request.remote_addr or 'unknown'
         success = user is not None and check_password_hash(user.password, password)
-        # Registrar log de acceso
+      
         log = AccessLog(username=username, ip=ip, success=success)
         db.session.add(log)
         db.session.commit()
@@ -204,10 +204,10 @@ def login():
         else:
             return jsonify(success=False), 401
 
-    # Solo GET: renderizar formulario
+    
     return render_template('login.html')
 
-# Panel del usuario
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
@@ -215,7 +215,7 @@ def dashboard():
 
     user = User.query.get(session['user_id'])
 
-    # Reto diario/semanal: selecciona un quiz aleatorio del área del usuario, cambia cada día
+   
     from datetime import date
     import random
     daily_seed = int(date.today().strftime('%Y%m%d'))
@@ -226,10 +226,9 @@ def dashboard():
         daily_quiz = random.choice(quizzes_in_area)
     from sqlalchemy.orm import joinedload
     achievements = Achievement.query.options(joinedload(Achievement.badge)).filter_by(user_id=user.id).all()
-    # Mostrar quizzes creados por el profesor actual o el admin, con preguntas asociadas
+    
     admin_user = User.query.filter_by(is_admin=True).first()
-    # Obtener perfil de profesor si existe
-    # Refuerza la obtención del perfil de profesor
+   
     from models import Teacher
     teacher = None
     if hasattr(user, 'teacher_profile') and user.teacher_profile is not None:
@@ -264,7 +263,7 @@ def dashboard():
         )
         if es_del_profesor or es_del_admin:
             games.append(g)
-    # Historial de actividad: últimos 5 retos respondidos y logros obtenidos
+    
     last_answers = (
         db.session.query(UserAnswer, Question, Quiz)
         .join(Question, UserAnswer.question_id == Question.id)
