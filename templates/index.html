@@ -6,1133 +6,213 @@
     <title>{{ config.SITE_NAME }} - Gamifica tu Aprendizaje</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
-      
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }  
-   
-    body {
-        font-family: 'Poppins', 'Orbitron', Arial, sans-serif;
-        background: #5f7f81;
-        color: #fff;
-        overflow-x: hidden;
-        min-height: 100vh;
-        scroll-behavior: smooth;
-        display: flex;
-        flex-direction: column;
-    }
-
-
-   nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 2rem;
-        background: #5f7f81;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
-        font-family: 'Exo 2', sans-serif;
-        letter-spacing: 2px;
-        position: sticky;
-        top: 0;
-        height: 80px;       
-        padding: 0 2rem;       
-        z-index: 90;
-    }
-
-    .logo-container {
-       padding-top: 8px;
-    height: 100%;           /* Igual a la altura del nav */
-    width: 80px;            /* Ajusta el ancho que quieras */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;       /* Evita que se deforme */        
-
-    }
-
-    .logo-container img {
-     height: 100%;           
-    width: auto;           
-    object-fit: cover;   
-    }
-
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-  }
-
-   .nav-links a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: color 0.3s, text-shadow 0.3s;
-    letter-spacing: 1px;
-  }
-
-  .nav-links a:hover {
-    color: #e0ffff;
-    text-shadow: 0 0 8px #e0ffff;
-  }
-
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-  }
-
-  .hamburger span {
-    width: 25px;
-    height: 3px;
-    background: #fff;
-    border-radius: 2px;
-    transition: 0.3s;
-  }
-
-   /* RESPONSIVE */
-   @media (max-width: 768px) {
-    nav {
-        padding: 1rem;
-    }
-
-    .logo-container img {
-        height: 50px;
-        width: 50px;
-    }
-
-    .nav-links {
-        position: fixed;  /* Cambiado de absolute a fixed */
-        top: 80px;
-        right: -100%;
-        background: rgba(95, 127, 129, 0.98);
-        width: 250px;
-        flex-direction: column;
-        padding: 2rem 1rem;
-        gap: 1.5rem;
-        transition: right 0.3s ease;
-        border-radius: 0 0 0 15px;
-        box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.3);
-        z-index: 100;  /* Agregado z-index */
-    }
-
-    .nav-links.active {
-        right: 0 !important;  /* Agregado !important por si hay conflicto */
-    }
-
-    .hamburger {
-        display: flex;
-        z-index: 101;  /* Para que esté siempre visible */
-    }
-
-    .login-container {
-        padding: 2rem;
-        margin: 1rem;
-    }
-
-    .login-container h2 {
-        font-size: 1.6rem;
-    }
-
-    .footer-links {
-        gap: 1rem;
-    }
-
-    .footer-links a {
-        font-size: 0.85rem;
-    }
-  }
-
-
-    .hero {
-       text-align: center;
-       padding: 2rem 2rem;
-       animation: fadeIn 1.2s;
-       position: relative;
-       z-index: 10;
-       min-height: 85vh;
-       display: flex;
-       flex-direction: column;
-       justify-content: center;
-   }
-
-    .hero h2 {
-       font-size: 3.6rem;
-       margin-bottom: 1.2rem;
-       color: #fff;
-       font-family: 'Exo 2', sans-serif;
-       text-shadow: 0 0 16px #767777, 0 0 2px #fff;
-       letter-spacing: 1px;
-    }
-
-    .hero p {
-       font-size: 1.35rem;
-       max-width: 650px;
-       margin: 0 auto;
-       color: #e0e7ef;
-       text-shadow: 0 0 4px #9cd2d3;
-    }
-
-    .cta-buttons {
-        margin-top: 2.5rem;
-   }
-
-    .cta-buttons a {
-       text-decoration: none;
-       background: linear-gradient(90deg, #fff 60%, #114c5f 100%);
-       color: #1a1a2e;
-       padding: 1rem 2.5rem;
-       border-radius: 40px;
-       font-weight: bold;
-       font-family: 'Exo 2', sans-serif;
-       margin: 0 0.7rem;
-       font-size: 1.15rem;
-       letter-spacing: 1px;
-       border: none;
-       transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
-       display: inline-block;
-    }
-
-    .cta-buttons a:hover {
-       background: linear-gradient(90deg, #114c5f 60%, #9cd2d3 100%);
-       color: #fff;
-       transform: scale(1.08);
-       box-shadow: 0 4px 32px #9cd2d3;
-   }
-
-    /* SECTIONS */
-    section {
-        position: relative;
-        z-index: 10;
-    }
-
-   .section-title {
-        text-align: center;
-        font-size: 2.8rem;
-        color: #fff;
-        font-family: 'Exo 2', sans-serif;
-        margin-bottom: 3rem;
-        letter-spacing: 1px;
-    }
-
-
-   /* FEATURES */
-    .features-section {
-        padding: 5rem 2rem;
-         background: #114c5f;
-    }
-
-    .features {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .feature {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 18px;
-        padding: 2.5rem 2rem;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border: 2px solid transparent;
-    }
-
-    .feature:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(156, 210, 211, 0.4);
-        border-color: #9cd2d3;
-    }
-
-    .feature-icon {
-        width: 60px;
-        height: 60px;
-        margin: 0 auto 1.5rem;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 12px rgba(17, 76, 95, 0.3);
-        overflow: hidden; 
-    }
-
-
-    .feature-icon img {
-        width: 70%;
-        height: 70%;
-        object-fit: contain;
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-    }
-
-    .feature h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: #114c5f;
-        font-family: 'Exo 2', sans-serif;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-    }
-
-    .feature p {
-       font-size: 1.05rem;
-       color: #4a5568;
-       line-height: 1.7;
-       text-align: justify;
-    }
-
-
-    /* BENEFICIOS */
-    .beneficios-section {
-        background: #638385ff;
-        padding: 5rem 2rem;
-    }
-
-    .beneficios-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        display: grid;
-        gap: 2rem;
-    }
-
-    .beneficio-item {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 16px;
-        padding: 2rem;
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-    }
-
-    .beneficio-item:hover {
-        transform: translateX(10px);
-        border-color: #9cd2d3;
-        box-shadow: 0 8px 24px rgba(156, 210, 211, 0.3);
-    }
-
-    .beneficio-number {
-        min-width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #114c5f, #638385ff);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #fff;
-        font-family: 'Exo 2', sans-serif;
-        box-shadow: 0 4px 12px rgba(17, 76, 95, 0.3);
-    }
-
-    .beneficio-content h3 {
-        font-size: 1.4rem;
-        color: #114c5f;
-        margin-bottom: 0.5rem;
-        font-family: 'Exo 2', sans-serif;
-    }
-
-    .beneficio-content p {
-        color: #4a5568;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    /* TESTIMONIOS */
-    .testimonials {
-        background: #114c5f;
-        padding: 5rem 2rem;
-        text-align: center;
-    }
-
-    .testimonial-slider {
-        display: flex;
-        justify-content: center;
-        align-items: stretch;
-        flex-wrap: wrap;
-        gap: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .testimonial {
-        background: rgba(99, 131, 133, 0.3);
-        border-radius: 14px;
-        padding: 2rem 1.5rem;
-        min-width: 260px;
-        max-width: 320px;
-        margin: 0;
-        color: #ffffffff;
-        font-style: italic;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        border: 2px solid #9cd2d3;
-        transition: all 0.3s ease;
-    }
-
-    .testimonial:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(156, 210, 211, 0.3);
-       background: rgba(99, 131, 133, 0.5);
-   }
-
-    .testimonial .author {
-       margin-top: 1rem;
-       font-size: 1.05rem;
-       color: #9cd2d3;
-       font-style: normal;
-       font-family: 'Exo 2', sans-serif;
-       font-weight: 600;
-   }
-
-     /* Footer */ 
-    footer {
-       text-align: center;
-       padding: 2rem;
-       font-size: 1rem;
-       color: #ffffffff;
-       letter-spacing: 1.5px;
-         background: #114c5f;
-       font-family: 'Exo 2', sans-serif;
-       position: relative;
-       z-index: 20;
-    }
-
-    .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-   .footer-links {
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-    }
-
-    .footer-links a {
-       color: #ffffffff;
-       text-decoration: none;
-       transition: all 0.3s ease;
-    }
-
-    .footer-links a:hover {
-       color: #fff;
-       text-shadow: 0 0 8px #9cd2d3;
-    }
-
-    .social-links {
-       display: flex;
-      justify-content: center;
-       gap: 1.5rem;
-       margin-bottom: 1.5rem;
-    }
-
-   .social-links a {
-    width: 40px;
-    height: 40px;
-    background: rgba(156, 210, 211, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffffff;
-    font-size: 1.2rem;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    }
-    
-    .social-links a:hover {
-    background: #9cd2d3;
-    color: #114c5f;
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(156, 210, 211, 0.4);
-    }
-
-
-
-    * TEXTO JUSTIFICADO */
-    p {
-    text-align: justify;
-    }
-
-
-   /* RESPONSIVE */
-    @media (max-width: 900px) {
-    .hamburger {
-        display: flex;
-    }
-    .nav-right {
-        position: absolute;
-        top: 80px;
-        right: 0;
-        background: white;
-        width: 200px;
-        flex-direction: column;
-        padding: 1rem;
-        display: none;
-    }
-    .nav-right a {
-        margin: 1rem 0;
-    }
-    }
-
-        /* Chatbot Styles - Tema Tecnonauta */
-        .chatbot-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 70px;
-            height: 70px;
-            background: #114c5f;
-            border: 2px solid #114c5f;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 30px #114c5f;
-        }
-
-        .chatbot-toggle:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
-        }
-
-        .notification-dot {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 22px;
-            height: 22px;
-            background: var(--stellar-orange);
-            border: 3px solid var(--primary-color);
-            border-radius: 50%;
-            display: none;
-            animation: cosmic-pulse 2s infinite;
-        }
-
-        @keyframes cosmic-pulse {
-            0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 111, 0, 0.5); }
-            50% { transform: scale(1.2); box-shadow: 0 0 20px rgba(255, 111, 0, 0.8); }
-            100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 111, 0, 0.5); }
-        }
-
-       /* CAJA PRINCIPAL */
- .chatbot-box {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 420px;
-    height: 650px;
-    background: #ffffff;
-    border: 2px solid #114c5f;
-    border-radius: 18px;
-    box-shadow: 0 0 25px rgba(17, 76, 95, 0.25);
-    display: none;
-    flex-direction: column;
-    z-index: 1001;
-    overflow: hidden;
- }
-
-  /* HEADER */
-  .chatbot-header {
-    background: #114c5f;
-    color: white;
-    padding: 1.2rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    border-bottom: 2px solid rgba(255,255,255,0.25);
-  }
-
-   .chatbot-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-   }
-
-   .chatbot-actions {
-    display: flex;
-    gap: 0.5rem;
-   }
-
-   .action-btn {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    cursor: pointer;
-    padding: 0.4rem;
-    border-radius: 6px;
-    transition: 0.3s ease;
-   }
-
-  .action-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-   }
-
-  /* MENSAJES */
-  .chatbot-messages {
-    flex: 1;
-    padding: 1rem;
-    overflow-y: auto;
-    background: #f8f9fa;
-  }
-
-  /* MENSAJE DE BIENVENIDA */
-  .welcome-message {
-    background: #ffffff;
-    border: 2px solid #114c5f;
-    padding: 1.2rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
- }
-
- .welcome-message h3 {
-    color: #114c5f;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-  }
-
-  .welcome-message p {
-    color: #333;
-    font-size: 0.9rem;
-  }
-
-   /* BOTONES RÁPIDOS */
-   .quick-suggestions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-   .quick-btn {
-    background: #114c5f;
-    color: white;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 16px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: 0.2s ease;
-  }
-
-  .quick-btn:hover {
-    background: #0d3847;
-  }
-
-  /* BURBUJAS DE MENSAJE */
-   .user-message, .bot-message {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-    align-items: flex-start;
-   }
-
-   .user-message {
-    justify-content: flex-end;
-   }
-
-  /* AVATARES */
-  .user-avatar, .bot-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-
-  .user-avatar {
-    background: #114c5f;
-  }
-
-  .bot-avatar {
-    background: #4a6f75;
-  }
-
-  /* BURBUJAS */
-  .message-bubble {
-    max-width: 260px;
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
-    word-wrap: break-word;
-    line-height: 1.4;
-    font-size: 0.9rem;
-   }
-
-  .user-bubble {
-    background: #114c5f;
-    color: white;
-    border-bottom-right-radius: 6px;
-  }
-
-  .bot-bubble {
-    background: #eaf3f4;
-    border: 1px solid #114c5f;
-    color: #114c5f;
-    border-bottom-left-radius: 6px;
-  }
-
-  /* INDICADOR ESCRIBIENDO */
-  .typing-indicator {
-    display: none;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    color: #114c5f;
-  }
-
-  .typing-dot {
-    width: 6px;
-    height: 6px;
-    background: #114c5f;
-    border-radius: 50%;
-    animation: typing 1.4s infinite ease-in-out;
-  }
-
-  @keyframes typing {
-    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-
-  /* INPUT */
-  .chatbot-input-area {
-    padding: 1rem;
-    border-top: 2px solid #114c5f;
-    display: flex;
-    gap: 0.5rem;
-    background: #ffffff;
-  }
-
-  .input-wrapper {
-      flex: 1;
-    display: flex;
-    align-items: center;
-    background: #f1f5f6;
-    border: 1px solid #114c5f;
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-   }
-
-   .chatbot-input {
-    flex: 1;
-    border: none;
-    background: none;
-    resize: none;
-    outline: none;
-    font-size: 0.9rem;
-    color: #114c5f;
-  }
-
-   /* BOTÓN ENVIAR */
-   .send-btn {
-    background: #114c5f;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 42px;
-    height: 42px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s ease;
-   }
-
-  .send-btn:hover:not(:disabled) {
-    background: #0d3847;
-  }
-
-  .send-btn:disabled {
-    background: #ccc;
-  }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .chatbot-box {
-                width: calc(100vw - 20px);
-                height: calc(100vh - 40px);
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .navbar {
-                padding: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-buttons {
-                flex-direction: column;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Animaciones tecnonauta adicionales */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        /* Efectos hover para las features */
-        .feature:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
-            border-color: rgba(99, 102, 241, 0.2);
-        }
-
-        /* 🔵 OVERLAY */
-     .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.87);
-    z-index: 900;
-   }
-
-   /* 🔵 MODAL BOX */
-   .modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 600px;
-
-    /* 🔥 Corrección: que se adapte al texto */
-    max-height: 90vh;
-    overflow-y: auto;
-
-    z-index: 1000;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    animation: fadeIn 0.3s ease;
-  }
-
-     /* Evitar que el modal cause saltos de pantalla */
-   .modal:focus,
-   .modal *:focus {
-    outline: none;
-  }
-
- @keyframes fadeIn {
-    from { opacity: 0; transform: translate(-50%, -60%); }
-    to   { opacity: 1; transform: translate(-50%, -50%); }
-  }
-
-  /* 🔵 BOTÓN CERRAR */
-   .close-modal {
-    float: right;
-    cursor: pointer;
-    font-size: 1.6rem;
-    color: #333;
-    transition: 0.3s;
- }
-
- .close-modal:hover {
-    color: #114c5f;
- }
-
- /* 🔵 CONTENIDO */
- .modal-content h2 {
-    margin-bottom: 1rem;
-    color: #114c5f;
-    font-family: 'Exo 2', sans-serif;
- }
-
- .modal-content p,
- .modal-content ul {
-    color: #333;
-    line-height: 1.6;
-    text-align: justify;
- }
-
- /* 🔵 EQUIPO */
-  .team {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .team-member {
-    text-align: center;
-    padding: 1rem;
-  }
-
-  .team-member img {
-    width: 85px;
-    margin-bottom: 0.7rem;
-  }
-
-  .team-member h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #114c5f;
-  }
-   
-    nav h1 {
-    order: 2;
-    }
-    .nav-links {
-    order: 1;
-    }
-</style>
-</head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+</head> 
 <body>
-    <svg class="gears-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;background:#638385ff;" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
-    <g opacity="0.25" stroke="#000" fill="none">
-        <g>
-            <circle cx="400" cy="300" r="70" stroke-width="8"/>
-            <g>
-                <animateTransform attributeName="transform" type="rotate" from="0 400 300" to="360 400 300" dur="6s" repeatCount="indefinite"/>
-                <rect x="390" y="220" width="20" height="30" rx="6" fill="#000"/>
-                <rect x="390" y="350" width="20" height="30" rx="6" fill="#000"/>
-                <rect x="320" y="290" width="30" height="20" rx="6" fill="#000"/>
-                <rect x="470" y="290" width="30" height="20" rx="6" fill="#000"/>
-            </g>
-        </g>
-
-        <g>
-            <circle cx="1200" cy="700" r="50" stroke-width="6"/>
-            <g>
-                <animateTransform attributeName="transform" type="rotate" from="0 1200 700" to="-360 1200 700" dur="5s" repeatCount="indefinite"/>
-                <rect x="1192" y="650" width="16" height="22" rx="4" fill="#000"/>
-                <rect x="1192" y="728" width="16" height="22" rx="4" fill="#000"/>
-                <rect x="1150" y="692" width="22" height="16" rx="4" fill="#000"/>
-                <rect x="1228" y="692" width="22" height="16" rx="4" fill="#000"/>
-            </g>
-        </g>
-    </g>
-
-    <g fill="#000" opacity="0.15">
-
-        <circle cx="300" cy="900" r="16">
-            <animate attributeName="cy" values="900;200;900" dur="8s" repeatCount="indefinite"/>
-            <animate attributeName="r" values="16;24;16" dur="6s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="1700" cy="200" r="12">
-            <animate attributeName="cy" values="200;800;200" dur="7s" repeatCount="indefinite"/>
-            <animate attributeName="r" values="12;18;12" dur="5s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="150" cy="1000" r="14">
-            <animate attributeName="cy" values="1000;300;1000" dur="12s" repeatCount="indefinite"/>
-            <animate attributeName="r" values="14;22;14" dur="9s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="600" cy="1200" r="10">
-            <animate attributeName="cy" values="1200;200;1200" dur="11s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="1000" cy="1100" r="18">
-            <animate attributeName="cy" values="1100;100;1100" dur="14s" repeatCount="indefinite"/>
-            <animate attributeName="r" values="18;26;18" dur="8s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="1400" cy="950" r="20">
-            <animate attributeName="cy" values="950;300;950" dur="10s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="1800" cy="1150" r="12">
-            <animate attributeName="cy" values="1150;400;1150" dur="13s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="900" cy="850" r="6">
-            <animate attributeName="cy" values="850;100;850" dur="16s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="400" cy="1040" r="5">
-            <animate attributeName="cy" values="1040;600;1040" dur="9s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="1600" cy="300" r="7">
-            <animate attributeName="cy" values="300;900;300" dur="8s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="1300" cy="100" r="9">
-            <animate attributeName="cy" values="100;700;100" dur="12s" repeatCount="indefinite"/>
-        </circle>
-
-        <circle cx="700" cy="150" r="11">
-            <animate attributeName="cy" values="150;950;150" dur="10s" repeatCount="indefinite"/>
-        </circle>
-
-    </g>
-    <g fill="#000" opacity="0.25">
-        <g>
-            <circle cx="250" cy="400" r="22"/>
-            <rect x="238" y="422" width="24" height="60" rx="12"/>
-            <rect x="230" y="482" width="10" height="40" rx="5">
-                <animate attributeName="y" values="482;492;482" dur="2.2s" repeatCount="indefinite"/>
-            </rect>
-            <rect x="260" y="482" width="10" height="40" rx="5">
-                <animate attributeName="y" values="482;472;482" dur="2.2s" repeatCount="indefinite"/>
-            </rect>
-        </g>
-
-        <g>
-            <circle cx="1700" cy="800" r="18"/>
-            <rect x="1690" y="818" width="20" height="48" rx="10"/>
-            <rect x="1682" y="866" width="8" height="28" rx="4">
-                <animate attributeName="y" values="866;876;866" dur="2.5s" repeatCount="indefinite"/>
-            </rect>
-            <rect x="1710" y="866" width="8" height="28" rx="4">
-                <animate attributeName="y" values="866;856;866" dur="2.5s" repeatCount="indefinite"/>
-            </rect>
-        </g>
-
-        <g>
-            <circle cx="1100" cy="300" r="15"/>
-            <rect x="1092" y="315" width="16" height="38" rx="8"/>
-            <rect x="1086" y="353" width="7" height="20" rx="3.5">
-                <animate attributeName="y" values="353;363;353" dur="2.8s" repeatCount="indefinite"/>
-            </rect>
-            <rect x="1111" y="353" width="7" height="20" rx="3.5">
-                <animate attributeName="y" values="353;343;353" dur="2.8s" repeatCount="indefinite"/>
-            </rect>
-        </g>
-
-        <g>
-            <circle cx="700" cy="600" r="20"/>
-            <rect x="690" y="620" width="20" height="52" rx="10"/>
-            <rect x="682" y="672" width="8" height="28" rx="4">
-                <animate attributeName="y" values="672;682;672" dur="2.4s" repeatCount="indefinite"/>
-            </rect>
-            <rect x="710" y="672" width="8" height="28" rx="4">
-                <animate attributeName="y" values="672;662;672" dur="2.4s" repeatCount="indefinite"/>
-            </rect>
-        </g>
-
-    </g>
-    </svg>
-      
+    {% include 'background_svg.html' %}     
     <nav>
-    <div class="logo-container">
-        <img src="/static/img/mentora1.png" alt="Logo MenTora">
-    </div>
-    <div class="nav-links" id="navLinks">
-        <a href="/">INICIO</a>
-        <a href="#caracteristicas">CARACTERÍSTICAS</a>
-        <a href="#beneficios">BENEFICIOS</a>
-        <a href="#testimonios">TESTIMONIOS</a>
-        <a href="/login">INICIAR SESIÓN</a>
-        <a href="/register">REGÍSTRATE</a>
-    </div>
-    <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+        <div class="logo-container">
+            <img src="/static/img/mentora1.png" alt="Logo MenTora">
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="/">INICIO</a>
+            <a href="#quesomos">¿QUÉ SOMOS?</a>
+            <a href="#caracteristicas">CARACTERÍSTICAS</a>
+            <a href="#beneficios">BENEFICIOS</a>
+            <a href="#profesores">PROFESORES</a>
+            <a href="/login" class="nav-btn">INICIAR SESIÓN</a>
+            <a href="/register" class="nav-btn">REGÍSTRATE</a>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </nav>
   
-    <section class="hero" id="inicio">
+    <section class="hero reveal" id="inicio">
         <h2>DESATA TU IMAGINACIÓN</h2>
-        <p>Sumérgete en desafíos épicos donde una línea de código es un movimiento estratégico. ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
-        <div class="cta-buttons">
+        <p>Sumérgete en desafíos épicos donde una línea de código es un movimiento estratégico. 
+        ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
+        <div class="cta-buttonss">
             <a href="/register">EMPEZAR A CODIFICAR</a>
-            
             <a href="/login">CONTINUAR AVENTURA</a>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
-            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 250px; width: 320px; animation: float 3s ease-in-out infinite;">
+            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 270px; width: 340px; animation: float 3s ease-in-out infinite;   margin-bottom: 0;">
         </div>
     </section>
-     
 
-    <section class="features-section" id="caracteristicas">
-    <h2 class="section-title">CARACTERÍSTICAS PRINCIPALES</h2>
+    <section class="platform-preview reveal">
+        <h2 class="section-title">EXPLORA LA PLATAFORMA</h2>
+        <p class="preview-subtitle"> Descubre cómo luce MenTora por dentro. Visualiza tu dashboard, 
+        retos interactivos, sistema de logros y más. Una experiencia para tu aprendizaje.</p>
+    <div class="preview-carousel">
+        <div class="preview-track" id="previewTrack">
+            <div class="preview-slide">
+                <img src="/static/img/preview-dashboard.jpg" alt="Dashboard de MenTora - Panel de control personal">
+                <div class="preview-caption">
+                    <h3>Tu Panel de Control</h3>
+                    <p>Visualiza tu progreso, estadísticas, niveles alcanzados y próximos desafíos en un solo lugar. Todo lo que necesitas para seguir avanzando.</p>
+                </div>
+            </div>
+            <div class="preview-slide">
+                <img src="/static/img/preview-challenges.jpg" alt="Retos de programación interactivos">
+                <div class="preview-caption">
+                    <h3>Retos Interactivos</h3>
+                    <p>Resuelve desafíos de código en tiempo real con retroalimentación instantánea. Siempre hay un nuevo reto esperándote para mejorar tus habilidades.</p>
+                </div>
+            </div>
+            <div class="preview-slide">
+                <img src="/static/img/preview-achievements.jpg" alt="Sistema de logros y niveles">
+                <div class="preview-caption">
+                    <h3>Sistema de Logros</h3>
+                    <p>Desbloquea insignias, sube de nivel y compite en rankings globales. Cada logro es un paso más hacia convertirte en un maestro del código.</p>
+                </div>
+            </div>
+            <div class="preview-slide">
+                <img src="/static/img/preview-community.jpg" alt="Comunidad activa de MenTora">
+                <div class="preview-caption">
+                    <h3>Comunidad Activa</h3>
+                    <p>Colabora con otros estudiantes, comparte soluciones y aprende en equipo. El conocimiento crece cuando se comparte.</p>
+                </div>
+            </div>
+        </div>
+        <div class="preview-controls">
+            <button class="preview-btn" onclick="movePreview(-1)" aria-label="Vista previa anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="preview-btn" onclick="movePreview(1)" aria-label="Siguiente vista previa">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="preview-indicators" id="previewDots"></div>
+    </section>
+
+    <section class="profesores-inicio reveal">
+    <h2 class="section-title">HERRAMIENTAS PARA PROFESORES</h2>
+
+    <p class="profesores-subtitle">
+        MenTora no es solo para estudiantes. Los profesores cuentan con herramientas avanzadas 
+        para crear, evaluar y potenciar el aprendizaje de manera dinámica e inteligente.
+    </p>
+
+    <div class="profesores-inicio-grid">
+        
+        <!-- Card 1 -->
+        <div class="prof-box">
+            <div class="prof-icon">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <h3>Panel Exclusivo de Profesor</h3>
+            <p>
+                Accede a un dashboard diseñado especialmente para docentes: controla grupos, asigna
+                actividades, monitorea progreso y ofrece retroalimentación personalizada.
+            </p>
+
+            <a class="prof-btn" href="/register?type=teacher">Registrarme como Profesor</a>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="prof-box">
+            <div class="prof-icon">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3>Generador IA de Exámenes</h3>
+            <p>
+                Crea evaluaciones, test y cuestionarios en segundos usando inteligencia artificial
+                adaptativa. Solo describe el tema y la IA genera el examen completo automáticamente.
+            </p>
+            <a class="prof-btn" href="/login">Probar IA Docente</a>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="prof-box">
+            <div class="prof-icon">
+                <i class="fa-solid fa-chalkboard"></i>
+            </div>
+            <h3>Crea Actividades y Juegos</h3>
+            <p>
+                Diseña actividades interactivas, minijuegos educativos y ejercicios personalizados
+                para tus estudiantes. Todo se integra automáticamente al progreso del alumno.
+            </p>
+            <a class="prof-btn" href="/register?type=teacher">Crear Actividades</a>
+        </div>
+
+    </div>
+</section>
+
+
+
+ <section class="sobre-mentora-section reveal" id="quesomos">
+    <h2 class="section-title" id="quesomos">¡CONOCE MÁS SOBRE NOSOTROS!</h2>
+    <div class="sobre-container">
+
+        <div class="sobre-item-with-image">
+            <div class="sobre-image">
+                <img src="/static/img/tec.png" alt="Plataforma MenTora">
+            </div>
+            <div class="sobre-content">
+                <h3>Plataforma Gamificada de Programación</h3>
+                <p>
+                    Mentora es una plataforma diseñada para aprender programación de forma práctica, 
+                    dinámica y divertida. Integra elementos de gamificación como logros, niveles, 
+                    y retos interactivos que convierten el aprendizaje en una experiencia motivadora.  
+                    Aquí no solo estudias: avanzas, compites contigo mismo y desbloqueas nuevas habilidades. 
+                </p>
+                <p>
+                    Nuestro objetivo es acercarte al mundo de la tecnología sin importar tu experiencia previa. 
+                    Este es un <strong>proyecto
+                     estudiantil sin fines de lucro</strong>, desarrollado en colaboración con el 
+            <strong>Tecnológico Nacional de México</strong> y guiado por nuestro asesor académico. Nace con la intención de 
+            brindar oportunidades de aprendizaje a estudiantes, entusiastas y futuros desarrolladores.
+        </p>
+        </div>
+        </div>
+    </div>
+   </section>
+   
+
+
+
+    <section class="features-section reveal" id="caracteristicas">
+     <h2 class="section-title">¡CARACTERISTICAS PRINCIPALES!</h2>  
     <div class="features">
-
         <div class="feature">
             <div class="feature-icon">
                 <img src="https://api.iconify.design/mdi/brain.svg?color=%23114c5f" alt="icono cerebro">
             </div>
             <h3>Retos Inteligentes</h3>
-            <p>Preguntas diseñadas para activar tu pensamiento crítico y curiosidad.</p>
+            <p>Preguntas diseñadas para activar tu pensamiento crítico y curiosidad única.</p>
         </div>
-
         <div class="feature">
             <div class="feature-icon">
                 <img src="https://api.iconify.design/mdi/gamepad-variant.svg?color=%23114c5f" alt="icono juego">
             </div>
             <h3>Gamificación Real</h3>
-            <p>Sube de nivel, desbloquea logros y compite en rankings por área.</p>
+            <p>Sube de nivel, desbloquea logros y compite en rankings globales.</p>
         </div>
-
         <div class="feature">
             <div class="feature-icon">
                 <img src="https://api.iconify.design/mdi/account-group.svg?color=%23114c5f" alt="icono comunidad">
             </div>
             <h3>Comunidad Activa</h3>
-            <p>Debate respuestas, comparte ideas y aprende en grupo.</p>
+            <p>Debate respuestas, comparte ideas y aprende en grupo mediante chat.</p>
         </div>
-
          <div class="feature">
             <div class="feature-icon">
                 <img src="https://api.iconify.design/mdi/account-multiple-check.svg?color=%23114c5f" alt="icono colaborativo">
             </div>
             <h3>Retos Colaborativos</h3>
-            <p>Trabaja en equipo y resuelve retos grupales para ganar.</p>
+            <p>Trabaja en equipo para ganar más que experiencia colaborativa.</p>
         </div>
-
         <div class="feature">
             <div class="feature-icon">
                 <img src="https://api.iconify.design/mdi/view-dashboard.svg?color=%23114c5f" alt="icono panel">
             </div>
             <h3>Tu Panel Personal</h3>
-            <p>Visualiza tu progreso, estadísticas y próximos desafíos.</p>
+            <p>Visualiza tu progreso, estadísticas y próximos desafíos en un solo lugar.</p>
         </div>
 
         <div class="feature">
@@ -1140,83 +220,112 @@
                 <img src="https://api.iconify.design/mdi/calendar-month.svg?color=%23114c5f" alt="icono calendario">
             </div>
             <h3>Retos Diarios</h3>
-            <p>Un nuevo desafío cada día para mantenerte motivado.</p>
+            <p>Un nuevo desafío te espera cada día para mantenerte motivado y línea.</p>
+        </div>
+    </div>
+    </section>
+    <section class="beneficios-section reveal" id="beneficios">
+    <h2 class="section-title">¿POR QUÉ ELEGIR MENTORA?</h2>
+    <div class="beneficios-container">
+
+        <div class="beneficio-item">
+            <div class="beneficio-number">1</div>
+            <div class="beneficio-content">
+                <h3>Aprendizaje Adaptativo</h3>
+                <p>Nuestro sistema analiza tu progreso, identifica tus fortalezas y áreas de oportunidad, 
+                y ajusta el nivel de dificultad de los ejercicios. Esto garantiza que siempre avances sin sentirte perdido o estancado. </p>
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <div class="beneficio-number">2</div>
+            <div class="beneficio-content">
+                <h3>Certificaciones Reconocidas</h3>
+                <p>Al completar cada módulo, obtendrás certificaciones digitales verificables por Mentora
+                que puedes añadir a tu currículum, perfil de LinkedIn o portafolio profesional.   </p>
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <div class="beneficio-number">3</div>
+            <div class="beneficio-content">
+                <h3>Zona Interactiva</h3>
+                <p>Explora algunos minijuegos, retos de código, simuladores y quizzes inteligentes diseñados para 
+                reforzar tu aprendizaje de manera dinámica y divertida. </p>
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <div class="beneficio-number">4</div>
+            <div class="beneficio-content">
+               <h3>Vizualiza Proyectos Futuros</h3>
+                  <p>Explora ejemplos y modelos de proyectos que podrás desarrollar conforme avances en tu aprendizaje. 
+                     Descubre cómo lucen aplicaciones reales, páginas web funcionales, CRUD básicos, dashboards y más. 
+
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <div class="beneficio-number">5</div>
+            <div class="beneficio-content">
+                <h3>Acceso Ilimitado</h3>
+                <p>Disfruta de acceso libre y permanente a todos los cursos, recursos, 
+                ejercicios, actualizaciones y nuevo contenido que se agregue. 
+                Estudia de día o de noche, desde tu computadora o móvil. </p>
+            </div>
+        </div>
+        <div class="beneficio-item">
+            <div class="beneficio-number">6</div>
+            <div class="beneficio-content">
+                <h3>Noticias del Mundo Tecnológico</h3>
+                <p>Mantente actualizado con secciones dedicadas a las últimas innovaciones, 
+                tendencias, herramientas, cambios en el mercado laboral y lanzamientos importantes en tecnología. </p>
+            </div>
         </div>
 
     </div>
     </section>
 
-    <section class="beneficios-section" id="beneficios">
-        <h2 class="section-title">¿POR QUÉ ELEGIR MENTORA?</h2>
-        <div class="beneficios-container">
-            <div class="beneficio-item">
-                <div class="beneficio-number">1</div>
-                <div class="beneficio-content">
-                    <h3>Aprendizaje Adaptativo</h3>
-                    <p>Nuestro sistema se adapta a tu ritmo y nivel, ofreciéndote retos personalizados que te mantienen en la zona de aprendizaje óptima.</p>
-                </div>
-            </div>
-
-            <div class="beneficio-item">
-                <div class="beneficio-number">2</div>
-                <div class="beneficio-content">
-                    <h3>Certificaciones Reconocidas</h3>
-                    <p>Obtén certificados avalados por la industria que demuestran tus habilidades y te ayudan a destacar en el mercado laboral.</p>
-                </div>
-            </div>
-
-            <div class="beneficio-item">
-                <div class="beneficio-number">3</div>
-                <div class="beneficio-content">
-                    <h3>Mentoría Personalizada</h3>
-                    <p>Acceso a expertos del sector que te guiarán en tu camino de aprendizaje y resolverán tus dudas en tiempo real.</p>
-                </div>
-            </div>
-
-            <div class="beneficio-item">
-                <div class="beneficio-number">4</div>
-                <div class="beneficio-content">
-                    <h3>Proyectos Reales</h3>
-                    <p>Trabaja en proyectos del mundo real que puedes agregar a tu portafolio profesional y mostrar a futuros empleadores.</p>
-                </div>
-            </div>
-
-            <div class="beneficio-item">
-                <div class="beneficio-number">5</div>
-                <div class="beneficio-content">
-                    <h3>Acceso Ilimitado</h3>
-                    <p>Aprende a tu ritmo con acceso 24/7 a todo el contenido, actualizaciones constantes y nuevos cursos cada mes.</p>
-                </div>
-            </div>
-
-            <div class="beneficio-item">
-                <div class="beneficio-number">6</div>
-                <div class="beneficio-content">
-                    <h3>Red de Networking</h3>
-                    <p>Conecta con miles de estudiantes y profesionales, participa en eventos y construye relaciones valiosas para tu carrera.</p>
-                </div>
-            </div>
+    <section class="testimonials reveal" id="testimonios">
+    <h2 class="section-title">LO QUE DICEN NUESTROS USUARIOS</h2>
+    
+    <div class="testimonial-slider">
+        
+        <div class="testimonial">
+            <div class="testimonial-avatar">S</div>
+            <div class="testimonial-rating">★★★★★</div>
+            <p>"¡MenTora me motiva a aprender todos los días! Los retos son adictivos y he mejorado increíblemente mis habilidades."</p>
+            <div class="author">— Sofía, estudiante</div>
         </div>
+
+        <div class="testimonial">
+            <div class="testimonial-avatar">E</div>
+            <div class="testimonial-rating">★★★★★</div>
+            <p>"La gamificación y los logros hacen que el aprendizaje sea divertido. Conseguí mi primer trabajo gracias a MenTora."</p>
+            <div class="author">— Edgar, ingeniero</div>
+        </div>
+
+        <div class="testimonial">
+            <div class="testimonial-avatar">I</div>
+            <div class="testimonial-rating">★★★★★</div>
+            <p>"La comunidad es muy activa y siempre aprendo algo nuevo. Los proyectos futuros me brindan ideas para mi portafolio de evidencias."</p>
+            <div class="author">— Ivonne, docente</div>
+        </div>
+
+        <div class="testimonial">
+            <div class="testimonial-avatar">M</div>
+            <div class="testimonial-rating">★★★★☆</div>
+            <p>"Empecé sin saber nada de código y ahora puedo crear mis propios proyectos. El sistema de niveles es muy motivador."</p>
+            <div class="author">— Marco, autodidacta</div>
+        </div>
+
+        <div class="testimonial">
+            <div class="testimonial-avatar">L</div>
+            <div class="testimonial-rating">★★★★★</div>
+            <p>"Los retos diarios mantienen mi disciplina. He aprendido más aquí que en meses de tutoriales de YouTube."</p>
+            <div class="author">— Laura, desarrolladora junior</div>
+        </div>
+
+    </div>
     </section>
 
-    <section class="testimonials" id="testimonios">
-        <h2 class="section-title">LO QUE DICEN NUESTROS USUARIOS</h2>
-        <div class="testimonial-slider">
-            <div class="testimonial">
-                "¡MenTora me motiva a aprender todos los días! Los retos son adictivos y he mejorado increíblemente mis habilidades."
-                <div class="author">— Sofía, estudiante.</div>
-            </div>
-            <div class="testimonial">
-                "La gamificación y los logros hacen que el aprendizaje sea divertido. Conseguí mi primer trabajo tech gracias a MenTora."
-                <div class="author">— Edgar, ingeniero.</div>
-            </div>
-            <div class="testimonial">
-                "La comunidad es muy activa y siempre aprendo algo nuevo. Los proyectos reales me dieron el portafolio que necesitaba."
-                <div class="author">— Ivonne, docente.</div>
-        </div>
-    </section>
-
-    <section class="how-it-works" style="background:#638385ff; padding:5rem 2rem;">
+    <section class="how-it-works reveal" style="padding:5rem 2rem;">
     <h2 class="section-title">¿CÓMO FUNCIONA?</h2>
 
     <div style="
@@ -1230,7 +339,7 @@
                 <img src="https://api.iconify.design/mdi/rocket-launch.svg?color=%23114c5f">
             </div>
             <h3>1. Elige tu Ruta</h3>
-            <p>Selecciona si quieres aprender lógica, algoritmos, Python, JavaScript o preparación para entrevistas técnicas.</p>
+            <p>Selecciona si quieres aprender lógica, algoritmos o solo teoría de programación. </p>
         </div>
 
         <div class="feature" style="text-align:center;">
@@ -1238,7 +347,7 @@
                 <img src="https://api.iconify.design/mdi/puzzle-star.svg?color=%23114c5f">
             </div>
             <h3>2. Completa Retos</h3>
-            <p>Resuelve desafíos interactivos que se adaptan automáticamente a tu nivel y estilo de aprendizaje.</p>
+            <p>Resuelve desafíos interactivos que se adaptan automáticamente a tu tiempo.</p>
         </div>
 
         <div class="feature" style="text-align:center;">
@@ -1246,12 +355,84 @@
                 <img src="https://api.iconify.design/mdi/trophy.svg?color=%23114c5f">
             </div>
             <h3>3. Gana Experiencia</h3>
-            <p>Desbloquea logros, sube de nivel y construye tu portafolio con proyectos reales que podrás mostrar.</p>
+            <p>Desbloquea logros, sube de nivel y construye ideas para tu portafolio.</p>
         </div>
     </div>
     </section>
 
-    <footer>
+<section class="profesores-section reveal" id="profesores">
+
+    <h2 class="section-title">MENTORA TAMBIÉN ES PARA PROFESORES</h2>
+
+    <p class="profesores-desc">
+        Además de estudiantes, MenTora cuenta con un espacio especial para 
+        <strong>docentes y mentores</strong>.  
+        Los profesores pueden crear actividades, asignar retos, evaluar progreso 
+        y usar inteligencia artificial para generar exámenes y juegos educativos.
+    </p>
+
+    <div class="profesores-grid">
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-id-card"></i>
+            </div>
+            <h3>Registro para Profesores</h3>
+            <p>Los docentes cuentan con un formulario especial para unirse y acceder a herramientas exclusivas.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+            <h3>Creación de Actividades</h3>
+            <p>Los profesores pueden diseñar actividades, tareas, explicaciones y ejercicios personalizados.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+            <h3>Exámenes con Inteligencia Artificial</h3>
+            <p>Una IA integrada genera preguntas, quizzes y pruebas adaptadas al nivel del grupo.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-puzzle-piece"></i>
+            </div>
+            <h3>Creación de Juegos y Retos</h3>
+            <p>Los docentes pueden generar juegos educativos, simuladores y actividades gamificadas.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-chart-bar"></i>
+            </div>
+            <h3>Panel de Profesor</h3>
+            <p>Acceso a dashboards avanzados para monitorear progreso, calificaciones y participación.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h3>Gestión de Grupos</h3>
+            <p>Crea grupos, asigna actividades, da retroalimentación y sigue el avance de cada estudiante.</p>
+        </div>
+
+    </div>
+
+ <div class="cta-teacher-center">
+    <a href="#" class="cta-teacher-btn">QUIERO REGISTRARME COMO PROFESOR</a>
+</div>
+
+
+</section>
+
+
+
+    <footer class="reveal">
     <div class="footer-content">
     <div class="footer-links">
     <a href="#" onclick="openModal('nosotros')">Sobre Nosotros</a>
@@ -1271,96 +452,6 @@
         <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados.</p>
     </div>
     </footer>
-
-
-    <div id="modal-overlay" class="modal-overlay"></div>
-    <div id="modal-box" class="modal">
-    <div class="modal-content">
-        <span id="close-modal" class="close-modal">&times;</span>
-        <h2 id="modal-title"></h2>
-        <div id="modal-text"></div>
-    </div>
-    </div>
-
-    <div id="modal-overlay" class="modal-overlay"></div>
-
-    <div class="modal" id="modal-nosotros">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-nosotros">&times;</span>
-        <h2>Sobre Nosotros</h2>
-        <p>
-            MenTora es una plataforma diseñada para impulsar el aprendizaje basado en retos, 
-            combinando gamificación, educación y comunidad. Nuestro objetivo es ayudarte a 
-            mejorar tus habilidades sin importar tu nivel, de una forma divertida y estratégica.
-        </p>
-    </div>
-    </div>
-
-    <div class="modal" id="modal-privacidad">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-privacidad">&times;</span>
-        <h2>Política de Privacidad</h2>
-        <p>
-            Tus datos están protegidos. Solo utilizamos información esencial para mejorar 
-            tu experiencia dentro de la plataforma y nunca serán compartidos sin tu consentimiento.
-            Cumplimos con estándares GDPR y normativas internacionales.
-        </p>
-    </div>
-    </div>
-
-
-    <div class="modal" id="modal-terminos">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-terminos">&times;</span>
-        <h2>Términos y Condiciones</h2>
-        <p>
-            Al usar MenTora aceptas los lineamientos de uso responsable. 
-            El contenido está en constante mejora, y puede actualizarse sin previo aviso.
-        </p>
-    </div>
-    </div>
-
-    <div class="modal" id="modal-contacto">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-contacto">&times;</span>
-        <h2>Contacto</h2>
-        <p>¿Tienes dudas, sugerencias o problemas? Escríbenos:</p>
-        <ul>
-            <li>Email: soporte@mentora.com</li>
-            <li>Teléfono: +52 000 000 0000</li>
-            <li>Horario: Lunes a Viernes 9:00–18:00</li>
-        </ul>
-    </div>
-    </div>
-
-
-    <div class="modal" id="modal-equipo">
-    <div class="modal-content">
-        <span class="close-modal" data-close="modal-equipo">&times;</span>
-        <h2>Nuestro Equipo</h2>
-
-        <div class="team">
-            <div class="team-member">
-                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
-                <h3>Ivone</h3>
-                <p>Fundadora y Diseñadora UX/UI</p>
-            </div>
-
-            <div class="team-member">
-                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
-                <h3>Marco</h3>
-                <p>Desarrollador Full Stack</p>
-            </div>
-
-            <div class="team-member">
-                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
-                <h3>Sofía</h3>
-                <p>Directora de Contenido Educativo</p>
-            </div>
-        </div>
-    </div>
-    </div>
-
 
     <button class="chatbot-toggle" id="chatbot-toggle" onclick="toggleChatbot()">
         <i class="fas fa-comments"></i>
@@ -1423,643 +514,8 @@
             </button>
         </form>
     </div>
-
-<script>
-    // Variables globales del chatbot
-    let chatbotOpen = false;
-    let isTyping = false;
-    let messageCount = 0;
-
-    // Base de conocimiento enriquecida de MenTora
-    const botResponses = {
-        // === RESPUESTAS PRINCIPALES DE NAVEGACIÓN ===
-        'como funciona': '🎯 **MenTora es una plataforma educativa gamificada donde los estudiantes aprenden de forma interactiva mediante juegos, retos y logros.**\n\n**¿Cómo funciona?**\n• **Resolver Retos Intelectuales:** Quiz interactivos en múltiples categorías (programación, matemáticas, ciencias, historia, literatura, tecnología)\n• **Sistema de Puntos:** Gana puntos por cada respuesta correcta y avanza en tu nivel\n• **Rankings Competitivos:** Compite con otros estudiantes y profesores en tiempo real\n• **Logros y Insignias:** Desbloquea badges especiales por tus logros académicos\n• **Biblioteca Digital:** Accede a recursos educativos organizados por temas\n• **Profesores Admin:** Los profesores pueden crear retos personalizados\n\n**"Gamifica tu aprendizaje"** significa que el aprendizaje se vuelve más divertido y motivante a través de dinámicas de juego, como niveles, puntos, retos y recompensas.\n\n¡Todo mientras te diviertes aprendiendo! 🚀',
-        
-        // === PREGUNTAS ESPECÍFICAS DE INICIO ===
-        'que es mentora': '🎓 **MenTora es una plataforma educativa gamificada donde los estudiantes aprenden de forma interactiva mediante juegos, retos y logros.**\n\nTransformamos el aprendizaje tradicional en una experiencia emocionante donde cada respuesta correcta te acerca más a dominar nuevos conocimientos.\n\n📱 **Características principales:**\n• Optimizada para dispositivos móviles\n• Acceso gratuito para estudiantes y profesores\n• Sistema de gamificación completo\n• Interacción en tiempo real\n• Biblioteca de recursos educativos\n\n¿Te gustaría saber cómo registrarte o qué puedes hacer en la plataforma?',
-        
-        'acceso gratuito': '💰 **¡Sí! MenTora ofrece acceso completamente gratuito para estudiantes y profesores.**\n\nNo necesitas pagar nada para:\n• Crear tu cuenta y perfil\n• Acceder a todos los juegos y retos\n• Usar la biblioteca de recursos\n• Participar en rankings\n• Ganar logros y puntos\n• Chatear con la comunidad\n\nEn el futuro podríamos agregar funciones avanzadas premium, pero el núcleo de la plataforma siempre será gratuito.\n\n¡Comienza tu aventura de aprendizaje sin costo alguno! 🚀',
-        
-        'movil': '📱 **¡Por supuesto! La plataforma está completamente optimizada para dispositivos móviles.**\n\nPuedes usar MenTora desde:\n• 📱 Tu smartphone (Android/iOS)\n• 💻 Tu computadora o laptop\n• 📟 Tablet\n• 🖥️ Cualquier dispositivo con navegador web\n\n**Ventajas del diseño móvil:**\n• Interfaz responsive que se adapta a tu pantalla\n• Navegación táctil optimizada\n• Carga rápida incluso con conexión lenta\n• Todas las funciones disponibles en cualquier dispositivo\n\n¡Aprende donde quieras, cuando quieras!',
-        
-        'que puedo hacer': '✨ **En MenTora tienes muchas opciones:**\n\n📚 **Sección "Aprende más":** Biblioteca digital con recursos de:\n• Python, JavaScript, Java, C++, HTML/CSS\n• Algoritmos y estructuras de datos\n• Patrones de diseño y APIs REST\n• Matemáticas, física, química\n• Historia, literatura y más\n\n🎮 **Juegos Educativos:** Retos interactivos creados por profesores\n\n📊 **Tu Dashboard Personal:**\n• Ver tu progreso y nivel actual\n• Estadísticas de rendimiento\n• Historial de actividades\n• Ranking de líderes\n• Notificaciones importantes\n\n🏆 **Sistema de Logros:** Colecciona insignias por tus logros\n\n💬 **Chat en Vivo:** Interactúa con otros estudiantes en tiempo real',
-        
-        'consejos estudio': '📚 **Consejos personalizados para maximizar tu aprendizaje en MenTora:**\n\n⏰ **Organización:**\n• Establece sesiones de estudio de 25-30 minutos (Técnica Pomodoro)\n• Usa la biblioteca de MenTora para repasar antes de los retos\n• Revisa tu progreso diariamente en el dashboard\n\n🎯 **Estrategia de Juego:**\n• Empieza con retos básicos para ganar confianza\n• Enfócate en una categoría a la vez (ej: programación)\n• Participa en retos diarios para mantener racha\n• Usa el ranking como motivación sana\n\n💡 **Para Programación:**\n• Practica con los recursos de Python, JavaScript y Java\n• Estudia algoritmos antes de intentar retos avanzados\n• Usa la sección de patrones de diseño\n\n🤝 **Comunidad:**\n• Participa en el chat en vivo para resolver dudas\n• Compite sanamente con compañeros\n• Comparte tus logros para mantener motivación',
-        
-        'registro': '📝 **¿Cómo registrarse en MenTora?**\n\n**Opción 1:** Haz clic en el botón **"Comenzar Gratis"** 🚀 en la página principal\n**Opción 2:** Usa el botón **"Registrarse"** en la esquina superior derecha\n\n**📋 Proceso de registro:**\n**Paso 1:** Completa tus datos básicos:\n• Nombre de usuario único\n• Email válido (recibirás confirmación)\n• Contraseña segura (mín. 8 caracteres)\n\n**Paso 2:** Elige tu rol:\n• 🎓 **Estudiante** - Acceso a juegos, retos y biblioteca\n• 👨‍🏫 **Profesor** - Panel administrativo + funciones de estudiante\n\n**Paso 3:** Personaliza tu perfil y avatar\n\n**✅ Al completar el registro tendrás acceso inmediato a:**\n• Dashboard personal con estadísticas\n• Biblioteca de recursos educativos\n• Primer reto de bienvenida\n• Sistema de puntos iniciado en 0\n• Chat en vivo con la comunidad\n\n**¡Es completamente gratis y toma menos de 2 minutos!** ⚡',
-        
-        'login': '🔐 **Proceso de inicio de sesión:**\n\n1. **Clic en "Iniciar Sesión"** (navbar superior derecho)\n2. **Ingresa credenciales:** Usuario y contraseña\n3. **¡Bienvenido a tu dashboard!** Donde verás:\n\n📊 **Panel Principal:**\n• Puntos actuales y nivel\n• Progreso hacia siguiente nivel\n• Logros desbloqueados recientes\n• Ranking actual entre usuarios\n\n🎯 **Reto Especial del Día:** Desafío diario con puntos extra\n\n🔔 **Notificaciones:** Mensajes importantes del sistema\n\n📜 **Historial:** Tus actividades recientes\n\n**¿Olvidaste tu contraseña?** Usa la opción de recuperación en la página de login',
-        
-        // === RESPUESTAS ESPECIALIZADAS POR ÁREA ===
-        'programacion': '💻 **Sección de Programación en MenTora:**\n\n📚 **Biblioteca de Recursos (12 recursos disponibles):**\n• **Python para Principiantes:** Variables, funciones, bucles, estructuras de datos\n• **JavaScript ES6+ Moderno:** Arrow functions, async/await, destructuring\n• **Java Fundamentos:** POO, herencia, polimorfismo, interfaces\n• **C++ Avanzado:** Punteros, memoria dinámica, templates, STL\n• **Algoritmos y Estructuras de Datos:** Arrays, listas, pilas, árboles\n• **HTML5 y CSS3:** Responsive design, flexbox, grid\n• **React.js:** Componentes, hooks, contexto\n• **APIs REST y Flask:** Desarrollo de servicios web\n• **Git y Control de Versiones:** Branching, merging, GitHub\n• **Patrones de Diseño:** Singleton, Factory, Observer\n• **Testing y Depuración:** Unit testing, TDD\n• **SQL y Bases de Datos:** Consultas, joins, optimización\n\n🎮 **Retos de Programación:**\n• Preguntas sobre sintaxis y conceptos\n• Análisis de algoritmos y complejidad\n• Debugging y resolución de problemas\n• Mejores prácticas y patrones',
-        
-        'matematicas': '🧮 **Matemáticas en MenTora:**\n\n📖 **Recursos Disponibles:**\n• **Álgebra Lineal Básica:** Vectores, matrices, operaciones\n• **Cálculo Diferencial:** Límites, derivadas, aplicaciones\n• **Estadística y Probabilidad:** Distribuciones, análisis de datos\n• **Matemáticas Discretas:** Lógica, combinatoria, grafos\n• **Geometría Analítica:** Coordenadas, ecuaciones de rectas\n\n🎯 **Tipos de Retos:**\n• Problemas de cálculo paso a paso\n• Aplicaciones prácticas en programación\n• Análisis de algoritmos (Big O)\n• Probabilidad en ciencias computacionales\n\n💡 **Tips:**\n• Practica con calculadoras interactivas\n• Revisa fórmulas antes de los retos\n• Conecta matemáticas con programación',
-        
-        'biblioteca': '📚 **Biblioteca Digital de MenTora - Tu Centro de Aprendizaje:**\n\n🔍 **Búsqueda Inteligente:**\n• Busca por tema, tecnología o nivel\n• Filtros por categoría (programación, matemáticas, etc.)\n• Sugerencias automáticas\n\n📱 **Categorías Principales:**\n• **💻 Programación (12 recursos):** Desde Python básico hasta patrones avanzados\n• **🧮 Matemáticas (8 recursos):** Álgebra, cálculo, estadística\n• **🔬 Ciencias (6 recursos):** Física, química, biología\n• **🏛️ Historia (5 recursos):** Mundial, culturas, civilizaciones\n• **📖 Literatura (7 recursos):** Análisis de obras clásicas\n• **⚡ Tecnología (9 recursos):** IA, blockchain, tendencias\n\n✨ **Características:**\n• Contenido interactivo con ejemplos\n• Niveles: Básico, Intermedio, Avanzado\n• Tiempo estimado de estudio\n• Recursos descargables\n• Actualizaciones constantes',
-        
-        'dashboard': '📊 **Tu Dashboard Personal - Centro de Control:**\n\n🎯 **¿Cómo gano puntos en MenTora?**\nGanas puntos completando juegos, retos y quizzes. También puedes recibir puntos extra por participar activamente en actividades especiales.\n\n🆙 **¿Qué significa mi nivel?**\nTu nivel refleja tu progreso general en la plataforma. A medida que acumulas puntos, tu nivel aumenta automáticamente.\n\n🏆 **¿Dónde puedo ver mis logros?**\nTus logros se muestran en la sección "🏆 Logros" dentro del dashboard. Cada logro representa un hito importante en tu aprendizaje.\n\n⚡ **¿Qué es el "Reto Especial del Día"?**\nEs una actividad única disponible por tiempo limitado para ganar puntos y recompensas adicionales. ¡Renueva cada 24 horas!\n\n🥇 **¿Cómo funciona el ranking de líderes?**\nEl ranking muestra a los estudiantes con más puntos y niveles dentro de la plataforma. Es una forma divertida de competir sanamente.\n\n💬 **¿Cómo puedo hablar con un profesor?**\nPuedes usar el botón de chat en vivo para comunicarte con un profesor o soporte técnico en tiempo real.\n\n👤 **¿Cómo cambio mi avatar o nombre?**\nHaz clic en "Editar Perfil" desde el menú del usuario en la esquina superior derecha.\n\n🔐 **¿Qué pasa si cierro sesión?**\nPerderás el acceso al panel y deberás iniciar sesión de nuevo para continuar. Tus datos y progreso se guardan automáticamente.',
-        
-        'juegos': '🎮 **Sección de Juegos y Retos:**\n\n🎯 **Tipos de Contenido:**\n• **Quiz Interactivos:** Preguntas de opción múltiple\n• **Retos de Programación:** Ejercicios de código\n• **Juegos Educativos:** Creados por profesores\n• **Desafíos Colaborativos:** Trabajo en equipo\n\n⭐ **Características:**\n• **Sistema de Puntos:** Gana puntos por respuestas correctas\n• **Cronómetro:** Retos contra tiempo\n• **Múltiples Intentos:** Practica hasta dominar\n• **Retroalimentación:** Explicaciones de respuestas\n\n🏅 **Logros Especiales:**\n• Racha de respuestas correctas\n• Completar categorías específicas\n• Participación en retos diarios\n• Tiempo récord en resolución\n\n📚 **Integración con Biblioteca:** Estudia antes de jugar para mejores resultados',
-        
-        'profesores': '👨‍🏫 **Panel del Profesor - Gestión Educativa Completa:**\n\n🎯 **¿Qué puedo hacer desde el panel de profesor?**\nPuedes gestionar tus quizzes, juegos creados y consultar el desempeño detallado de tus alumnos en tiempo real.\n\n➕ **¿Cómo agrego un nuevo quiz?**\nEn la sección "Mis Quizzes", usa el botón "Agregar Quiz" para crear uno nuevo. Incluye preguntas, respuestas y nivel de dificultad.\n\n📈 **¿Dónde veo los resultados de mis alumnos?**\nEn la tabla de "Alumnos inscritos en tu área" podrás consultar sus puntajes, correos y progreso individual.\n\n✏️ **¿Puedo modificar un quiz existente?**\nSí, selecciona el quiz que desees editar y usa el botón de edición correspondiente. Puedes cambiar preguntas, respuestas y configuraciones.\n\n🏷️ **¿Qué significa el área del profesor?**\nCada profesor pertenece a un área temática (por ejemplo, matemáticas, tecnología o inglés) y solo ve alumnos asociados a esa área específica.\n\n💬 **¿Puedo comunicarme con mis alumnos?**\nSí, puedes usar el chat integrado o las funciones de comunicación dentro del dashboard para contactar estudiantes.\n\n🔐 **¿Qué pasa si cierro sesión?**\nTu sesión se cerrará y deberás volver a iniciar sesión con tu cuenta de profesor. Todos tus datos se guardan automáticamente.\n\n📊 **Herramientas adicionales:**\n• Sistema de logros personalizables\n• Estadísticas detalladas de rendimiento\n• Generación automática de contenido con IA\n• Exportación de reportes y exámenes',
-        
-        'ayuda': '🆘 **Centro de Ayuda MenTora:**\n\n📞 **Soporte Técnico:**\n• **Chat en Vivo:** Habla con otros usuarios en tiempo real\n• **MenToraBot:** Asistente 24/7 (¡soy yo!)\n• **Email Soporte:** Para problemas técnicos complejos\n\n❓ **Preguntas Frecuentes:**\n• ¿Cómo restablecer contraseña?\n• ¿Cómo subir de nivel más rápido?\n• ¿Qué hacer si un reto no carga?\n• ¿Cómo acceder a recursos premium?\n\n📖 **Guías de Usuario:**\n• Tutorial de inicio para nuevos usuarios\n• Guía avanzada de la biblioteca\n• Manual para profesores\n• Mejores prácticas de estudio\n\n🔧 **Reportar Problemas:**\n• Bugs en la plataforma\n• Contenido incorrecto\n• Sugerencias de mejora\n• Solicitudes de nuevas funciones',
-        
-        'tecnologia': '⚡ **Sección de Tecnología Avanzada:**\n\n🤖 **Inteligencia Artificial:**\n• Fundamentos de Machine Learning\n• Redes neuronales básicas\n• Aplicaciones en la vida cotidiana\n• Ética en IA\n\n🔗 **Blockchain y Criptomonedas:**\n• Conceptos básicos de blockchain\n• Smart contracts\n• NFTs y aplicaciones\n\n☁️ **Cloud Computing:**\n• AWS, Azure, Google Cloud\n• Servicios en la nube\n• DevOps y deployment\n\n📱 **Desarrollo Móvil:**\n• React Native\n• Flutter\n• Ionic\n• App Store optimization',
-
-        // === RESPUESTA POR DEFECTO EXPANDIDA ===
-        'default': '🤔 **¡Excelente pregunta!** Como MenToraBot, el asistente oficial especializado con conocimiento completo de la plataforma, puedo ayudarte con absolutamente todo:\n\n**🏗️ ARQUITECTURA Y TECNOLOGÍA:**\n• Detalles técnicos: Flask, SQLAlchemy, Socket.IO, WebSockets\n• 10+ tablas de base de datos con relaciones complejas\n• APIs REST completas y endpoints especializados\n• Sistema de autenticación y seguridad avanzado\n• Integración de IA local para generación automática\n\n**🎓 SISTEMA EDUCATIVO COMPLETO:**\n• Quiz interactivos con múltiples tipos de pregunta\n• Biblioteca digital: 47+ recursos en 6 categorías principales\n• Sistema de juegos: programación, lógica, colaborativos\n• Generación automática de exámenes exportables\n• Analytics detallado de rendimiento estudiantil\n\n**🎮 GAMIFICACIÓN AVANZADA:**\n• 100 niveles con progresión exponencial balanceada\n• 50+ logros en 6 categorías diferentes\n• Sistema de puntos con múltiples fuentes\n• Rankings globales y por especialización\n• Eventos especiales y competencias estacionales\n\n**👥 GESTIÓN DE USUARIOS:**\n• Roles granulares: estudiante/profesor/admin\n• Perfiles completamente personalizables\n• Sistema de permisos y moderación automática\n• Herramientas administrativas completas\n• Analytics y reportes institucionales\n\n**💬 COMUNICACIÓN EN TIEMPO REAL:**\n• Chat con WebSockets y moderación IA\n• Sistema de notificaciones inteligente\n• Mensajes multimedia y formato rico\n• Grupos de estudio y mentorías\n\n**🔧 HERRAMIENTAS PARA PROFESORES:**\n• Panel administrativo con 15+ funcionalidades\n• Creación de contenido con editor visual\n• Sistema de logros personalizable\n• Estadísticas detalladas de estudiantes\n• Generación automática con IA local\n\n**🚀 ¡PREGÚNTAME LO QUE NECESITES!**\nTengo conocimiento exhaustivo de cada línea de código, cada tabla de la base de datos, cada funcionalidad y cada proceso de MenTora. ¡No hay pregunta demasiado técnica o demasiado específica para mí!'
-    };
-
-    // Función para alternar el chatbot
-    function toggleChatbot() {
-        const box = document.getElementById('chatbot-box');
-        const btn = document.getElementById('chatbot-toggle');
-        const notificationDot = document.getElementById('notificationDot');
-        
-        if (!chatbotOpen) {
-            box.style.display = 'flex';
-            btn.style.display = 'none';
-            chatbotOpen = true;
-            notificationDot.style.display = 'none';
-            
-            // Focus en el input
-            setTimeout(() => {
-                document.getElementById('chatbot-input').focus();
-            }, 300);
-        } else {
-            box.style.display = 'none';
-            btn.style.display = 'flex';
-            chatbotOpen = false;
-        }
-    }
-
-    // Función para limpiar el chat
-    function clearChat() {
-        const messages = document.getElementById('chatbot-messages');
-        const welcomeMessage = messages.querySelector('.welcome-message');
-        messages.innerHTML = '';
-        messages.appendChild(welcomeMessage);
-        messageCount = 0;
-        
-        // Mostrar sugerencias nuevamente
-        document.getElementById('quickSuggestions').style.display = 'flex';
-    }
-
-    // Función para enviar mensajes rápidos
-    function sendQuickMessage(message) {
-        document.getElementById('chatbot-input').value = message;
-        sendChatbotMessage(new Event('submit'));
-    }
-
-    // Función principal para enviar mensajes
-    async function sendChatbotMessage(e) {
-        e.preventDefault();
-        
-        if (isTyping) return;
-        
-        const input = document.getElementById('chatbot-input');
-        const messages = document.getElementById('chatbot-messages');
-        const sendBtn = document.querySelector('.send-btn');
-        const userMsg = input.value.trim();
-        
-        if (!userMsg) return;
-        
-        // Ocultar sugerencias después del primer mensaje
-        if (messageCount === 0) {
-            document.getElementById('quickSuggestions').style.display = 'none';
-        }
-        
-        messageCount++;
-        
-        // Agregar mensaje del usuario
-        addUserMessage(userMsg);
-        
-        // Limpiar input y deshabilitar botón
-        input.value = '';
-        sendBtn.disabled = true;
-        
-        // Mostrar indicador de escritura
-        showTypingIndicator();
-        
-        // Generar respuesta del bot
-        setTimeout(async () => {
-            hideTypingIndicator();
-            
-            // Usar siempre respuesta local para mayor confiabilidad
-            console.log('Procesando mensaje:', userMsg);
-            const localResponse = getLocalResponse(userMsg);
-            console.log('Respuesta generada:', localResponse.substring(0, 100) + '...');
-            addBotMessage(localResponse);
-            
-            sendBtn.disabled = false;
-        }, Math.random() * 1000 + 800); // Simular tiempo de respuesta humano
-    }
-
-    // Función para obtener respuesta local enriquecida
-    function getLocalResponse(message) {
-        const msg = message.toLowerCase().trim();
-        console.log('🔍 Analizando mensaje:', msg);
-        
-        // === RESPUESTAS DIRECTAS SIMPLES ===
-        
-        // Saludos
-        if (msg.includes('hola') || msg.includes('hello') || msg.includes('hey') || msg.includes('buenos')) {
-            const hora = new Date().getHours();
-            let saludo = '👋 ¡Hola!';
-            if (hora >= 6 && hora < 12) saludo = '🌅 ¡Buenos días!';
-            else if (hora >= 12 && hora < 18) saludo = '☀️ ¡Buenas tardes!';  
-            else if (hora >= 18 || hora < 6) saludo = '🌙 ¡Buenas noches!';
-            
-            return `${saludo} Soy **MenToraBot**, tu asistente personal en la plataforma.\n\n¿En qué puedo ayudarte hoy? Puedes preguntarme sobre:\n• 📚 Cómo usar la biblioteca de recursos\n• 🎮 Juegos y retos disponibles\n• 📊 Tu progreso y estadísticas\n• 💻 Recursos de programación\n• 🧮 Materiales de matemáticas\n• 🏆 Sistema de logros y niveles\n• 💬 Chat en vivo con la comunidad\n\n¡Estoy aquí para hacer tu experiencia en MenTora increíble!`;
-        }
-        
-        // ¿Qué es MenTora?
-        if (msg.includes('que es mentora') || msg.includes('que es la plataforma') || msg.includes('explicame mentora')) {
-            console.log('✅ Detectado: que es mentora');
-            console.log('📋 Respuesta disponible:', botResponses['que es mentora'] ? 'SÍ' : 'NO');
-            return botResponses['que es mentora'] || 'Error: Respuesta no encontrada';
-        }
-        
-        // ¿Es gratis? / Precio
-        if (msg.includes('es gratis') || msg.includes('gratis') || msg.includes('pagar') || msg.includes('costo') || msg.includes('precio') || msg.includes('gratuito')) {
-            console.log('✅ Detectado: acceso gratuito');
-            console.log('📋 Respuesta disponible:', botResponses['acceso gratuito'] ? 'SÍ' : 'NO');
-            return botResponses['acceso gratuito'] || 'Error: Respuesta no encontrada';
-        }
-        
-        // ¿Cómo gano puntos?
-        if (msg.includes('como gano puntos') || msg.includes('ganar puntos') || msg.includes('conseguir puntos')) {
-            console.log('✅ Detectado: como gano puntos');
-            console.log('📋 Respuesta dashboard disponible:', botResponses.dashboard ? 'SÍ' : 'NO');
-            return botResponses.dashboard || 'Error: Respuesta dashboard no encontrada';
-        }
-        
-        // ¿Cómo funciona?
-        if (msg.includes('como funciona') || msg.includes('explicame') || msg.includes('gamifica')) {
-            console.log('✅ Detectado: como funciona');
-            return botResponses['como funciona'];
-        }
-        
-        // ¿Qué puedo hacer?
-        if (msg.includes('que puedo hacer') || msg.includes('que hay') || msg.includes('funcionalidades')) {
-            console.log('✅ Detectado: que puedo hacer');
-            return botResponses['que puedo hacer'];
-        }
-        
-        // Móvil / Dispositivos
-        if (msg.includes('movil') || msg.includes('telefono') || msg.includes('celular') || msg.includes('dispositivo') || msg.includes('tablet')) {
-            console.log('Detectado: movil');
-            return botResponses['movil'];
-        }
-        
-        // Ayuda
-        if (msg.includes('ayuda') || msg.includes('help') || msg.includes('auxilio')) {
-            console.log('Detectado: ayuda');
-            return botResponses.ayuda;
-        }
-        
-        // Consejos
-        if (msg.includes('consejos') || msg.includes('tips') || msg.includes('recomendaciones')) {
-            console.log('Detectado: consejos');
-            return botResponses['consejos estudio'];
-        }
-        
-        // Programación
-        if (msg.includes('programacion') || msg.includes('codigo') || msg.includes('python') || msg.includes('javascript')) {
-            console.log('Detectado: programacion');
-            return botResponses.programacion;
-        }
-        
-        // Matemáticas
-        if (msg.includes('matematicas') || msg.includes('mates') || msg.includes('calculo')) {
-            console.log('Detectado: matematicas');
-            return botResponses.matematicas;
-        }
-        
-        // Biblioteca
-        if (msg.includes('biblioteca') || msg.includes('recursos') || msg.includes('materiales')) {
-            console.log('Detectado: biblioteca');
-            return botResponses.biblioteca;
-        }
-        
-        // Dashboard y preguntas específicas de estudiantes
-        if (msg.includes('dashboard') || msg.includes('progreso') || msg.includes('como gano puntos') || 
-            msg.includes('que significa mi nivel') || msg.includes('donde veo logros') || 
-            msg.includes('reto especial') || msg.includes('ranking') || msg.includes('chat profesor') ||
-            msg.includes('cambio avatar') || msg.includes('editar perfil') || msg.includes('cierro sesion')) {
-            console.log('Detectado: dashboard');
-            return botResponses.dashboard;
-        }
-        
-        // Preguntas específicas de puntos y niveles
-        if (msg.includes('ganar puntos') || msg.includes('como subo nivel') || msg.includes('puntos extra')) {
-            console.log('Detectado: dashboard (puntos)');
-            return botResponses.dashboard;
-        }
-        
-        // Logros y ranking
-        if (msg.includes('logros') || msg.includes('ranking') || msg.includes('lider') || msg.includes('posicion')) {
-            console.log('Detectado: dashboard (logros)');
-            return botResponses.dashboard;
-        }
-        
-        // Juegos
-        if (msg.includes('juegos') || msg.includes('retos') || msg.includes('quiz')) {
-            console.log('Detectado: juegos');
-            return botResponses.juegos;
-        }
-        
-        // Profesores y panel docente
-        if (msg.includes('profesor') || msg.includes('admin') || msg.includes('docente') ||
-            msg.includes('panel profesor') || msg.includes('agregar quiz') || msg.includes('crear quiz') ||
-            msg.includes('resultados alumnos') || msg.includes('modificar quiz') || msg.includes('area profesor') ||
-            msg.includes('comunicarme alumnos') || msg.includes('gestionar') || msg.includes('ensenar')) {
-            console.log('Detectado: profesores');
-            return botResponses.profesores;
-        }
-        
-        // Específico para gestión de quizzes
-        if (msg.includes('quiz') && (msg.includes('crear') || msg.includes('editar') || msg.includes('modificar'))) {
-            console.log('Detectado: profesores (quiz)');
-            return botResponses.profesores;
-        }
-        
-        // Registro
-        if (msg.includes('registro') || msg.includes('registrarme') || msg.includes('crear cuenta')) {
-            console.log('Detectado: registro');
-            return botResponses.registro;
-        }
-        
-        // Login
-        if (msg.includes('login') || msg.includes('iniciar sesion') || msg.includes('entrar')) {
-            console.log('Detectado: login');
-            return botResponses.login;
-        }
-        
-        // Tecnología
-        if (msg.includes('tecnologia') || msg.includes('inteligencia artificial') || msg.includes('blockchain')) {
-            console.log('Detectado: tecnologia');
-            return botResponses.tecnologia;
-        }
-        
-        // Agradecimientos
-        if (msg.includes('gracias') || msg.includes('excelente') || msg.includes('perfecto')) {
-            return '😊 ¡De nada! Es un placer ayudarte.\n\nComo asistente de MenTora, mi objetivo es hacer tu experiencia de aprendizaje lo más fluida posible. \n\n¿Hay algo más en lo que pueda asistirte? Puedo ayudarte con:\n• 🔍 Encontrar recursos específicos\n• 📈 Optimizar tu progreso\n• 🎯 Estrategias de estudio\n• 🎮 Recomendaciones de retos\n\n¡Sigue explorando y aprendiendo!';
-        }
-        
-        // Despedidas
-        if (msg.includes('adios') || msg.includes('bye') || msg.includes('hasta luego')) {
-            return '👋 ¡Hasta luego! Fue un placer ayudarte.\n\n🎯 **Recuerda:**\n• Sigue practicando con los retos diarios\n• Explora la biblioteca para más conocimiento\n• Compite en los rankings para subir de nivel\n\n¡Nos vemos pronto en MenTora! 🚀\n\n*Tip: Siempre puedes volver a chatear conmigo cuando necesites ayuda.*';
-        }
-        
-        // Problemas técnicos
-        if (msg.includes('problema') || msg.includes('error') || msg.includes('no funciona')) {
-            return '🔧 **Soporte Técnico de MenTora**\n\n😔 Lamento escuchar que tienes problemas. Aquí tienes algunas soluciones:\n\n**🔄 Soluciones Rápidas:**\n• Refrescar la página (F5 o Ctrl+R)\n• Limpiar caché del navegador\n• Verificar tu conexión a internet\n• Intentar en modo incógnito\n\n**📱 Si persiste el problema:**\n• Intenta desde otro navegador\n• Verifica que JavaScript esté habilitado\n• Desactiva extensiones que puedan interferir\n\n**📞 Contacto Directo:**\nSi el problema continúa, contacta a nuestro equipo técnico con:\n• Descripción detallada del problema\n• Navegador y versión que usas\n• Pasos que realizaste antes del error\n\n¡Estamos aquí para ayudarte!';
-        }
-        
-        console.log('❓ Usando respuesta default para:', msg);
-        // Respuesta por defecto actualizada
-        const defaultResponse = '🤖 **¡Hola! Soy MenToraBot, tu asistente personal en MenTora**\n\n**📋 Preguntas sobre la plataforma:**\n• "¿Qué es MenTora?" - Conoce nuestra plataforma educativa\n• "¿Cómo funciona?" - Gamificación y dinámicas de aprendizaje\n• "¿Es gratis?" - Información sobre acceso gratuito\n• "¿Funciona en móvil?" - Compatibilidad con dispositivos\n• "¿Cómo me registro?" - Proceso paso a paso\n\n**🎮 Para estudiantes:**\n• "¿Cómo gano puntos?" - Sistema de puntuación\n• "¿Qué significa mi nivel?" - Progreso y niveles\n• "¿Dónde veo mis logros?" - Insignias y recompensas\n• "Reto especial del día" - Actividades diarias\n• "Ranking de líderes" - Competencia sana\n• "Cambiar avatar" - Personalización de perfil\n\n**👨‍🏫 Para profesores:**\n• "Panel de profesor" - Herramientas docentes\n• "Crear quiz" - Gestión de evaluaciones\n• "Resultados de alumnos" - Seguimiento académico\n• "Área del profesor" - Organización por materias\n\n**📚 Contenido educativo:**\n• **Programación** - Python, JavaScript, algoritmos\n• **Matemáticas** - Cálculo, álgebra, estadística\n• **Biblioteca** - Recursos y materiales\n• **Juegos** - Retos interactivos\n\n**💡 También puedo ayudarte con:**\n• Consejos de estudio\n• Soporte técnico\n• Chat en vivo\n• Inicio de sesión\n\n**¡Escribe cualquier tema y te daré información detallada! 🚀**';
-        console.log('📤 Retornando respuesta default');
-        return defaultResponse;
-    }
-
-    // Función para agregar mensaje del usuario
-    function addUserMessage(message) {
-        const messages = document.getElementById('chatbot-messages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'user-message';
-        messageDiv.innerHTML = `
-            <div class="user-avatar">👤</div>
-            <div class="message-bubble user-bubble">${escapeHtml(message)}</div>
-        `;
-        messages.appendChild(messageDiv);
-        scrollToBottom();
-    }
-
-    // Función para agregar mensaje del bot
-    function addBotMessage(message) {
-        const messages = document.getElementById('chatbot-messages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'bot-message';
-        messageDiv.innerHTML = `
-            <div class="bot-avatar">🤖</div>
-            <div class="message-bubble bot-bubble">${formatBotMessage(message)}</div>
-        `;
-        messages.appendChild(messageDiv);
-        scrollToBottom();
-        
-        // Mostrar notificación si el chat está cerrado
-        if (!chatbotOpen) {
-            document.getElementById('notificationDot').style.display = 'block';
-        }
-    }
-
-    // Función para mostrar indicador de escritura
-    function showTypingIndicator() {
-        isTyping = true;
-        document.getElementById('typing-indicator').style.display = 'flex';
-        scrollToBottom();
-    }
-
-    // Función para ocultar indicador de escritura
-    function hideTypingIndicator() {
-        isTyping = false;
-        document.getElementById('typing-indicator').style.display = 'none';
-    }
-
-    // Función para hacer scroll al final
-    function scrollToBottom() {
-        const messages = document.getElementById('chatbot-messages');
-        setTimeout(() => {
-            messages.scrollTop = messages.scrollHeight;
-        }, 100);
-    }
-
-    // Función para escapar HTML
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // Función para formatear mensajes del bot
-    function formatBotMessage(message) {
-        console.log('🎨 Formateando mensaje:', message.substring(0, 50) + '...');
-        let formatted = escapeHtml(message);
-        
-        // Convertir markdown básico a HTML
-        formatted = formatted
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **texto** -> <strong>texto</strong>
-            .replace(/\*(.*?)\*/g, '<em>$1</em>') // *texto* -> <em>texto</em>
-            .replace(/\n• /g, '<br>• ') // Bullets con salto de línea
-            .replace(/\n\n/g, '<br><br>') // Doble salto de línea
-            .replace(/\n/g, '<br>'); // Salto de línea simple
-        
-        console.log('✨ Mensaje formateado completado');
-        return formatted;
-    }
-
-    // Función para alternar picker de emojis (placeholder)
-    function toggleEmojiPicker() {
-        const emojis = ['😊', '😂', '🤔', '👍', '❤️', '🎉', '💡', '🔥', '💯', '👏'];
-        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-        const input = document.getElementById('chatbot-input');
-        input.value += randomEmoji;
-        input.focus();
-    }
-
-    // Event listeners
-    document.addEventListener('DOMContentLoaded', function() {
-        // Auto-focus en el input cuando se abre el chat
-        const input = document.getElementById('chatbot-input');
-        
-        // Detectar Enter para enviar
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendChatbotMessage(e);
-            }
-        });
-        
-        // Prevenir envío de formulario vacío
-        input.addEventListener('input', function() {
-            const sendBtn = document.querySelector('.send-btn');
-            sendBtn.disabled = !this.value.trim();
-        });
-        
-        // Cerrar chat con Escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && chatbotOpen) {
-                toggleChatbot();
-            }
-        });
-        
-        // Mostrar notificación inicial después de unos segundos
-        setTimeout(() => {
-            if (!chatbotOpen) {
-                document.getElementById('notificationDot').style.display = 'block';
-            }
-        }, 5000);
-    });
-
-
-   // CONTENIDOS DE CADA MODAL
-   const modalData = {
-    "nosotros": {
-        title: "Sobre MenTora",
-        text: `
-            <div style="padding: 10px;">
-                <h2>Nuestra Misión y Visión</h2>
-                <p>
-                    Somos <strong>MenTora</strong>, una plataforma de EdTech innovadora comprometida con la 
-                    <strong>transformación del aprendizaje profesional</strong>. Nuestra misión es desatar el
-                     potencial de cada usuario a través de una metodología de <strong>aprendizaje basado en retos</strong>
-                      (Challenge-Based Learning) altamente gamificada.
-                </p>
-                <p>
-                    Nuestra visión es ser la plataforma líder a nivel global en el desarrollo de habilidades críticas del
-                     siglo XXI (pensamiento crítico, resolución de problemas complejos, y creatividad), ofreciendo una experiencia
-                      inmersiva, social y estratégicamente divertida. Fundada en la premisa de que <strong>aprender haciendo</strong>
-                       es el camino más efectivo, nos dedicamos a construir un ecosistema donde la educación y la práctica profesional 
-                       convergen.
-                </p>
-                <p>
-                    Nos enfocamos en el diseño de experiencias que simulan escenarios del mundo real, 
-                    preparando a nuestros usuarios no solo con conocimientos, sino con la <strong>capacidad de aplicarlos</strong> 
-                    bajo presión y en colaboración con una comunidad de pares y expertos.
-                </p>
-            </div>
-        `
-    },
-    "privacidad": {
-        title: "Política de Privacidad (Aviso de Privacidad)",
-        text: `
-            <div style="padding: 10px;">
-                <h2>Última Actualización: 17 de Noviembre de 2025</h2>
-
-                <h3>1. Recopilación de Información Personal</h3>
-                <p>
-                    MenTora (referida en adelante como "la Plataforma") recaba información que usted nos proporciona
-                     directamente al crear una cuenta, participar en desafíos, o interactuar con la comunidad. Esta 
-                     información puede incluir:
-                </p>
-                <ul>
-                    <li><strong>Datos de Identificación:</strong> Nombre completo, correo electrónico, nombre de usuario y contraseña (cifrada).</li>
-                    <li><strong>Datos de Uso y Desempeño:</strong> Progreso en retos, puntuaciones, insignias obtenidas, y actividad dentro de los foros.</li>
-                    <li><strong>Datos Técnicos:</strong> Dirección IP, tipo de dispositivo, sistema operativo, y datos de navegación (a través de cookies).</li>
-                </ul>
-
-                <h3>2. Finalidad del Tratamiento de Datos</h3>
-                <h3>3. Compartición y Transferencia de Datos</h3>
-                <p>
-                    <strong>MenTora NO vende ni alquila su información personal.</strong> Sus datos solo serán compartidos en 
-                    los siguientes escenarios limitados:
-                </p>
-                <ul>
-                    <li><strong>Proveedores de Servicios:</strong> Con terceros que nos ayudan a operar la Plataforma (ej. 
-                    alojamiento web, análisis de datos), quienes están obligados a mantener la confidencialidad.</li>
-                    <li><strong>Cumplimiento Legal:</strong> Cuando sea requerido por ley, orden judicial o para proteger 
-                    nuestros derechos legales o la seguridad de otros usuarios.</li>
-                </ul>
-
-                <h3>4. Derechos del Usuario (ARCO)</h3>
-                <p>
-                    Usted tiene derecho en todo momento a acceder, rectificar, cancelar u oponerse al tratamiento de sus 
-                    datos personales (<strong>Derechos ARCO</strong>). Para ejercer estos derechos, por favor envíe una 
-                    solicitud formal a <a href="">mentora@gmail.com</a>.
-                </p>
-                
-                <h3>5. Uso de Cookies y Tecnologías de Rastreo</h3>
-                <p>
-                    Utilizamos cookies y tecnologías similares para rastrear la actividad en nuestro 
-                    servicio y mantener cierta información. Las cookies pueden ser esenciales (para el funcionamiento), 
-                    de rendimiento (para estadísticas) o de funcionalidad (para recordar preferencias). Al usar la Plataforma,
-                     usted acepta el uso de estas tecnologías.
-                </p>
-                
-                <p style="margin-top: 20px; font-size: 0.9em; color: #555;">
-                    <em>MenTora se reserva el derecho de modificar esta Política de Privacidad en cualquier 
-                    momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la Plataforma. 
-                    Le recomendamos revisar esta sección periódicamente.</em>
-                </p>
-            </div>
-        `
-    },
-    "terminos": {
-        title: "Términos y Condiciones de Uso",
-        text: `
-            <div style="padding: 10px;">
-                <h2>Acuerdo de Uso de la Plataforma</h2>
-                <p>
-                    Al acceder o utilizar los servicios de <strong>MenTora</strong>, usted acepta quedar sujeto a los presentes
-                     Términos y Condiciones. Si no está de acuerdo con alguna parte de los términos, no debe utilizar la Plataforma.
-                </p>
-
-                <h3>1. Elegibilidad y Cuentas de Usuario</h3>
-                <p>
-                    El uso de la Plataforma está disponible solo para personas que puedan formar contratos legalmente vinculantes. 
-                    Usted es <strong>responsable</strong> de mantener la confidencialidad de su contraseña y de todas las actividades
-                     que ocurran bajo su cuenta.
-                </p>
-
-                <h3>2. Uso Prohibido</h3>
-                <p>
-                    Queda <strong>estrictamente prohibido</strong>: (a) el uso de la Plataforma para cualquier fin ilegal;
-                     (b) la publicación de contenido ofensivo, difamatorio o que viole derechos de propiedad intelectual; 
-                     (c) el intento de interferir con el funcionamiento adecuado de la Plataforma. El incumplimiento resultará 
-                     en la baja inmediata de la cuenta.
-                </p>
-
-                <h3>3. Propiedad Intelectual</h3>
-                <p>
-                    Todo el contenido de <strong>MenTora</strong>, incluyendo el diseño de los retos, el software, los gráficos y 
-                    el material educativo, es propiedad exclusiva de MenTora o de sus licenciantes y está protegido por derechos 
-                    de autor. Usted solo tiene licencia para el uso personal y no comercial del contenido.
-                </p>
-            </div>
-        `
-    },
-    "contacto": {
-        title: "Información de Contacto",
-        text: `
-            <div style="padding: 10px;">
-                <p>Para consultas generales, soporte técnico o preguntas sobre su cuenta, por favor contáctenos a través de los siguientes medios:</p>
-                <p><strong>Email de Soporte:</strong> <a href="">mentora@gmail.com</a></p>
-                <p><strong>Teléfono:</strong> +52 5619174545 (Horario: Lunes a Viernes, 9:00 - 17:00 CST)</p>
-                <p><strong>Dirección Postal:</strong> Instituto Tecnologíco Nacional de México.</p>
-            </div>
-        `
-    },
-    "equipo": {
-        title: "Conoce a Nuestro Equipo",
-        text: `
-            <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; padding: 20px;">
-                <div style="text-align:center; min-width: 150px;">
-                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
-                    <h4>David Iván Torres Martínez</h4>
-                    <p><strong>Fundador del Proyecto</strong></p>
-                    <p style="font-size: 0.9em; color: #555;">Lider con pensamiento estratégico, capacidad para coordinar la ejecución y experiencia sólida en desarrollo backend.</p>
-                </div>
-                <div style="text-align:center; min-width: 150px;">
-                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
-                    <h4>Karla Ivonne Romero Gonzalez</h4>
-                    <p><strong>Diseñadora UX/UI </strong></p>
-                    <p style="font-size: 0.9em; color: #555;">Especialista en desarrollo frontend, con enfoque técnico en diseño de interacción y arquitectura visual.</p>
-                </div>
-                <div style="text-align:center; min-width: 150px;">
-                    <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" width="80" style="margin-bottom: 5px;">
-                    <h4>Perla Ramos Santillan</h4>
-                    <p><strong>Analista de QA</strong></p>
-                    <p style="font-size: 0.9em; color: #555;">Especialista en pruebas de software con experiencia en verificación, documentación y análisis de resultados..</p>
-                </div>
-            </div>
-        `
-    }
-  };
-   let lastScroll = 0;
-
-   // FUNCIÓN PARA ABRIR MODAL
-   function openModal(type) {
-    // Guardamos la posición EXACTA antes de abrir
-    lastScroll = window.scrollY;
-
-    document.getElementById("modal-title").innerHTML = modalData[type].title;
-    document.getElementById("modal-text").innerHTML = modalData[type].text;
-
-    document.getElementById("modal-box").style.display = "block";
-    document.getElementById("modal-overlay").style.display = "block";
-
-    // Evita que la página se mueva
-    document.body.style.overflow = "hidden";
-   }
-
-   // FUNCIÓN PARA CERRAR MODAL
-   function cerrarModal() {
-    const modal = document.getElementById("modal-box");
-    const overlay = document.getElementById("modal-overlay");
-
-    // Volvemos a permitir scroll en la página
-    document.body.style.overflow = "auto";
-
-    modal.style.display = "none";
-    overlay.style.display = "none";
-
-    //  Regresar EXACTAMENTE al punto donde el usuario estaba
-    setTimeout(() => {
-        window.scrollTo({
-            top: lastScroll,
-            behavior: "instant"   // No animado, sin saltos
-        });
-    }, 1);
-   }
-
-   document.getElementById("close-modal").onclick = cerrarModal;
-   document.getElementById("modal-overlay").onclick = cerrarModal;
-
-   document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado');
-    
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
-    
-    console.log('Hamburger:', hamburger);
-    console.log('NavLinks:', navLinks);
-
-    if (hamburger && navLinks) {
-        console.log('Elementos encontrados');
-        
-        hamburger.addEventListener('click', function(e) {
-            console.log('Click en hamburger');
-            navLinks.classList.toggle('active');
-            console.log('Clases después del toggle:', navLinks.className);
-        });
-    } else {
-        console.log('ERROR: No se encontraron los elementos');
-    }
-   });
-
-</script>
+    <script defer src="{{ url_for('static', filename='js/script_index.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/reveal.js') }}"></script>
 </body>
 </html> 
