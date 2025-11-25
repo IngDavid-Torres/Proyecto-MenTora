@@ -454,7 +454,8 @@ document.addEventListener('keydown', (e) => {
         try {
             const response = await fetch('/login', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'same-origin'
             });
             if (response.ok) {
                 let res;
@@ -526,7 +527,8 @@ document.addEventListener('keydown', (e) => {
                 const response = await fetch('/register', {
                     method: 'POST',
                     headers: { 'Accept': 'application/json' },
-                    body: formData
+                    body: formData,
+                    credentials: 'same-origin'
                 });
                 if(response.ok) {
                     const res = await response.json();

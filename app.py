@@ -167,7 +167,9 @@ def register():
             return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
-            msg = 'Error interno en el registro.'
+            app.logger.exception('Error al registrar usuario:')
+            # Proveer más información en modo debug para facilitar diagnóstico
+            msg = f'Error interno en el registro. ({str(e)})' if app.debug else 'Error interno en el registro.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=False, message=msg), 500
             flash(msg)
