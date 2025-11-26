@@ -36,10 +36,13 @@ def get_or_create(model, defaults=None, **kwargs):
 
 
 def seed_admin_and_teacher():
+    import os
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'MenToraAdmin123')
+    prof_password = os.environ.get('PROF_PASSWORD', 'MenToraProf123')
     admin, created = get_or_create(User, username="admin")
     if created:
         admin.email = "admin@mentora.com"
-        admin.password = generate_password_hash("admin123")
+        admin.password = generate_password_hash(admin_password)
         admin.area = "general"
         admin.is_admin = True
         admin.points = 0
@@ -47,7 +50,7 @@ def seed_admin_and_teacher():
     teacher_user, created_t = get_or_create(User, username="prof_demo")
     if created_t:
         teacher_user.email = "prof_demo@mentora.com"
-        teacher_user.password = generate_password_hash("prof123")
+        teacher_user.password = generate_password_hash(prof_password)
         teacher_user.area = "programacion"
         teacher_user.is_admin = False
         teacher_user.points = 0

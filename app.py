@@ -200,13 +200,14 @@ def login():
         try:
             username = request.form.get('username', '').strip()
             password = request.form.get('password', '')
-            app.logger.debug(f"[LOGIN] username='{username}', password='{password}'")
+            # No registrar datos sensibles ni controlados por el usuario
+            app.logger.debug("[LOGIN] Datos de formulario recibidos.")
         except Exception as e:
             app.logger.error(f"[LOGIN ERROR] Exception al obtener datos del formulario: {e}")
             return jsonify(success=False, error="Error al obtener datos del formulario"), 400
 
         if not username or not password:
-            app.logger.error(f"[LOGIN ERROR] Campos faltantes: username='{username}', password='{password}'")
+            app.logger.error("[LOGIN ERROR] Campos requeridos faltantes.")
             return jsonify(success=False, error="Campos requeridos faltantes"), 400
 
         app.logger.debug("[LOGIN] Buscando usuario en la base de datos...")
@@ -216,7 +217,8 @@ def login():
             app.logger.error(f"[LOGIN ERROR] Exception al buscar usuario: {e}")
             return jsonify(success=False, error="Error al buscar usuario"), 500
 
-        ip = request.remote_addr or 'unknown'
+        # Definir IP solo para registro de acceso, no para logs
+        ip = request.remote_addr if request.remote_addr else None
         app.logger.debug(f"[LOGIN] Usuario encontrado: {user is not None}")
         try:
             success = user is not None and check_password_hash(user.password, password)

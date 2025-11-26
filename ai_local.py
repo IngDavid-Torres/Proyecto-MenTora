@@ -159,13 +159,13 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
             
             questions = []
             set_seed(42)
-            
-            for i in range(cantidad):
+            # Limitar cantidad a rango seguro
+            safe_cantidad = min(max(int(cantidad), 1), 20) if str(cantidad).isdigit() else 5
+            for i in range(safe_cantidad):
                 if tipo_examen == 'opciones':
                     prompt = f"Pregunta de opción múltiple sobre {tema}:"
                 else:
                     prompt = f"Pregunta sobre {tema}:"
-                
                 result = generator(prompt, max_length=100, num_return_sequences=1)
                 question_text = result[0]['generated_text'].replace(prompt, '').strip()
                 
@@ -232,9 +232,10 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
         knowledge = self.knowledge_base[tema_key]
         questions = []
         
-        for i in range(cantidad):
+        # Limitar cantidad a rango seguro
+        safe_cantidad = min(max(int(cantidad), 1), 20) if str(cantidad).isdigit() else 5
+        for i in range(safe_cantidad):
             template = random.choice(templates)
-            
             # Rellenar plantilla con datos aleatorios
             filled_question = template
             for placeholder, values in knowledge.items():
@@ -242,7 +243,6 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
                     filled_question = filled_question.replace(
                         f'{{{placeholder}}}', str(random.choice(values))
                     )
-            
             if tipo_examen == 'opciones':
                 # Generar opciones múltiples
                 if tema_key == 'matematicas' and any(op in filled_question for op in ['+', '-', '×', '%']):
