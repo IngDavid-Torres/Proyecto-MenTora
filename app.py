@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-from flask_wtf import CSRFProtect
+# from flask_wtf import CSRFProtect
 from flask_socketio import SocketIO, emit
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -28,8 +28,7 @@ app.config['SITE_NAME'] = 'MenTora'
 db.init_app(app)
 socketio = SocketIO(app)
 
-# Protección CSRF
-csrf = CSRFProtect(app)
+
 
 # Activar recarga automática
 app.config['DEBUG'] = True
@@ -186,7 +185,7 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
-@csrf.exempt
+
 def login():
 
     app.logger.debug("[LOGIN] Ejecutando función login()")
@@ -1071,7 +1070,7 @@ def quiz_attempt(quiz_id):
             attempts += 1
             session[session_key] = attempts
             if attempts >= max_attempts:
-                session[session_cooldown_key] = now + cooldown_minutes * 60
+                session_cooldown_key = now + cooldown_minutes * 60
                 mins_left = cooldown_minutes
                 return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left)
             return render_template('quiz.html', quiz=quiz, questions=questions, attempts=attempts, max_attempts=max_attempts, error=True)
@@ -1451,7 +1450,7 @@ def download_exam_word():
         print("DEBUG - ERROR: No se recibieron preguntas en el formulario")
         return "Error: No se encontraron preguntas para descargar", 400
     
-    try:
+    try {
         # Limpiar el string JSON primero
         preguntas_clean = preguntas_raw.strip()
         
@@ -1472,35 +1471,35 @@ def download_exam_word():
         if preguntas:
             print(f"DEBUG - Primera pregunta keys: {list(preguntas[0].keys()) if isinstance(preguntas[0], dict) else 'No es dict'}")
             
-    except (json.JSONDecodeError, ValueError) as e:
+    } catch (Exception as e) {
         print(f"DEBUG - Error JSON específico: {e}")
         print(f"DEBUG - Posición del error: {getattr(e, 'pos', 'N/A')}")
         print(f"DEBUG - Raw content para debug: {repr(preguntas_raw[:100])}")
         
         # Intentar métodos alternativos de parseo más específicos
-        try:
+        try {
             # Método 1: Usar ast.literal_eval para estructuras de Python
             import ast
             preguntas = ast.literal_eval(preguntas_raw)
             print(f"DEBUG - Preguntas extraídas con ast: {len(preguntas)}")
-        except (ValueError, SyntaxError) as e2:
+        } catch (ValueError, SyntaxError as e2) {
             print(f"DEBUG - ast también falló: {e2}")
             
-            try:
+            try {
                 # Método 2: Intentar reparar JSON manualmente
                 repaired = preguntas_raw.replace("'", '"').replace('True', 'true').replace('False', 'false').replace('None', 'null')
                 preguntas = json.loads(repaired)
                 print(f"DEBUG - JSON reparado exitosamente: {len(preguntas)} preguntas")
-            except json.JSONDecodeError as e3:
+            } catch (json.JSONDecodeError as e3) {
                 print(f"DEBUG - Reparación JSON falló: {e3}")
                 
                 # Último recurso: generar preguntas desde el tema original
                 print(f"DEBUG - Generando preguntas de respaldo desde tema: {tema}")
-                try:
+                try {
                     from ai_local import generate_local_exam
                     preguntas = generate_local_exam(tema, 5, tipo_examen, 'offline')
                     print(f"DEBUG - Preguntas de respaldo generadas: {len(preguntas)}")
-                except Exception as e4:
+                } catch (Exception as e4) {
                     print(f"DEBUG - Generación de respaldo falló: {e4}")
                     # Última opción: mensaje de error útil
                     preguntas = [{
@@ -1513,7 +1512,8 @@ def download_exam_word():
                         ],
                         'respuesta': 'A'
                     }]
-    
+    }
+
     print(f"DEBUG - Total preguntas finales a procesar: {len(preguntas)}")
     
     # Validar estructura de preguntas
@@ -1526,14 +1526,15 @@ def download_exam_word():
     else:
         print(f"DEBUG - Estructura de pregunta inesperada: {type(preguntas[0]) if preguntas else 'Lista vacía'}")
     
-    try:
-        try:
+    try {
+        try {
             from docx import Document
             print("DEBUG - Librería python-docx importada exitosamente")
-        except ImportError as import_error:
+        } except ImportError as import_error {
             print(f"DEBUG - Error importando python-docx: {import_error}")
             print("DEBUG - Generando archivo de texto como alternativa")
             return download_exam_simple()
+        }
         
         doc = Document()
         doc.add_heading(f'Examen de {area}', 0)
@@ -1577,7 +1578,7 @@ def download_exam_word():
         return send_file(f, as_attachment=True, download_name=filename, 
                         mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                         
-    except ImportError:
+    } catch (ImportError {
         # Si no está disponible python-docx, crear un archivo de texto simple
         content = f"EXAMEN DE {area.upper()}\n"
         content += f"Tema: {tema}\n"
@@ -1630,7 +1631,7 @@ def download_exam_pdf():
     if not preguntas_raw:
         print("DEBUG PDF - ERROR: No se recibieron preguntas en el formulario")
         return "Error: No se encontraron preguntas para descargar", 400
-    try:
+    try {
         # Intentar decodificar JSON con diferentes métodos
         if preguntas_raw.startswith('[') and preguntas_raw.endswith(']'):
             # Parece ser JSON válido
@@ -1644,24 +1645,24 @@ def download_exam_pdf():
         if preguntas:
             print(f"DEBUG PDF - Primera pregunta keys: {list(preguntas[0].keys()) if isinstance(preguntas[0], dict) else 'No es dict'}")
             
-    except Exception as e:
+    } catch (Exception as e) {
         print(f"DEBUG PDF - Error parseando JSON: {e}")
         print(f"DEBUG PDF - Raw content preview: {preguntas_raw[:200]}...")
         
         # Intentar métodos alternativos de parseo
-        try:
+        try {
             # Método 1: Usar ast.literal_eval
             import ast
             preguntas = ast.literal_eval(preguntas_raw)
             print(f"DEBUG PDF - Preguntas extraídas con ast: {len(preguntas)}")
-        except Exception as e2:
+        } catch (Exception as e2) {
             print(f"DEBUG PDF - ast también falló: {e2}")
             
             # Método 2: Usar eval (más peligroso pero como último recurso)
-            try:
+            try {
                 preguntas = eval(preguntas_raw)
                 print(f"DEBUG PDF - Preguntas extraídas con eval: {len(preguntas)}")
-            except Exception as e3:
+            } catch (Exception as e3) {
                 print(f"DEBUG PDF - eval también falló: {e3}")
                 
                 # Último recurso: mensaje de error descriptivo
@@ -1675,7 +1676,8 @@ def download_exam_pdf():
                     ],
                     'respuesta': 'A'
                 }]
-    
+    }
+
     print(f"DEBUG PDF - Total preguntas finales a procesar: {len(preguntas)}")
     
     # Validar estructura de preguntas
@@ -1684,12 +1686,12 @@ def download_exam_pdf():
     else:
         print(f"DEBUG PDF - Estructura de pregunta inesperada: {type(preguntas[0]) if preguntas else 'Lista vacía'}")
     
-    try:
-        try:
+    try {
+        try {
             from reportlab.lib.pagesizes import letter
             from reportlab.pdfgen import canvas
             print("DEBUG - Librería reportlab importada exitosamente")
-        except ImportError as import_error:
+        } except ImportError as import_error {
             print(f"DEBUG - Error importando reportlab: {import_error}")
             print("DEBUG - Generando archivo de texto como alternativa para PDF")
             return download_exam_simple()
@@ -1763,7 +1765,7 @@ def download_exam_pdf():
         filename = f"Examen_{area}_{tema}.pdf".replace(' ', '_').replace('/', '_')
         return send_file(f, as_attachment=True, download_name=filename, mimetype='application/pdf')
         
-    except ImportError:
+    } catch (ImportError {
         # Si no está disponible reportlab, crear un archivo de texto simple
         content = f"EXAMEN DE {area.upper()}\n"
         content += f"Tema: {tema}\n"
@@ -1816,7 +1818,7 @@ def download_exam_simple():
     
     # Intentar parsear con manejo de errores específico
     preguntas = None
-    try:
+    try {
         if not preguntas_raw or preguntas_raw.strip() == '':
             raise ValueError("Preguntas raw está vacío")
         
@@ -1855,20 +1857,21 @@ def download_exam_simple():
         else:
             raise ValueError(f"Formato de preguntas inválido: {type(preguntas)}")
             
-    except json.JSONDecodeError as e:
+    } catch (json.JSONDecodeError as e) {
         print(f"DEBUG SIMPLE - Error JSON Decode: {e}")
         print(f"DEBUG SIMPLE - JSON problemático: {preguntas_raw}")
         preguntas = None
-    except Exception as e:
+    } catch (Exception as e) {
         print(f"DEBUG SIMPLE - Error general: {e}")
         preguntas = None
+    }
     
     # Si hay problemas, generar preguntas de programación reales como fallback
     if not preguntas:
         print("DEBUG SIMPLE - Usando fallback - generando preguntas de programación")
         from ai_local import generate_local_exam
         
-        try:
+        try {
             # Intentar generar preguntas reales de programación como fallback
             tema_normalizado = tema.lower()
             if 'programacion' in tema_normalizado or 'programming' in tema_normalizado:
@@ -1889,7 +1892,7 @@ def download_exam_simple():
                             ],
                             'respuesta': chr(65 + (i % 4))  # A, B, C, D rotativamente
                         })
-                else:
+                } else {
                     preguntas = [
                         f'¿Cuáles son los fundamentos básicos de {tema}?',
                         f'¿Cómo se aplica {tema} en la práctica?',
@@ -1897,11 +1900,13 @@ def download_exam_simple():
                         f'¿Cuáles son los principales desafíos en {tema}?',
                         f'¿Cómo ha evolucionado {tema} en los últimos años?'
                     ]
+                }
                 print(f"DEBUG SIMPLE - Fallback genérico: {len(preguntas)} preguntas")
-        except Exception as fallback_error:
+        } catch (Exception as fallback_error) {
             print(f"DEBUG SIMPLE - Error en fallback: {fallback_error}")
             # Último recurso: preguntas muy básicas
             preguntas = [f"Pregunta básica {i} sobre {tema}" for i in range(1, 6)]
+    }
     
     # Crear contenido del examen
     content = create_text_exam(tema, area, tipo_examen, preguntas)
@@ -2066,8 +2071,4 @@ def edit_question(question_id):
         flash('Pregunta actualizada correctamente.')
         return redirect(url_for('teacher_dashboard'))
     return render_template('edit_question.html', question=question)
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    socketio.run(app, host='0.0.0.0', port=port, debug=False)
 
