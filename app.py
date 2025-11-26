@@ -733,13 +733,16 @@ def create_quiz():
         flash('Todos los campos son obligatorios.')
         return redirect(url_for('admin_panel'))
 
-    # Si el usuario es admin, teacher_id debe ser None
-    # Usar id=2 para el admin
+    # Buscar el usuario admin y usar su id
+    admin = User.query.filter_by(username='admin').first()
+    if not admin:
+        flash('No se encontró el usuario administrador. No se puede crear el quiz.')
+        return redirect(url_for('admin_panel'))
     new_quiz = Quiz(
         title=title,
         area=area,
         description=description,
-        created_by=2,
+        created_by=admin.id,
         teacher_id=None,
         created_at=datetime.utcnow()
     )
