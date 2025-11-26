@@ -986,22 +986,22 @@ def game_detail(game_id):
         cooldown = True
     return render_template('game_detail.html', game=game, attempts=attempts, max_attempts=max_attempts, cooldown=cooldown)
 
+
 @app.route('/chatbot', methods=['POST'])
 def chatbot():
     data = request.get_json()
-    user_msg = data.get('message', '').strip()
+    user_msg = data.get('message', '').strip() if data else ''
     # Lógica simple: eco o respuesta programada
     if not user_msg:
-        return jsonify({'response': '¿Puedes escribir tu pregunta?'}), 200
-   
-    if 'hola' in user_msg.lower():
-        return jsonify({'response': '¡Hola! ¿En qué puedo ayudarte hoy?'}), 200
-    if 'nivel' in user_msg.lower():
-        return jsonify({'response': 'Puedes subir de nivel completando retos y juegos.'}), 200
-    if 'juego' in user_msg.lower():
-        return jsonify({'response': 'Para jugar, ve a la sección de Juegos y elige uno.'}), 200
-    # Eco por defecto
-    return jsonify({'response': f'Recibí: {user_msg}'}), 200
+        return jsonify({'response': 'No se recibió mensaje.'}), 400
+    # Puedes agregar lógica más avanzada aquí
+    if user_msg.lower() == 'hola':
+        respuesta = '¡Hola! ¿En qué puedo ayudarte hoy?'
+    elif user_msg.lower() == 'suma':
+        respuesta = '¿Quieres ayuda con una suma? Escribe los números.'
+    else:
+        respuesta = f'Recibí: {user_msg}'
+    return jsonify({'response': respuesta}), 200
 
 
 @app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])
