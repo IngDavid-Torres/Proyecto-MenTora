@@ -199,7 +199,7 @@
 
     <script>
     // Inserta iconos SVG de hackers animados en el fondo
-    window.addEventListener('DOMContentLoaded', function() {
+    globalThis.addEventListener('DOMContentLoaded', function() {
         const bg = document.getElementById('hacker-bg');
         if (bg) {
             for (let i = 1; i <= 6; i++) {
@@ -296,14 +296,14 @@
         };
     }
     // Prevenir volver atrás después de logout (historial y caché)
-    window.addEventListener('pageshow', function(event) {
+    globalThis.addEventListener('pageshow', function(event) {
         if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
             window.location.href = '/login';
         }
     });
     // Forzar no-caché en todas las páginas admin
-    if (window.location.pathname.startsWith('/admin')) {
-        document.addEventListener('DOMContentLoaded', function() {
+    if (globalThis.location.pathname.startsWith('/admin')) {
+        globalThis.addEventListener('DOMContentLoaded', function() {
             document.querySelector('meta[http-equiv="Cache-Control"]') || document.head.insertAdjacentHTML('beforeend', '<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">');
             document.querySelector('meta[http-equiv="Pragma"]') || document.head.insertAdjacentHTML('beforeend', '<meta http-equiv="Pragma" content="no-cache">');
             document.querySelector('meta[http-equiv="Expires"]') || document.head.insertAdjacentHTML('beforeend', '<meta http-equiv="Expires" content="0">');
