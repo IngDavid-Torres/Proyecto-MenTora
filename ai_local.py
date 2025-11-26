@@ -299,7 +299,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
                 nums = [int(x) for x in question.replace('%', ' ').split() if x.isdigit()]
                 if len(nums) >= 2:
                     return str(int(nums[0] * nums[1] / 100))
-        except:
+        except (ValueError, TypeError):
             pass
         return "42"  # Respuesta por defecto
 
@@ -313,7 +313,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
                 str(num + random.randint(11, 20))
             ]
             return wrong
-        except:
+        except (ValueError, TypeError):
             return ["10", "20", "30"]
 
     def _generate_generic_options(self, tema: str, question: str) -> List[str]:
