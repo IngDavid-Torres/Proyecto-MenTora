@@ -27,11 +27,20 @@
     </nav>
 
      <section>
-        <h2 class="section-title">¡BIENVENIDO DE NUEVO!</h2>  
+        <h2 class="section-title">¡BIENVENIDO!</h2>  
      </section> 
 
     <main>
         <div class="login-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div id="flashed-messages" style="display:none;">
+                    {% for category, message in messages %}
+                        <div class="flashed" data-category="{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
             <h2>INICIAR SESIÓN</h2>
             <form id="loginForm" method="POST" action="/login" autocomplete="off">
                 <div>
@@ -93,11 +102,7 @@
     <script defer src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/reveal.js') }}"></script>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="login-error-msg" style="display:none;">{{ messages[0] }}</div>
-            {% endif %}
-        {% endwith %}
+        {# Flashed messages are shown at top of the login box (see above) #}
 
 </body>
 </html>   

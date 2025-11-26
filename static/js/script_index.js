@@ -187,7 +187,7 @@
             </div>
         `
     }
-  };
+    };
    let lastScroll = 0;
 
    function openModal(type) {
@@ -244,6 +244,75 @@
         console.log('ERROR: No se encontraron los elementos');
     }
    });
+
+
+function _ensureToastContainer() {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    return container;
+}
+
+function showToast(category, message, { duration = 4500 } = {}) {
+    const container = _ensureToastContainer();
+    const toast = document.createElement('div');
+    const cls = `toast toast-${category === 'success' ? 'success' : category === 'error' ? 'error' : 'info'}`;
+    toast.className = cls;
+
+    const icon = document.createElement('div');
+    icon.className = 'icon';
+    icon.innerHTML = category === 'success' ? '' : (category === 'error' ? '' : 'ℹ');
+
+    const text = document.createElement('div');
+    text.className = 'text';
+    text.textContent = message;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-toast';
+    closeBtn.style.marginLeft = 'auto';
+    closeBtn.style.border = 'none';
+    closeBtn.style.background = 'transparent';
+    closeBtn.style.color = 'rgba(255,255,255,0.9)';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.fontSize = '14px';
+    closeBtn.textContent = '✖';
+
+    closeBtn.addEventListener('click', () => {
+        toast.style.animation = 'toastOut 220ms forwards';
+        setTimeout(() => toast.remove(), 230);
+    });
+
+    toast.appendChild(icon);
+    toast.appendChild(text);
+    toast.appendChild(closeBtn);
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        if (!toast.parentElement) return;
+        toast.style.animation = 'toastOut 220ms forwards';
+        setTimeout(() => toast.remove(), 230);
+    }, duration);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const flashed = document.getElementById('flashed-messages');
+        if (flashed) {
+            const items = flashed.querySelectorAll('.flashed');
+            items.forEach(it => {
+                const cat = it.getAttribute('data-category') || 'info';
+                const msg = it.textContent.trim();
+                if (msg) showToast(cat, msg);
+            });
+        }
+    } catch (e) {
+        console.warn('Error mostrando toasts:', e);
+    }
+});
 
 let previewIndex = 0;
 let previewAutoplay;
@@ -361,7 +430,7 @@ document.addEventListener('keydown', (e) => {
 
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
-    // Respect reduced motion: mark everything as already revealed
+
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-revealed'));
     return;
   }
@@ -371,7 +440,7 @@ document.addEventListener('keydown', (e) => {
     children.forEach((child, i) => {
       const delay = (i * gap);
       child.style.transitionDelay = `${delay}ms`;
-      // if you want an initial per-child transform override, ensure CSS matches
+
     });
   }
 
@@ -386,21 +455,22 @@ document.addEventListener('keydown', (e) => {
       const el = entry.target;
       const once = el.hasAttribute('data-once');
       if (entry.isIntersecting) {
-        // if parent has data-stagger: stagger its children
+
         if (el.hasAttribute('data-stagger')) {
           const gapAttr = parseInt(el.getAttribute('data-stagger-gap') || getComputedStyle(document.documentElement).getPropertyValue('--reveal-stagger-gap')) || 80;
           revealChildrenWithStagger(el, gapAttr);
         }
-        // Add class that triggers CSS transitions
+
         requestAnimationFrame(() => el.classList.add('is-revealed'));
 
         if (once) {
           obs.unobserve(el);
         }
+
       } else {
-        // When leaving viewport: remove, unless data-once present
+
         if (!once) {
-          // cleanup child delays if needed
+
           if (el.hasAttribute('data-stagger')) clearStaggerDelays(el);
           el.classList.remove('is-revealed');
         }
@@ -408,14 +478,13 @@ document.addEventListener('keydown', (e) => {
     });
   }, defaultOptions);
 
-  // Initialize: read per-element observer options if provided
+
   document.querySelectorAll('.reveal').forEach(el => {
-    // allow per-element override of threshold/rootMargin
+    
     const rootMargin = el.getAttribute('data-root-margin') || defaultOptions.rootMargin;
     const threshold = parseFloat(el.getAttribute('data-threshold') || defaultOptions.threshold);
 
-    // if direction is set, it's handled by CSS via data-direction attribute already present
-    // We need separate observer instances when options differ
+   
     const obs = new IntersectionObserver((entries, obsRef) => {
       entries.forEach(entry => {
         const target = entry.target;
@@ -441,15 +510,44 @@ document.addEventListener('keydown', (e) => {
 
 })();
 
-  // Lógica de login 
+
     const loginForm = document.getElementById('loginForm');
     const btnEntrar = document.getElementById('btnEntrar');
     const alertMentoraModal = document.getElementById('alert-mentora-modal');
-    const alertError = document.getElementById('alert-error');
+    function showAlertElement(el, text, { duration = 2600, autoHide = true } = {}){
+        if(!el) return false;
+        try{
+            el.textContent = text;
+            el.classList.remove('alert-hidden');
+            el.classList.add('alert-visible');
+            el.style.display = 'block';
+            if(autoHide){
+                setTimeout(()=>{
+                    el.classList.remove('alert-visible');
+                    el.classList.add('alert-hidden');
+                    setTimeout(()=> el.style.display = 'none', 360);
+                }, duration);
+            }
+            return true;
+        }catch(e){ console.warn('showAlertElement failed', e); return false; }
+    }
 
+    function showAlertOrToast(type, text, duration){
+        const elId = type === 'success' ? 'alert-success' : 'alert-error';
+        const el = document.getElementById(elId);
+        if (el) {
+            showAlertElement(el, text, { duration });
+        } else {
+            if (typeof showToast === 'function') showToast(type === 'success' ? 'success' : 'error', text, duration);
+            else alert(text);
+        }
+    }
+
+    if (loginForm) {
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        alertError.style.display = 'none';
+        const errorEl = document.getElementById('alert-error');
+        if (errorEl) { errorEl.style.display = 'none'; errorEl.classList.add('alert-hidden'); }
         const formData = new FormData(loginForm);
         try {
             const response = await fetch('/login', {
@@ -462,8 +560,7 @@ document.addEventListener('keydown', (e) => {
                 try {
                     res = await response.json();
                 } catch (err) {
-                    alertError.textContent = 'Usuario o contraseña incorrectos';
-                    alertError.style.display = 'block';
+                    showAlertOrToast('error', 'Usuario o contraseña incorrectos');
                     return;
                 }
                 if (res.success) {
@@ -472,24 +569,21 @@ document.addEventListener('keydown', (e) => {
                         window.location.href = res.redirect || '/dashboard';
                     }, 4000);
                 } else {
-                    alertError.textContent = res.message || 'Usuario o contraseña incorrectos';
-                    alertError.style.display = 'block';
+                    showAlertOrToast('error', res.message || 'Usuario o contraseña incorrectos');
                 }
             } else {
-                alertError.textContent = 'Usuario o contraseña incorrectos';
-                alertError.style.display = 'block';
+                showAlertOrToast('error', 'Usuario o contraseña incorrectos');
             }
         } catch (err) {
-            alertError.textContent = 'Error de conexión. Intenta de nuevo.';
-            alertError.style.display = 'block';
+            showAlertOrToast('error', 'Error de conexión. Intenta de nuevo.');
         }
     });
+    }
 
     window.addEventListener('DOMContentLoaded', function() {
         const errorMsg = document.getElementById('login-error-msg');
         if (errorMsg) {
-            alertError.textContent = errorMsg.textContent || 'Usuario o contraseña incorrectos';
-            alertError.style.display = 'block';
+            showAlertOrToast('error', errorMsg.textContent || 'Usuario o contraseña incorrectos');
         }
     });
 
@@ -521,6 +615,9 @@ document.addEventListener('keydown', (e) => {
     if(registerForm) {
         registerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            // if another handler already is processing this submit, bail out
+            if (registerForm.dataset.processing === '1') return;
+            registerForm.dataset.processing = '1';
             const formData = new FormData(registerForm);
             const data = Object.fromEntries(formData.entries());
             try {
@@ -533,21 +630,21 @@ document.addEventListener('keydown', (e) => {
                 if(response.ok) {
                     const res = await response.json();
                     if(res.success) {
-                        alertSuccess.style.display = 'block';
+                        showAlertOrToast('success', res.message || 'Registro exitoso. Ahora puedes iniciar sesión.');
                         setTimeout(() => {
                             window.location.href = '/login';
                         }, 1800);
                     } else {
-                        alertSuccess.style.display = 'none';
-                        alert(res.message || 'Error en el registro.');
+                        showAlertOrToast('error', res.message || 'Error en el registro.');
                     }
                 } else {
-                    alertSuccess.style.display = 'none';
-                    alert('Error en el registro.');
+                    showAlertOrToast('error', 'Error en el registro.');
                 }
             } catch (err) {
-                alertSuccess.style.display = 'none';
-                alert('Error de conexión.');
+                showAlertOrToast('error', 'Error de conexión.');
+            } finally {
+                // release lock so other handlers can run later
+                try { registerForm.dataset.processing = '0'; } catch (e) {}
             }
         });
     }

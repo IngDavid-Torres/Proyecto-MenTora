@@ -15,10 +15,9 @@
             <img src="/static/img/mentora1.png" alt="Logo MenTora">
         </div>
         <div class="nav-links" id="navLinks">
-            <a href="/">INICIO</a>
-            <a href="#quesomos">¿QUÉ SOMOS?</a>
-            <a href="#caracteristicas">CARACTERÍSTICAS</a>
+            <a href="/">INICIO</a>          
             <a href="#beneficios">BENEFICIOS</a>
+            <a href="#caracteristicas">CARACTERÍSTICAS</a>
             <a href="#profesores">PROFESORES</a>
             <a href="/login" class="nav-btn">INICIAR SESIÓN</a>
             <a href="/register" class="nav-btn">REGÍSTRATE</a>
@@ -39,7 +38,7 @@
             <a href="/login">CONTINUAR AVENTURA</a>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
-            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 270px; width: 340px; animation: float 3s ease-in-out infinite;   margin-bottom: 0;">
+            <img src="/static/img/mentora.png" alt="Logo MenTora" style="height: 260px; width: 330px; animation: float 3s ease-in-out infinite;   margin-bottom: 0;">
         </div>
     </section>
 
@@ -89,93 +88,75 @@
     </div>
     <div class="preview-indicators" id="previewDots"></div>
     </section>
+    
+       
+   <section class="profesores-section reveal">
+    <h2 class="section-title">MENTORA TAMBIÉN ES PARA PROFESORES</h2>
 
-    <section class="profesores-inicio reveal">
-    <h2 class="section-title">HERRAMIENTAS PARA PROFESORES</h2>
-
-    <p class="profesores-subtitle">
-        MenTora no es solo para estudiantes. Los profesores cuentan con herramientas avanzadas 
-        para crear, evaluar y potenciar el aprendizaje de manera dinámica e inteligente.
+    <p class="profesores-desc">
+        Además de estudiantes, MenTora cuenta con un espacio especial para 
+        <strong>docentes y mentores</strong>.  
+        Los profesores pueden crear actividades, asignar retos, evaluar progreso 
+        y usar inteligencia artificial para generar exámenes y juegos educativos.
     </p>
 
-    <div class="profesores-inicio-grid">
-        
-        <!-- Card 1 -->
-        <div class="prof-box">
-            <div class="prof-icon">
-                <i class="fa-solid fa-user-tie"></i>
-            </div>
-            <h3>Panel Exclusivo de Profesor</h3>
-            <p>
-                Accede a un dashboard diseñado especialmente para docentes: controla grupos, asigna
-                actividades, monitorea progreso y ofrece retroalimentación personalizada.
-            </p>
+    <div class="profesores-grid">
 
-            <a class="prof-btn" href="/register?type=teacher">Registrarme como Profesor</a>
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-id-card"></i>
+            </div>
+            <h3>Registro para Profesores</h3>
+            <p>Los docentes cuentan con un formulario especial para unirse y acceder a herramientas exclusivas.</p>
         </div>
 
-        <!-- Card 2 -->
-        <div class="prof-box">
-            <div class="prof-icon">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-book-open"></i>
             </div>
-            <h3>Generador IA de Exámenes</h3>
-            <p>
-                Crea evaluaciones, test y cuestionarios en segundos usando inteligencia artificial
-                adaptativa. Solo describe el tema y la IA genera el examen completo automáticamente.
-            </p>
-            <a class="prof-btn" href="/login">Probar IA Docente</a>
+            <h3>Creación de Actividades</h3>
+            <p>Los profesores pueden diseñar actividades, tareas, explicaciones y ejercicios personalizados.</p>
         </div>
 
-        <!-- Card 3 -->
-        <div class="prof-box">
-            <div class="prof-icon">
-                <i class="fa-solid fa-chalkboard"></i>
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-brain"></i>
             </div>
-            <h3>Crea Actividades y Juegos</h3>
-            <p>
-                Diseña actividades interactivas, minijuegos educativos y ejercicios personalizados
-                para tus estudiantes. Todo se integra automáticamente al progreso del alumno.
-            </p>
-            <a class="prof-btn" href="/register?type=teacher">Crear Actividades</a>
+            <h3>Exámenes con Inteligencia Artificial</h3>
+            <p>Una IA integrada genera preguntas, quizzes y pruebas adaptadas al nivel del grupo.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-puzzle-piece"></i>
+            </div>
+            <h3>Creación de Juegos y Retos</h3>
+            <p>Los docentes pueden generar juegos educativos, simuladores y actividades gamificadas.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-chart-bar"></i>
+            </div>
+            <h3>Panel de Profesor</h3>
+            <p>Acceso a dashboards avanzados para monitorear progreso, calificaciones y participación.</p>
+        </div>
+
+        <div class="prof-card">
+            <div class="feature-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h3>Gestión de Grupos</h3>
+            <p>Crea grupos, asigna actividades, da retroalimentación y sigue el avance de cada estudiante.</p>
         </div>
 
     </div>
-</section>
 
-
-
- <section class="sobre-mentora-section reveal" id="quesomos">
-    <h2 class="section-title" id="quesomos">¡CONOCE MÁS SOBRE NOSOTROS!</h2>
-    <div class="sobre-container">
-
-        <div class="sobre-item-with-image">
-            <div class="sobre-image">
-                <img src="/static/img/tec.png" alt="Plataforma MenTora">
-            </div>
-            <div class="sobre-content">
-                <h3>Plataforma Gamificada de Programación</h3>
-                <p>
-                    Mentora es una plataforma diseñada para aprender programación de forma práctica, 
-                    dinámica y divertida. Integra elementos de gamificación como logros, niveles, 
-                    y retos interactivos que convierten el aprendizaje en una experiencia motivadora.  
-                    Aquí no solo estudias: avanzas, compites contigo mismo y desbloqueas nuevas habilidades. 
-                </p>
-                <p>
-                    Nuestro objetivo es acercarte al mundo de la tecnología sin importar tu experiencia previa. 
-                    Este es un <strong>proyecto
-                     estudiantil sin fines de lucro</strong>, desarrollado en colaboración con el 
-            <strong>Tecnológico Nacional de México</strong> y guiado por nuestro asesor académico. Nace con la intención de 
-            brindar oportunidades de aprendizaje a estudiantes, entusiastas y futuros desarrolladores.
-        </p>
-        </div>
-        </div>
-    </div>
-   </section>
+   <div class="cta-teacher-center">
+    <a href="/register" class="cta-teacher-btn">QUIERO REGISTRARME COMO PROFESOR</a>
+  </div>
+  </section>
    
-
-
-
     <section class="features-section reveal" id="caracteristicas">
      <h2 class="section-title">¡CARACTERISTICAS PRINCIPALES!</h2>  
     <div class="features">
@@ -324,113 +305,53 @@
 
     </div>
     </section>
-
-    <section class="how-it-works reveal" style="padding:5rem 2rem;">
-    <h2 class="section-title">¿CÓMO FUNCIONA?</h2>
-
-    <div style="
-        max-width:1100px;
-        margin:0 auto;
-        display:grid;
-        grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
-        gap:2rem;">
-        <div class="feature" style="text-align:center;">
-            <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/rocket-launch.svg?color=%23114c5f">
-            </div>
-            <h3>1. Elige tu Ruta</h3>
-            <p>Selecciona si quieres aprender lógica, algoritmos o solo teoría de programación. </p>
-        </div>
-
-        <div class="feature" style="text-align:center;">
-            <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/puzzle-star.svg?color=%23114c5f">
-            </div>
-            <h3>2. Completa Retos</h3>
-            <p>Resuelve desafíos interactivos que se adaptan automáticamente a tu tiempo.</p>
-        </div>
-
-        <div class="feature" style="text-align:center;">
-            <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/trophy.svg?color=%23114c5f">
-            </div>
-            <h3>3. Gana Experiencia</h3>
-            <p>Desbloquea logros, sube de nivel y construye ideas para tu portafolio.</p>
-        </div>
-    </div>
-    </section>
-
-<section class="profesores-section reveal" id="profesores">
-
-    <h2 class="section-title">MENTORA TAMBIÉN ES PARA PROFESORES</h2>
-
-    <p class="profesores-desc">
-        Además de estudiantes, MenTora cuenta con un espacio especial para 
-        <strong>docentes y mentores</strong>.  
-        Los profesores pueden crear actividades, asignar retos, evaluar progreso 
-        y usar inteligencia artificial para generar exámenes y juegos educativos.
+ 
+    <section class="profesores-inicio reveal" id="profesores" >
+    <h2 class="section-title">HERRAMIENTAS PARA PROFESORES</h2>
+    <p class="profesores-subtitle">
+        MenTora no es solo para estudiantes. Los profesores cuentan con herramientas avanzadas 
+        para crear, evaluar y potenciar el aprendizaje de manera dinámica e inteligente.
     </p>
-
-    <div class="profesores-grid">
-
-        <div class="prof-card">
-            <div class="feature-icon">
-                <i class="fa-solid fa-id-card"></i>
+    <div class="profesores-inicio-grid">
+        <div class="prof-box">
+            <div class="prof-icon">
+                <i class="fa-solid fa-user-tie"></i>
             </div>
-            <h3>Registro para Profesores</h3>
-            <p>Los docentes cuentan con un formulario especial para unirse y acceder a herramientas exclusivas.</p>
+            <h3>Panel Exclusivo de Profesor</h3>
+            <p>
+                Accede a un dashboard diseñado especialmente para docentes: asigna
+                actividades, monitorea progreso y ofrece retroalimentación personalizada.
+            </p>
+
+            <a class="prof-btn" href="/register?type=teacher">Registrarme</a>
         </div>
 
-        <div class="prof-card">
-            <div class="feature-icon">
-                <i class="fa-solid fa-book-open"></i>
+        <div class="prof-box">
+            <div class="prof-icon">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
             </div>
-            <h3>Creación de Actividades</h3>
-            <p>Los profesores pueden diseñar actividades, tareas, explicaciones y ejercicios personalizados.</p>
+            <h3>Generador IA de Exámenes</h3>
+            <p>
+                Crea evaluaciones, test y cuestionarios en segundos usando inteligencia artificial
+                adaptativa. Solo describe el tema y la IA genera el examen completo automáticamente.
+            </p>
+            <a class="prof-btn" href="/login">Probar IA Docente</a>
         </div>
 
-        <div class="prof-card">
-            <div class="feature-icon">
-                <i class="fa-solid fa-brain"></i>
+        <div class="prof-box">
+            <div class="prof-icon">
+                <i class="fa-solid fa-chalkboard"></i>
             </div>
-            <h3>Exámenes con Inteligencia Artificial</h3>
-            <p>Una IA integrada genera preguntas, quizzes y pruebas adaptadas al nivel del grupo.</p>
-        </div>
-
-        <div class="prof-card">
-            <div class="feature-icon">
-                <i class="fa-solid fa-puzzle-piece"></i>
-            </div>
-            <h3>Creación de Juegos y Retos</h3>
-            <p>Los docentes pueden generar juegos educativos, simuladores y actividades gamificadas.</p>
-        </div>
-
-        <div class="prof-card">
-            <div class="feature-icon">
-                <i class="fa-solid fa-chart-bar"></i>
-            </div>
-            <h3>Panel de Profesor</h3>
-            <p>Acceso a dashboards avanzados para monitorear progreso, calificaciones y participación.</p>
-        </div>
-
-        <div class="prof-card">
-            <div class="feature-icon">
-                <i class="fa-solid fa-users"></i>
-            </div>
-            <h3>Gestión de Grupos</h3>
-            <p>Crea grupos, asigna actividades, da retroalimentación y sigue el avance de cada estudiante.</p>
+            <h3>Crea Actividades y Juegos</h3>
+            <p>
+                Diseña tus actividades interactivas, minijuegos educativos y ejercicios 
+                para los estudiantes. Todo se integra automáticamente al progreso del alumno.
+            </p>
+            <a class="prof-btn" href="/register">Crear Actividades</a>
         </div>
 
     </div>
-
- <div class="cta-teacher-center">
-    <a href="#" class="cta-teacher-btn">QUIERO REGISTRARME COMO PROFESOR</a>
-</div>
-
-
-</section>
-
-
+   </section>
 
     <footer class="reveal">
     <div class="footer-content">

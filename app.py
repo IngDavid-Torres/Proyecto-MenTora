@@ -79,24 +79,29 @@ def handle_request_history():
     emit('chat_history', chat_history)
 
 
+from werkzeug.security import generate_password_hash
+
 with app.app_context():
     db.create_all()
     print("✅ Tablas creadas correctamente.")
 
-   
+    # Verificar si el usuario admin ya existe
     admin = User.query.filter_by(username='admin').first()
     if admin:
-        admin.password = None  
-        admin.email = None  
-        admin.area = 'general'
-        admin.is_admin = True
-        db.session.commit()
-        print("🔐 Usuario admin actualizado (oculto email y contraseña).")
+        # Solo actualizar si es necesario
+        if not admin.is_admin:
+            admin.is_admin = True
+            admin.area = 'general'
+            db.session.commit()
+            print("🔐 Usuario admin actualizado.")
+        else:
+            print("👑 Usuario admin ya existe.")
     else:
+        # Crear nuevo usuario admin con valores válidos
         admin_user = User(
             username='admin',
-            email=None, 
-            password=None,  
+            email='admin@mentora.com',  # Email válido
+            password=generate_password_hash('admin123'),  # Password hasheado
             area='general',
             is_admin=True,
             points=0,
@@ -104,13 +109,14 @@ with app.app_context():
         )
         db.session.add(admin_user)
         db.session.commit()
-        print("👑 Usuario administrador creado (oculto email y contraseña).")
+        print("👑 Usuario administrador creado.")
+        print("📧 Email: admin@mentora.com")
+        print("🔑 Contraseña: admin123")
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -125,7 +131,7 @@ def register():
             msg = 'Todos los campos son obligatorios.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=False, message=msg), 400
-            flash(msg)
+            flash(msg, 'error')
             return redirect(url_for('register'))
 
         existing_user = User.query.filter_by(username=username).first()
@@ -134,13 +140,13 @@ def register():
             msg = 'El nombre de usuario ya está en uso.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=False, message=msg), 400
-            flash(msg)
+            flash(msg, 'error')
             return redirect(url_for('register'))
         if existing_email:
             msg = 'El correo electrónico ya está registrado.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=False, message=msg), 400
-            flash(msg)
+            flash(msg, 'error')
             return redirect(url_for('register'))
 
         try:
@@ -163,16 +169,16 @@ def register():
             msg = 'Registro exitoso. Ahora puedes iniciar sesión.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=True, message=msg)
-            flash(msg)
+            flash(msg, 'success')
             return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
             app.logger.exception('Error al registrar usuario:')
-            # Proveer más información en modo debug para facilitar diagnóstico
-            msg = f'Error interno en el registro. ({str(e)})' if app.debug else 'Error interno en el registro.'
+            # Devolver un mensaje de error correcto (no reutilizar el mensaje de éxito)
+            err_msg = 'Error al registrar usuario. Intenta de nuevo más tarde.'
             if request.accept_mimetypes['application/json']:
-                return jsonify(success=False, message=msg), 500
-            flash(msg)
+                return jsonify(success=False, message=err_msg), 500
+            flash(err_msg, 'error')
             return redirect(url_for('register'))
 
     return render_template('register.html')
@@ -451,6 +457,7 @@ def noticias():
     
 
 
+
 @app.route('/admin', methods=['GET'])
 def admin_panel():
     if 'user_id' not in session or not session.get('is_admin'):
@@ -717,7 +724,8 @@ def create_quiz():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
-    flash('Sesión cerrada correctamente.')
+    # Mark logout message as an 'error' style (red) to match the site's visual language
+    flash('Sesión cerrada correctamente.', 'error')
     response = redirect(url_for('login'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0, private'
     response.headers['Pragma'] = 'no-cache'
