@@ -28,8 +28,8 @@ app.config['SITE_NAME'] = 'MenTora'
 db.init_app(app)
 socketio = SocketIO(app)
 
-# Protección CSRF
-csrf = CSRFProtect(app)
+## Protección CSRF desactivada
+# csrf = CSRFProtect(app)
 
 # Activar recarga automática
 app.config['DEBUG'] = True

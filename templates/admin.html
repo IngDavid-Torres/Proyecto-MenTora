@@ -405,7 +405,7 @@
                     <h2>👥 Gestión de Usuarios</h2>
                     <!-- Formulario para agregar/editar usuario -->
                     <form method="POST" action="/admin/create_or_update_user" style="margin-bottom:2rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                        <!-- CSRF token removed -->
                         <input type="hidden" name="user_id" value="{{ user_to_edit.id if user_to_edit else '' }}">
                         <div style="flex:1; min-width:180px;">
                             <label for="username" style="font-weight:bold;">Usuario:</label>
@@ -486,7 +486,7 @@
                     <h2>🎮 Gestión de Juegos</h2>
                     <!-- Formulario para agregar juego -->
                     <form method="POST" action="/admin/create_game" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                        <!-- CSRF token removed -->
                         <input type="hidden" name="game_id" value="{{ game_to_edit.id if game_to_edit else '' }}">
                         <div style="flex:1; min-width:160px;">
                             <label for="game_name" style="font-weight:bold;">Nombre del Juego:</label>
@@ -548,7 +548,7 @@
                     <h2>📝 Gestión de Quizzes</h2>
                     <!-- Formulario para agregar quiz -->
                     <form method="POST" action="/admin/create_quiz" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                                <!-- CSRF token removed -->
                         <div style="flex:1; min-width:160px;">
                             <label for="quiz_name" style="font-weight:bold;">Nombre del Quiz:</label>
                             <input type="text" id="quiz_name" name="quiz_name" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
@@ -594,7 +594,7 @@
                 <div class="section">
                     <h2>❓ Gestión de Preguntas</h2>
                     <form method="POST" action="/admin/add_question" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                                <!-- CSRF token removed -->
                         <div style="flex:2; min-width:220px;">
                             <label for="quiz_id" style="font-weight:bold;">Quiz:</label>
                             <select id="quiz_id" name="quiz_id" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
@@ -645,7 +645,7 @@
                     <h2>🏅 Gestión de Logros/Insignias</h2>
                     <!-- Formulario para agregar/actualizar logro -->
                     <form method="POST" action="/admin/create_or_update_achievement" enctype="multipart/form-data" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                                <!-- CSRF token removed -->
                         <input type="hidden" name="achievement_id" value="{{ achievement_to_edit.id if achievement_to_edit else '' }}">
                         <div style="flex:2; min-width:180px;">
                             <label for="achievement_name" style="font-weight:bold;">Nombre:</label>
@@ -771,7 +771,7 @@
                     <h2>✉️ Mensajes/Notificaciones</h2>
                     <!-- Formulario para enviar notificación -->
                     <form method="POST" action="/admin/send_notification" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                                <!-- CSRF token removed -->
                         <div style="flex:2; min-width:220px;">
                             <label for="notification_message" style="font-weight:bold;">Mensaje:</label>
                             <input type="text" id="notification_message" name="notification_message" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
@@ -817,7 +817,7 @@
                     <h2>🔒 Seguridad</h2>
                     <!-- Formulario para cambiar contraseña de admin -->
                     <form method="POST" action="/admin/change_password" style="max-width:400px; margin-bottom:2rem;">
-                                                {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                                <!-- CSRF token removed -->
                         <h3 style="font-size:1.1rem; margin-bottom:0.7rem;">Cambiar contraseña de administrador</h3>
                         <div style="margin-bottom:0.7rem;">
                             <label for="current_password" style="font-weight:bold;">Contraseña actual:</label>
