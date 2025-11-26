@@ -28,8 +28,8 @@ app.config['SITE_NAME'] = 'MenTora'
 db.init_app(app)
 socketio = SocketIO(app)
 
-## Protección CSRF desactivada
-# csrf = CSRFProtect(app)
+# Protección CSRF
+csrf = CSRFProtect(app)
 
 # Activar recarga automática
 app.config['DEBUG'] = True
@@ -987,7 +987,19 @@ def game_detail(game_id):
     return render_template('game_detail.html', game=game, attempts=attempts, max_attempts=max_attempts, cooldown=cooldown)
 
 @app.route('/chatbot', methods=['POST'])
-
+def chatbot():
+    data = request.get_json()
+    user_msg = data.get('message', '').strip()
+    # Lógica simple: eco o respuesta programada
+    if not user_msg:
+        return jsonify({'response': '¿Puedes escribir tu pregunta?'}), 200
+   
+    if 'hola' in user_msg.lower():
+        return jsonify({'response': '¡Hola! ¿En qué puedo ayudarte hoy?'}), 200
+    if 'nivel' in user_msg.lower():
+        return jsonify({'response': 'Puedes subir de nivel completando retos y juegos.'}), 200
+    if 'juego' in user_msg.lower():
+        return jsonify({'response': 'Para jugar, ve a la sección de Juegos y elige uno.'}), 200
     # Eco por defecto
     return jsonify({'response': f'Recibí: {user_msg}'}), 200
 
