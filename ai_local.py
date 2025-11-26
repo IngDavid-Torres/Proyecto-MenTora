@@ -15,6 +15,26 @@ import requests
 from typing import List, Dict, Optional
 
 class LocalAIExamGenerator:
+    def _get_tema_key(self, tema_lower, tema_synonyms):
+        import unicodedata
+        tema_normalized = unicodedata.normalize('NFD', tema_lower)
+        tema_normalized = ''.join(char for char in tema_normalized if unicodedata.category(char) != 'Mn')
+        for key, synonyms in tema_synonyms.items():
+            if any(syn in tema_normalized for syn in synonyms) or any(tema_normalized in syn for syn in synonyms):
+                return key
+        for key in self.question_templates.keys():
+            if key in tema_normalized or tema_normalized in key:
+                return key
+        return 'programacion'
+
+    def _generate_question(self, template, knowledge):
+        filled_question = template
+        for placeholder, values in knowledge.items():
+            if f'{{{placeholder}}}' in template:
+                filled_question = filled_question.replace(
+                    f'{{{placeholder}}}', str(random.choice(values))
+                )
+        return filled_question
     def __init__(self):
         self.question_templates = {
             'matematicas': [
@@ -218,56 +238,36 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
             'geografia': ['geografia', 'geografía', 'geography', 'paises', 'países']
         }
         
-        # Buscar por sinónimos
-        for key, synonyms in tema_synonyms.items():
-            if any(syn in tema_normalized for syn in synonyms) or any(tema_normalized in syn for syn in synonyms):
-                tema_key = key
-                break
-        
-        # Si no se encuentra, buscar en las llaves originales
-        if not tema_key:
-            for key in self.question_templates.keys():
-                if key in tema_normalized or tema_normalized in key:
-                    tema_key = key
-                    break
-        
-        # Por defecto usar programación si no se encuentra nada
-        if not tema_key:
-            tema_key = 'programacion'
-        
+        tema_lower = tema.lower()
+        tema_synonyms = {
+            'programacion': ['programacion', 'programación', 'programming', 'codigo', 'código', 'software', 'desarrollo'],
+            'matematicas': ['matematicas', 'matemáticas', 'math', 'aritmetica', 'aritmética', 'algebra', 'álgebra'],
+            'ciencias': ['ciencias', 'ciencia', 'science', 'biologia', 'biología', 'fisica', 'física', 'quimica', 'química'],
+            'historia': ['historia', 'history', 'historico', 'histórico'],
+            'literatura': ['literatura', 'literature', 'letras', 'escritura'],
+            'geografia': ['geografia', 'geografía', 'geography', 'paises', 'países']
+        }
+        tema_key = self._get_tema_key(tema_lower, tema_synonyms)
         templates = self.question_templates[tema_key]
         knowledge = self.knowledge_base[tema_key]
         questions = []
-        
-        # Limitar cantidad a rango seguro
         safe_cantidad = min(max(int(cantidad), 1), 20) if str(cantidad).isdigit() else 5
-        for i in range(safe_cantidad):  # 'i' is used for answer distribution, keep as is
+        for i in range(safe_cantidad):
             template = random.choice(templates)
-            # Rellenar plantilla con datos aleatorios
-            filled_question = template
-            for placeholder, values in knowledge.items():
-                if f'{{{placeholder}}}' in template:
-                    filled_question = filled_question.replace(
-                        f'{{{placeholder}}}', str(random.choice(values))
-                    )
+            filled_question = self._generate_question(template, knowledge)
             if tipo_examen == 'opciones':
-                # Generar opciones múltiples
                 if tema_key == 'matematicas' and any(op in filled_question for op in ['+', '-', '×', '%']):
-                    # Para matemáticas, calcular respuesta correcta
                     correct_answer = self._calculate_math_answer(filled_question)
                     wrong_answers = self._generate_wrong_math_answers(correct_answer)
-                    
                     opciones = [correct_answer] + wrong_answers
                     random.shuffle(opciones)
-                    correct_letter = chr(65 + opciones.index(correct_answer))  # A, B, C, D
-                    
+                    correct_letter = chr(65 + opciones.index(correct_answer))
                     questions.append({
                         'pregunta': filled_question,
                         'opciones': opciones,
                         'respuesta': correct_letter
                     })
                 else:
-                    # Para otras materias, opciones genéricas
                     opciones, respuesta_correcta = self._generate_smart_options(tema_key, filled_question, i)
                     questions.append({
                         'pregunta': filled_question,
@@ -276,13 +276,11 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
                     })
             else:
                 questions.append(filled_question)
-        
         return questions
 
     def _calculate_math_answer(self, question: str) -> str:
-        """Calcula la respuesta correcta para preguntas de matemáticas"""
+        """Calcula la respuesta correcta para preguntas matemáticas simples"""
         try:
-            # Extraer operación matemática
             if '+' in question:
                 nums = [int(x) for x in question.split() if x.isdigit()]
                 if len(nums) >= 2:
