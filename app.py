@@ -734,11 +734,12 @@ def create_quiz():
         return redirect(url_for('admin_panel'))
 
     # Si el usuario es admin, teacher_id debe ser None
+    # Usar id=2 para el admin
     new_quiz = Quiz(
         title=title,
         area=area,
         description=description,
-        created_by=session['user_id'],
+        created_by=2,
         teacher_id=None,
         created_at=datetime.utcnow()
     )
