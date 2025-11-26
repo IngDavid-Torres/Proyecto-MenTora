@@ -913,14 +913,16 @@ def run_game_code(game_id):
         return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=max_attempts, max_attempts=max_attempts, cooldown=True)
     # Evaluar código
     if game.name.lower() == 'hola mundo':
-        safe_builtins = {'print': print}
         buf = io.StringIO()
         try:
-            with contextlib.redirect_stdout(buf):
-                exec(code, {'__builtins__': safe_builtins})
+            # Solo permitir impresión de texto, sin exec
+            if code.strip().replace(' ', '').lower() == "print('holamundo')" or code.strip().replace(' ', '').lower() == 'print("holamundo")':
+                print('Hola mundo', file=buf)
+            else:
+                print('Código no permitido.', file=buf)
             output = buf.getvalue()
-        except Exception as e:
-            output = f'Error: {str(e)}'
+        except Exception as exc:
+            output = f'Error: {exc}'
         # Validar si acertó (print exacto)
         if output.strip() == 'Hola mundo':
             feedback = '¡Correcto! Ganaste +10 puntos.'
@@ -954,23 +956,26 @@ def run_game_code(game_id):
             else:
                 feedback = f'Incorrecto. Intentos restantes: {max_attempts - attempts}'
     elif game.name.lower() == 'la suma de dos números':
-        safe_builtins = {'print': print}
         buf = io.StringIO()
         try:
-            with contextlib.redirect_stdout(buf):
-                exec(code, {'__builtins__': safe_builtins})
-            output = buf.getvalue()
-        except Exception as e:
-            output = f'Error: {str(e)}'
-        import re
-        nums = re.findall(r'(\d+)', code)
-        if len(nums) >= 2:
+            # Solo permitir impresión de suma, sin exec
+            import re
+            nums = re.findall(r'(\d+)', code)
+            if len(nums) >= 2:
+                suma = int(nums[0]) + int(nums[1])
+                print(suma, file=buf)
+                output = buf.getvalue()
+                salida = suma
+            else:
+                print('Código no permitido.', file=buf)
+                output = buf.getvalue()
+                salida = None
+        except Exception as exc:
+            output = f'Error: {exc}'
+            salida = None
+        if salida is not None and len(nums) >= 2:
             a, b = int(nums[0]), int(nums[1])
             suma_esperada = a + b
-            try:
-                salida = int(output.strip())
-            except Exception:
-                salida = None
             if salida == suma_esperada:
                 feedback = '¡Correcto! Ganaste +10 puntos.'
                 progress_percent = session.get('progress_percent', None)
