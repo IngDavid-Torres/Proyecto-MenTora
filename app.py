@@ -190,20 +190,44 @@ def login():
 
     app.logger.debug("[LOGIN] Ejecutando función login()")
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        password = request.form.get('password', '')
-        app.logger.info(f"[LOGIN DEBUG] username recibido: '{username}' | password recibido: '{password}'")
+        app.logger.debug("[LOGIN] POST recibido, intentando obtener datos del formulario...")
+        try:
+            username = request.form.get('username', '').strip()
+            password = request.form.get('password', '')
+            app.logger.debug(f"[LOGIN] username='{username}', password='{password}'")
+        except Exception as e:
+            app.logger.error(f"[LOGIN ERROR] Exception al obtener datos del formulario: {e}")
+            return jsonify(success=False, error="Error al obtener datos del formulario"), 400
+
         if not username or not password:
             app.logger.error(f"[LOGIN ERROR] Campos faltantes: username='{username}', password='{password}'")
             return jsonify(success=False, error="Campos requeridos faltantes"), 400
-        user = User.query.filter_by(username=username).first()
+
+        app.logger.debug("[LOGIN] Buscando usuario en la base de datos...")
+        try:
+            user = User.query.filter_by(username=username).first()
+        except Exception as e:
+            app.logger.error(f"[LOGIN ERROR] Exception al buscar usuario: {e}")
+            return jsonify(success=False, error="Error al buscar usuario"), 500
+
         ip = request.remote_addr or 'unknown'
-        success = user is not None and check_password_hash(user.password, password)
-        app.logger.info(f"[LOGIN DEBUG] Usuario encontrado: {user is not None} | Password match: {success}")
-        log = AccessLog(username=username, ip=ip, success=success)
-        db.session.add(log)
-        db.session.commit()
+        app.logger.debug(f"[LOGIN] Usuario encontrado: {user is not None}")
+        try:
+            success = user is not None and check_password_hash(user.password, password)
+        except Exception as e:
+            app.logger.error(f"[LOGIN ERROR] Exception al verificar contraseña: {e}")
+            return jsonify(success=False, error="Error al verificar contraseña"), 500
+        app.logger.debug(f"[LOGIN] Password match: {success}")
+
+        try:
+            log = AccessLog(username=username, ip=ip, success=success)
+            db.session.add(log)
+            db.session.commit()
+        except Exception as e:
+            app.logger.error(f"[LOGIN ERROR] Exception al guardar log de acceso: {e}")
+
         if success:
+            app.logger.info(f"[LOGIN] Login exitoso para usuario: {username}")
             session['user_id'] = user.id
             session['username'] = user.username
             session['is_admin'] = user.is_admin
