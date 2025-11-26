@@ -94,9 +94,10 @@ with app.app_context():
 
     admin_password = os.environ.get('ADMIN_PASSWORD', 'MenToraAdmin123')
     print(f"[DEBUG] Contraseña admin fija usada: '{admin_password}'")
-    # Buscar usuario admin por ID fijo (1) o username
-    admin = User.query.filter_by(id=1, username='admin').first()
+    # Buscar usuario admin por username
+    admin = User.query.filter_by(username='admin').first()
     if not admin:
+        # Si no existe, crear con ID fijo
         admin_user = User(
             id=1,
             username='admin',
@@ -111,13 +112,13 @@ with app.app_context():
         db.session.commit()
         print(f"👑 Usuario administrador creado (ID=1, contraseña: {admin_password})")
     else:
-        # Si existe, asegurar que la contraseña esté correctamente hasheada
+        # Si existe, actualizar ID y contraseña si es necesario
+        if admin.id != 1:
+            admin.id = 1
         if not check_password_hash(admin.password, admin_password):
             admin.password = generate_password_hash(admin_password)
-            db.session.commit()
-            print("🔒 Contraseña de admin actualizada.")
-        else:
-            print("👑 Usuario administrador ya existe y contraseña válida.")
+        db.session.commit()
+        print("🔒 Usuario admin actualizado con ID=1 y contraseña fija.")
 
 
 @app.route('/')
