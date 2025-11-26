@@ -186,12 +186,16 @@ def register():
 def login():
 
     if request.method == 'POST':
-        username = request.form['username'].strip()
-        password = request.form['password']
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        print(f"[LOGIN DEBUG] username recibido: '{username}' | password recibido: '{password}'")
+        if not username or not password:
+            print(f"[LOGIN ERROR] Campos faltantes: username='{username}', password='{password}'")
+            return jsonify(success=False, error="Campos requeridos faltantes"), 400
         user = User.query.filter_by(username=username).first()
         ip = request.remote_addr or 'unknown'
         success = user is not None and check_password_hash(user.password, password)
-      
+        print(f"[LOGIN DEBUG] Usuario encontrado: {user is not None} | Password match: {success}")
         log = AccessLog(username=username, ip=ip, success=success)
         db.session.add(log)
         db.session.commit()
@@ -209,7 +213,8 @@ def login():
             else:
                 return jsonify(success=True, redirect=url_for('dashboard'))
         else:
-            return jsonify(success=False), 401
+            print(f"[LOGIN ERROR] Usuario o contraseña incorrectos para username='{username}'")
+            return jsonify(success=False, error="Usuario o contraseña incorrectos"), 401
 
     
     return render_template('login.html')
