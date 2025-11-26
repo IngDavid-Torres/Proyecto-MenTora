@@ -86,8 +86,7 @@ with app.app_context():
    
     admin = User.query.filter_by(username='admin').first()
     if admin:
-        admin.password = None  
-        admin.email = None  
+        admin.password = generate_password_hash('admin123') 
         admin.area = 'general'
         admin.is_admin = True
         db.session.commit()
