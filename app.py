@@ -186,6 +186,7 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
+@csrf.exempt
 def login():
 
     app.logger.debug("[LOGIN] Ejecutando función login()")
