@@ -91,6 +91,7 @@ with app.app_context():
     print("✅ Tablas creadas correctamente.")
 
     admin_password = os.environ.get('ADMIN_PASSWORD', 'admin12345!')
+    print(f"[DEBUG] Contraseña admin usada: '{admin_password}'")
     admin = User.query.filter_by(username='admin').first()
     if admin:
         admin.password = generate_password_hash(admin_password)
@@ -111,9 +112,6 @@ with app.app_context():
         db.session.add(admin_user)
         db.session.commit()
         print(f"👑 Usuario administrador creado (contraseña: {admin_password})")
-        db.session.add(admin_user)
-        db.session.commit()
-        print("👑 Usuario administrador creado (oculto email y contraseña).")
 
 
 @app.route('/')
