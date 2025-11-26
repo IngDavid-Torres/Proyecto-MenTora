@@ -29,7 +29,7 @@
         .main-navbar {
             justify-content: space-between;
             padding: 0 2rem;
-            background: #5f7f81;
+            background:#114c5f;
             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
             font-family: 'Exo 2', sans-serif;
@@ -234,7 +234,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* === TABLES === */
+
         .leaderboard table {
             width: 100%;
             border-collapse: separate;

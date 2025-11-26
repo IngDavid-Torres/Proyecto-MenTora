@@ -84,25 +84,25 @@ def handle_request_history():
     emit('chat_history', chat_history)
 
 
+from werkzeug.security import generate_password_hash
+
 with app.app_context():
     db.create_all()
     print("✅ Tablas creadas correctamente.")
 
    
-    import os
-    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin12345!')
     admin = User.query.filter_by(username='admin').first()
     if admin:
-        admin.password = generate_password_hash(admin_password)
+        admin.password = generate_password_hash('admin123') 
         admin.area = 'general'
         admin.is_admin = True
         db.session.commit()
-        print("🔐 Usuario admin actualizado. Contraseña tomada de variable de entorno.")
+        print("🔐 Usuario admin actualizado (oculto email y contraseña).")
     else:
         admin_user = User(
             username='admin',
-            email=None,
-            password=generate_password_hash(admin_password),
+            email=None, 
+            password=None,  
             area='general',
             is_admin=True,
             points=0,
@@ -110,13 +110,12 @@ with app.app_context():
         )
         db.session.add(admin_user)
         db.session.commit()
-        print("👑 Usuario administrador creado. Contraseña tomada de variable de entorno.")
+        print("👑 Usuario administrador creado (oculto email y contraseña).")
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -131,7 +130,7 @@ def register():
             msg = 'Todos los campos son obligatorios.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=False, message=msg), 400
-            flash(msg)
+            flash(msg, 'error')
             return redirect(url_for('register'))
 
         existing_user = User.query.filter_by(username=username).first()
@@ -140,13 +139,13 @@ def register():
             msg = 'El nombre de usuario ya está en uso.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=False, message=msg), 400
-            flash(msg)
+            flash(msg, 'error')
             return redirect(url_for('register'))
         if existing_email:
             msg = 'El correo electrónico ya está registrado.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=False, message=msg), 400
-            flash(msg)
+            flash(msg, 'error')
             return redirect(url_for('register'))
 
         try:
@@ -169,16 +168,16 @@ def register():
             msg = 'Registro exitoso. Ahora puedes iniciar sesión.'
             if request.accept_mimetypes['application/json']:
                 return jsonify(success=True, message=msg)
-            flash(msg)
+            flash(msg, 'success')
             return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
             app.logger.exception('Error al registrar usuario:')
-            # Proveer más información en modo debug para facilitar diagnóstico
-            msg = f'Error interno en el registro. ({str(e)})' if app.debug else 'Error interno en el registro.'
+            # Devolver un mensaje de error correcto (no reutilizar el mensaje de éxito)
+            err_msg = 'Error al registrar usuario. Intenta de nuevo más tarde.'
             if request.accept_mimetypes['application/json']:
-                return jsonify(success=False, message=msg), 500
-            flash(msg)
+                return jsonify(success=False, message=err_msg), 500
+            flash(err_msg, 'error')
             return redirect(url_for('register'))
 
     return render_template('register.html')
@@ -457,6 +456,7 @@ def noticias():
     
 
 
+
 @app.route('/admin', methods=['GET'])
 def admin_panel():
     if 'user_id' not in session or not session.get('is_admin'):
@@ -614,34 +614,28 @@ def delete_achievement(badge_id):
 def create_game():
     if 'user_id' not in session or not session.get('is_admin'):
         flash('Acceso restringido.')
-        return redirect(url_for('login'))
-
-    from models import Game
-    game_id = request.form.get('game_id')
-    name = request.form.get('game_name', '').strip()
-    description = request.form.get('game_description', '').strip()
-    rules = request.form.get('game_rules', '').strip()
-
-    if not name or not description:
-        flash('Todos los campos obligatorios deben estar llenos.')
-        return redirect(url_for('admin_panel'))
-
-    try:
-        if game_id:  # Editar juego existente
-            game = Game.query.get_or_404(game_id)
-            game.name = name
-            game.description = description
-            game.rules = rules
-            db.session.commit()
-            flash(f'Juego "{name}" actualizado correctamente.')
-        else:  # Crear nuevo juego
-            new_game = Game(name=name, description=description, rules=rules, teacher_id=None, created_at=datetime.utcnow())
-            db.session.add(new_game)
-            db.session.commit()
-            flash(f'Juego "{name}" creado exitosamente.')
-    except Exception as e:
-        db.session.rollback()
-        flash(f'Error al procesar el juego: {e}')
+    import os
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin12345!')
+    admin = User.query.filter_by(username='admin').first()
+    if admin:
+        admin.password = generate_password_hash(admin_password)
+        admin.area = 'general'
+        admin.is_admin = True
+        db.session.commit()
+        print("🔐 Usuario admin actualizado (contraseña por variable de entorno).")
+    else:
+        admin_user = User(
+            username='admin',
+            email=None,
+            password=generate_password_hash(admin_password),
+            area='general',
+            is_admin=True,
+            points=0,
+            level=1
+        )
+        db.session.add(admin_user)
+        db.session.commit()
+        print("👑 Usuario administrador creado (contraseña por variable de entorno).")
     
     # Limpiar datos de edición
     session.pop('game_to_edit', None)
@@ -723,7 +717,8 @@ def create_quiz():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
-    flash('Sesión cerrada correctamente.')
+    # Mark logout message as an 'error' style (red) to match the site's visual language
+    flash('Sesión cerrada correctamente.', 'error')
     response = redirect(url_for('login'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0, private'
     response.headers['Pragma'] = 'no-cache'

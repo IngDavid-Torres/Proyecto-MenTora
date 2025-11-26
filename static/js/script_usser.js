@@ -1,10 +1,10 @@
 
-        // Evitar cache del navegador
+ 
         if (window.performance && window.performance.navigation && window.performance.navigation.type === 2) {
             window.location.reload();
         }
 
-        // Menú desplegable usuario
+ 
         const userMenuBtn = document.getElementById('userMenuBtn');
         const userMenu = document.getElementById('userMenu');
         
@@ -25,7 +25,7 @@
 
         
 
-        // Scroll a sección
+ 
         function scrollToSection(id) {
             const el = document.getElementById(id);
             if (el) {
@@ -34,7 +34,7 @@
             }
         }
 
-        // Modal functions
+
         function showModal() {
             const modal = document.getElementById('logoutModal');
             if (modal) {
@@ -56,7 +56,7 @@
             if (form) form.submit();
         }
 
-        // Cerrar modal con Escape o clic fuera
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') hideModal();
         });
@@ -68,7 +68,7 @@
             });
         }
 
-        // Chat en Vivo: abrir/cerrar
+
         function toggleLiveChat() {
             const box = document.getElementById('livechat-box');
             const btn = document.getElementById('livechat-toggle');
@@ -83,7 +83,7 @@
             }
         }
 
-        // Chatbot: abrir/cerrar
+ 
         function toggleChatbot() {
             const box = document.getElementById('chatbot-box');
             const btn = document.getElementById('chatbot-toggle');
@@ -98,7 +98,7 @@
             }
         }
 
-        // Chatbot: enviar mensaje
+
         async function sendChatbotMessage(e) {
             e.preventDefault();
             const input = document.getElementById('chatbot-input');
@@ -113,7 +113,7 @@
             input.value = '';
             messages.scrollTop = messages.scrollHeight;
             
-            // Llamar al backend
+
             try {
                 const res = await fetch('/chatbot', {
                     method: 'POST',
@@ -128,7 +128,7 @@
             }
         }
 
-        // Inicializar socket.io para chat en vivo
+
         let socket;
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof io !== 'undefined') {
@@ -147,7 +147,7 @@
                     messages.appendChild(msgDiv);
                     messages.scrollTop = messages.scrollHeight;
                     
-                    // Sonido solo si el mensaje es de otro usuario
+
                     if (!isUser) {
                         const sound = document.getElementById('livechat-sound');
                         if (sound) {
@@ -158,7 +158,7 @@
                 });
             }
 
-            // Chat en Vivo: enviar mensaje
+           
             const livechatForm = document.getElementById('livechat-form');
             if (livechatForm && typeof io !== 'undefined') {
                 livechatForm.addEventListener('submit', function(e) {
@@ -178,7 +178,6 @@
                 });
             }
 
-            // Inicializar toggle del menú principal en móviles
             (function initNavToggle(){
                 const navToggle = document.getElementById('navToggle');
                 const navLinks = document.querySelector('.navbar-links');
@@ -194,13 +193,13 @@
                     }
                 });
 
-                // evitar que clics dentro del menú lo cierren
+
                 navLinks.addEventListener('click', function(e){ e.stopPropagation(); });
 
-                // cerrar al hacer clic fuera
+
                 document.body.addEventListener('click', function(){ navLinks.style.display = ''; });
 
-                // al redimensionar, restablecer para escritorio
+
                 window.addEventListener('resize', function(){ if (window.innerWidth > 768) navLinks.style.display = ''; });
             })();
         });

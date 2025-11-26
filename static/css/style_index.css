@@ -26,13 +26,13 @@
         align-items: center;
         padding: 1rem 2rem;
         background: #5f7f81;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        border-bottom: #114c5f;
         box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
         font-family: 'Exo 2', sans-serif;
         letter-spacing: 2px;
         position: sticky;
         top: 0;
-        height: 80px;       
+        height: 70px;       
         padding: 0 2rem;       
         z-index: 90;
     }
@@ -63,8 +63,8 @@
    .nav-links a {
     text-decoration: none;
     color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 550;
     transition: color 0.3s, text-shadow 0.3s;
     letter-spacing: 1px;
    }
@@ -212,7 +212,7 @@
    }
 
     .hero h2 {
-       font-size: 3.6rem;
+       font-size: 2.9rem;
        margin-bottom: 1.3rem;
        color: #fff;
        font-family: 'Exo 2', sans-serif;
@@ -225,7 +225,7 @@
     }
 
     .hero p {
-       font-size: 1.35rem;
+       font-size: 1rem;
        max-width: 650px;
        margin: 0 auto;
        color: #e0e7ef;
@@ -245,14 +245,14 @@
        font-weight: bold;
        font-family: 'Exo 2', sans-serif;
        margin: 0 0.7rem;
-       font-size: 1.15rem;
+       font-size: 1rem;
        letter-spacing: 1px;
        border: none;
        transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
        display: inline-block;
     }
 
-    /* Make CTA buttons responsive: wrap and stack on small screens */
+
     .cta-buttonss {
         display: flex;
         gap: 0.9rem;
@@ -302,15 +302,17 @@
 
    .section-title {
         text-align: center;
-        font-size: 2.8rem;
         color: #fff;
         font-family: 'Exo 2', sans-serif;
-        margin-bottom: 3rem;
         letter-spacing: 1px;
+       font-size: 2.4rem;
+        font-weight: 700;
+       margin-bottom: 1rem;
     }
 
     .features-section {
         padding: 5rem 2rem;
+                margin-top: 1rem;
          background: #114c5f;
     }
 
@@ -319,7 +321,7 @@
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 2rem;
         max-width: 1200px;
-        margin-top: 3rem;
+        margin-top: 2rem;
         margin-left: auto;
         margin-right: auto;
     }
@@ -333,7 +335,7 @@
         transition: all 0.3s ease;
         cursor: pointer;
         border: 2px solid transparent;
-          margin-top: 3rem;
+          margin-top: 2rem;
         margin-left: auto;
         margin-right: auto;
     }
@@ -366,7 +368,7 @@
     }
 
     .feature h3 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         margin-bottom: 1rem;
         color: #114c5f;
         font-family: 'Exo 2', sans-serif;
@@ -375,7 +377,7 @@
     }
 
     .feature p {
-       font-size: 1.1rem;
+       font-size: 1rem;
        color: #4a5568;
        line-height: 1.7;
        text-align: justify;
@@ -438,7 +440,7 @@
         color: #4a5568;
         line-height: 1.6;
         margin: 0;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
 :root{
@@ -460,18 +462,17 @@
     filter calc(var(--reveal-duration) / 1.15) var(--reveal-ease);
   will-change: opacity, transform;
   backface-visibility: hidden;
-  /* Optional: improve layered rendering */
   transform-origin: 50% 50%;
 }
 
-/* Active state — clean and crisp */
+
 .reveal.is-revealed{
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);
 }
 
-/* For upward reveal (element comes into view from top) */
+
 .reveal[data-direction="up"]{
   transform: translateY(calc(var(--reveal-distance) * -1)) scale(var(--reveal-scale));
 }
@@ -479,11 +480,11 @@
   transform: translateY(0) scale(1);
 }
 
-/* horizontal variants */
+
 .reveal[data-direction="left"]{ transform: translateX(calc(var(--reveal-distance) * -1)) scale(var(--reveal-scale)); }
 .reveal[data-direction="right"]{ transform: translateX(var(--reveal-distance)) scale(var(--reveal-scale)); }
 
-/* stagger children when parent has data-stagger */
+
 .reveal[data-stagger] > *{
   opacity: 0;
   transform: translateY(12px);
@@ -495,12 +496,12 @@
   transform: translateY(0);
 }
 
-/* small helper delays (you can also rely on JS dynamic stagger) */
+
 .reveal-delay-100 { transition-delay: 100ms; }
 .reveal-delay-200 { transition-delay: 200ms; }
 .reveal-delay-300 { transition-delay: 300ms; }
 
-/* Accessibility */
+
 @media (prefers-reduced-motion: reduce){
   .reveal,
   .reveal[data-stagger] > * {
@@ -512,7 +513,7 @@
 }
 
 
-/* TESTIMONIOS */
+
 
     .testimonials {
     background: #114c5f;
@@ -577,7 +578,7 @@
 
     .testimonial p {
     font-style: italic;
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 1rem;
     flex-grow: 1;
@@ -605,9 +606,11 @@
     }
 
     .platform-preview .section-title {
-    color:#ffffffff;
+     text-align: center;
+    font-size: 2.4rem;
     margin-bottom: 1rem;
-            font-size: 2.8rem;
+    margin-top: 1rem;
+    font-weight: 700;
     }
 
    .platform-preview .preview-subtitle {
@@ -662,15 +665,16 @@
     }
 
     .preview-caption h3 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    margin-bottom: 0.8rem;
-    color: #ffffff;
-    font-weight: 700;
+   font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        font-family: 'Exo 2', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.5px;
     }
 
     .preview-caption p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.95);
     max-width: 800px;
@@ -824,7 +828,7 @@
 
 
 
-/* FOOTER */ 
+
 
     footer {
        text-align: center;
@@ -832,7 +836,7 @@
        font-size: 1rem;
        color: #ffffffff;
        letter-spacing: 1.5px;
-         background: #114c5f;
+              background: #5f7f81;
        font-family: 'Exo 2', sans-serif;
        position: relative;
        z-index: 20;
@@ -890,7 +894,7 @@
     box-shadow: 0 4px 12px rgba(156, 210, 211, 0.4);
     }
 
-   /* RESPONSIVE */
+
 
     @media (max-width: 900px) {
     .hamburger {
@@ -1338,138 +1342,7 @@
     order: 1;
     }
 
-.sobre-mentora-section {
-        padding: 5rem 2rem;
-    margin: 0 auto 2rem auto;
-    max-width: 1290px;
-    position: relative;
-     margin-top: 0 !important;
-}
 
-
-.sobre-mentora-section .section-title {
-   text-align: center;
-        font-size: 2.8rem;
-        color: #fff;
-        font-family: 'Exo 2', sans-serif;
-        margin-bottom: 3rem;
-        letter-spacing: 1px;
-}
-
-.sobre-container {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 27px;
-    padding: 3rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-}
-
-.sobre-item-with-image {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2.5rem;
-    align-items: center;
-}
-
-.sobre-item-with-image:hover {
-    transform: translateY(-5px);
-    transition: transform 0.3s ease;
-}
-
-.sobre-image img {
-    width: 300px;
-    height: 300px;
-    object-fit: contain;
-    border-radius: 16px;
-    transition: transform 0.3s ease;
-}
-
-.sobre-item-with-image:hover .sobre-image img {
-    transform: scale(1.05);
-}
-
-.sobre-content h3 {
-    font-size: 1.8rem;
-    font-family: 'Exo 2', sans-serif;
-    color: #114c5f;
-    margin-bottom: 1.5rem;
-    letter-spacing: 1px;
-}
-
-.sobre-content p {
-    font-size: 1.1rem;
-          color: #4a5568;
-    line-height: 1.8;
-    margin-bottom: 1.2rem;
-    text-align: justify;
-}
-
-.sobre-content p:last-child {
-    margin-bottom: 0;
-}
-
-.sobre-content strong {
-    color: #114c5f;
-    font-weight: 700;
-}
-
-@media (max-width: 968px) {
-    .sobre-item-with-image {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .sobre-image img {
-        width: 100%;
-        height: 200px;
-        margin: 0 auto;
-    }
-
-    .sobre-mentora-section .section-title {
-        font-size: 2rem;
-    }
-
-    .sobre-content h3 {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .sobre-mentora-section {
-        padding: 2.5rem 1.5rem;
-        margin: 2rem 1rem;
-    }
-
-    .sobre-container {
-        padding: 2rem;
-    }
-
-    .sobre-mentora-section .section-title {
-                font-size: 2.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .sobre-mentora-section {
-        padding: 2rem 1rem;
-    }
-
-    .sobre-container {
-        padding: 1.5rem;
-    }
-
-    .sobre-content h3 {
-        font-size: 1.3rem;
-    }
-
-    .sobre-content p {
-        font-size: 1rem;
-    }
-
-    .sobre-image img {
-        height: 150px;
-    }
-}
 
 .nav-links .nav-btn {
     background: #fff;
@@ -1611,25 +1484,25 @@
     }
  
     .section-title {
-    text-align: center;
-    font-size: 2.8rem;
-    color: #fff;
-    font-family: 'Exo 2', sans-serif;
-    margin-top: 3rem; 
+     text-align: center;
+    font-size: 2.4rem;
     margin-bottom: 1rem;
-    letter-spacing: 1px;
+    margin-top: 1rem;
+    font-weight: 700;
   }
 
       /* Main Content */
-    main {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 2rem;
-        position: relative;
-        z-index: 10;
-    }
+   main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+    margin-top: -50px; /* súbelo */
+}
+
 
     /* Login Container */
     .login-container {
@@ -1641,15 +1514,15 @@
         max-width: 450px;
         position: relative;
         z-index: 20;
+           margin-top: 1rem;
     }
 
     .login-container h2 {
-        color: #5f7f81;
-        font-family: 'Exo 2', sans-serif;
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
+          font-size: 1.4rem;
+        color: #114c5f;
+        margin-bottom: 0.5rem;
         text-align: center;
-        letter-spacing: 1px;
+        font-family: 'Exo 2', sans-serif;
     }
 
     .login-container form {
@@ -1669,11 +1542,11 @@
     padding: 0.9rem;
     border: 2px solid #5f7f81;
     border-radius: 8px;
-    font-size: 1rem; /* fuerza el mismo tamaño SIEMPRE */
+    font-size: 1rem; 
     font-family: 'Poppins', sans-serif;
     transition: all 0.3s ease;
     background: #fff;
-    width: 100%; /* opcional, asegura consistencia */
+    width: 100%; 
     box-sizing: border-box;
     margin-top: 0.3rem;
  }
@@ -1710,12 +1583,12 @@
     .register-link {
         text-align: center;
         margin-top: 1.5rem;
-        color: #5f7f81;
+        color:  #0b3946; 
         font-size: 0.95rem;
     }
 
     .register-link a {
-        color: #4a6668;
+        color:  #0b3946; 
         font-weight: 600;
         text-decoration: none;
         transition: color 0.3s;
@@ -1729,9 +1602,7 @@
     
 
 
-/* --------------------------- */
-/*   MODAL DE BIENVENIDA      */
-/* --------------------------- */
+
 
 .mentora-modal {
     position: fixed;
@@ -1745,7 +1616,7 @@
     animation: fadeIn 0.35s ease forwards;
 }
 
-/* Caja principal */
+
 .mentora-box {
     background: #114c5f;
     padding: 2.6rem 2.8rem;
@@ -1758,7 +1629,7 @@
     animation: scaleIn 0.45s ease forwards;
 }
 
-/* Título */
+
 .mentora-title {
     font-family: 'Poppins','Orbitron',sans-serif;
     font-size: 2rem;
@@ -1768,7 +1639,7 @@
     margin-bottom: 0.8rem;
 }
 
-/* Subtítulo */
+
 .mentora-sub {
     font-family: 'Poppins', sans-serif;
     font-size: 1.05rem;
@@ -1777,7 +1648,8 @@
     opacity: 0.85;
 }
 
-/* Loader minimalista */
+
+
 .mentora-loader {
     width: 34px;
     height: 34px;
@@ -1788,18 +1660,16 @@
     margin: 0 auto 1rem;
 }
 
-/* Texto "Cargando..." */
+
 .mentora-loading-text {
-    font-family: 'Orbitron', sans-serif;
+        font-family: 'Exo 2', sans-serif;
     font-size: 1rem;
-    color: #114c5f;
+    color: #ffffff;
     letter-spacing: 1px;
     opacity: 0.8;
 }
 
-/* --------------------------- */
-/*        ANIMACIONES          */
-/* --------------------------- */
+
 
 @keyframes spin {
     to { transform: rotate(360deg); }
@@ -1816,50 +1686,65 @@
 }
 
 
-/* --------------------------- */
-/*       ALERTA DE ERROR       */
-/* --------------------------- */
+
+
 
 .mentora-error {
     display: none;
     position: fixed;
-    top: 22px;
+    top: 92px; 
     left: 50%;
     transform: translateX(-50%);
-    background: #ff4d4d;
+    background: #ff4d4d; 
     color: #fff;
     padding: 0.9rem 2rem;
     border-radius: 10px;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-    z-index: 1001;
+    box-shadow: 0 6px 26px rgba(0,0,0,0.16);
+    z-index: 1100;
     animation: slideDown 0.35s ease;
+    opacity: 1;
+    transition: opacity 350ms ease, transform 350ms ease;
+    will-change: opacity, transform;
 }
 
 
-/* Animación de flotación suave */
+.alert-visible { opacity: 1; transform: translateY(0); }
+.alert-hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+
+
+@keyframes fadeOutUp {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-8px); }
+}
+
+
 @keyframes floatSoft {
     0% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0); }
 }
 
-/* Estilo para la imagen del modal */
+
 .mentora-img {
     width: 340px;
+    align-items: center;
     height: 270px;
     object-fit: contain;
     display: block;
-    margin: 0 auto 1rem;  /* Centrado + pequeño margen abajo */
+    margin: 0 auto 1rem;  
     animation: floatSoft 3s ease-in-out infinite;
 }
 
 
-
-  /* Alerta de éxito */
-  .alert-success {
-    background: linear-gradient(135deg, #5cb85c 0%, #4cae4c 100%);
+    .alert-success {
+        position: fixed;
+        top: 92px; 
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1101;
+        background: linear-gradient(135deg, #4CAF50 0%, #2E8B57 100%);
     color: #fff;
     padding: 1rem;
     border-radius: 8px;
@@ -1867,10 +1752,11 @@
     text-align: center;
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(92, 184, 92, 0.3);
-    animation: slideDown 0.5s ease;
-   }
+        animation: slideDown 0.5s ease;
+        transition: opacity 350ms ease, transform 350ms ease;
+    }
 
-   @keyframes slideDown {
+    @keyframes slideDown {
     from {
         opacity: 0;
         transform: translateY(-20px);
@@ -1881,7 +1767,51 @@
     }
    }
 
-  /* Estilos para el select */
+
+.toast-container {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 360px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    transform-origin: right top;
+    animation: toastIn 300ms cubic-bezier(.2,.9,.2,1);
+}
+
+.toast .icon {
+    width: 26px; height: 26px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; opacity:0.95;
+}
+
+.toast-success { background: linear-gradient(135deg,#38b2ac 0%, #2f855a 100%); }
+.toast-error   { background: linear-gradient(135deg,#fc5c7d 0%, #ff4d4d 100%); }
+.toast-info    { background: linear-gradient(135deg,#3b82f6 0%, #2563eb 100%); }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(18px) scale(0.98); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastOut {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to { opacity: 0; transform: translateX(12px) scale(0.98); }
+}
+
+
   .login-container select {
     padding: 0.9rem;
     border: 2px solid #5f7f81;
@@ -1906,13 +1836,13 @@
     color: #333;
    }
 
-   /* Ajuste para los divs contenedores */
+
   .login-container form > div {
     display: flex;
     flex-direction: column;
    }
 
-  /* Clase register-link (igual que login-link) */
+
   .register-link {
     text-align: center;
     margin-top: 1.5rem;
@@ -1935,14 +1865,12 @@
 
 
 
-
-/* ============================================================
-    SECCIÓN PROFESORES INICIO (NUEVA SECCIÓN)
-   ============================================================ */
-
 .profesores-inicio {
-    padding: 4rem 2rem;
-    margin-top: 4rem;
+     padding: 5rem 2rem;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+        margin-top: 1rem;
 }
 
 .profesores-inicio .section-title {
@@ -1961,7 +1889,7 @@
     text-align: justify;
 }
 
-/* GRID */
+
 .profesores-inicio-grid {
     max-width: 1200px;
     margin: 3rem auto;
@@ -1970,7 +1898,7 @@
     gap: 2rem;
 }
 
-/* TARJETAS */
+
 .prof-box {
     background: #ffffff10;
     padding: 2rem;
@@ -1981,27 +1909,30 @@
     border: 1px solid #ffffff15;
 }
 
-/* Hover */
+
 .prof-box:hover {
     transform: translateY(-8px);
     box-shadow: 0px 12px 35px rgba(0,0,0,0.25);
 }
 
-/* Iconos */
+
 .prof-icon i {
     font-size: 60px;
-    color: #114c5f;
+    color: #ffffff;
     margin-bottom: 1rem;
 }
 
-/* Título */
+
 .prof-box h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: white;
+    font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        font-family: 'Exo 2', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.5px;
 }
 
-/* Texto */
+
 .prof-box p {
     opacity: 0.85;
     margin-bottom: 1.5rem;
@@ -2009,7 +1940,7 @@
          font-size: 1.1rem;
 }
 
-/* BOTÓN EXCLUSIVO PROFESORES-INICIO */
+
 .prof-btn {
      display: inline-block;
     padding: 1rem 2rem;
@@ -2027,27 +1958,25 @@
 
 
 
-/* ============================================================
-   SECCIÓN PROFESORES (GRAN BLOQUE)
-   ============================================================ */
 
 .profesores-section {
     padding: 5rem 2rem;
     background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(8px);
     border-radius: 20px;
-    margin: 4rem auto;
+        margin-top: 1rem;
 }
 
-/* Título */
+
 .profesores-section .section-title {
     text-align: center;
     font-size: 2.4rem;
     margin-bottom: 1rem;
+    margin-top: 1rem;
     font-weight: 700;
 }
 
-/* Descripción */
+
 .profesores-desc {
     max-width: 900px;
     margin: 0 auto;
@@ -2057,7 +1986,7 @@
     text-align: justify;
 }
 
-/* GRID */
+
 .profesores-grid {
     max-width: 1100px;
     margin: 3rem auto;
@@ -2066,7 +1995,7 @@
     gap: 2rem;
 }
 
-/* TARJETAS */
+
 .prof-card {
     background: #ffffff0f;
     padding: 2rem;
@@ -2077,13 +2006,13 @@
     backdrop-filter: blur(6px);
 }
 
-/* Hover */
+
 .prof-card:hover {
     transform: translateY(-8px);
     box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.25);
 }
 
-/* CONTENEDOR DEL ICONO */
+
 .feature-icon {
     display: flex;
     justify-content: center;
@@ -2091,22 +2020,26 @@
     margin-bottom: 1rem;
 }
 
-/* EL ICONO */
+
 .feature-icon i,
 .feature-icon img {
-    font-size: 35px; /* o 30px si prefieres */
-    color: #114c5f;
+    font-size: 35px;
+    color: #ffffff;
     display: block;
 }
 
 
-/* Títulos */
+
 .prof-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
+   font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        font-family: 'Exo 2', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.5px;
 }
 
-/* Texto */
+
 .prof-card p {
     opacity: 0.85;
     margin-bottom: 0;
@@ -2116,10 +2049,7 @@
 
 
 
-/* ============================================================
-   BOTÓN EXCLUSIVO DE LA SECCIÓN PROFESORES
-   (ANTES .cta-buttons — AHORA AISLADO)
-   ============================================================ */
+
 .cta-teacher-center {
     display: flex;
     justify-content: center;
@@ -2141,4 +2071,28 @@
 
 .cta-teacher-btn:hover {
     background: #0e3b47;
+}
+
+
+.simple-select {
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f7f7f7;
+    color: #333;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+}
+
+
+.simple-select:hover {
+    background: #eee;
+}
+
+.simple-select:focus {
+    border-color: #000;
 }
