@@ -20,6 +20,7 @@ from models import db, User, Quiz, Question, UserAnswer, Achievement, Badge, Not
 
 
 
+import logging
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
@@ -34,6 +35,8 @@ csrf = CSRFProtect(app)
 app.config['DEBUG'] = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
+# Configurar nivel de log a DEBUG
+app.logger.setLevel(logging.DEBUG)
 
 
 # Función personalizada para manejar JSON correctamente
@@ -185,6 +188,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
+    app.logger.debug("[LOGIN] Ejecutando función login()")
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
