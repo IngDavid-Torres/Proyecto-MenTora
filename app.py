@@ -90,24 +90,27 @@ with app.app_context():
     db.create_all()
     print("✅ Tablas creadas correctamente.")
 
-   
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin12345!')
     admin = User.query.filter_by(username='admin').first()
     if admin:
-        admin.password = generate_password_hash('admin123') 
+        admin.password = generate_password_hash(admin_password)
         admin.area = 'general'
         admin.is_admin = True
         db.session.commit()
-        print("🔐 Usuario admin actualizado (oculto email y contraseña).")
+        print(f"🔐 Usuario admin actualizado (contraseña: {admin_password})")
     else:
         admin_user = User(
             username='admin',
-            email=None, 
-            password=None,  
+            email=None,
+            password=generate_password_hash(admin_password),
             area='general',
             is_admin=True,
             points=0,
             level=1
         )
+        db.session.add(admin_user)
+        db.session.commit()
+        print(f"👑 Usuario administrador creado (contraseña: {admin_password})")
         db.session.add(admin_user)
         db.session.commit()
         print("👑 Usuario administrador creado (oculto email y contraseña).")
