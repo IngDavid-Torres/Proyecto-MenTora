@@ -92,27 +92,32 @@ with app.app_context():
     db.create_all()
     print("✅ Tablas creadas correctamente.")
 
-    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin12345!')
-    print(f"[DEBUG] Contraseña admin usada: '{admin_password}'")
-    # Eliminar usuario admin si existe
-    admin = User.query.filter_by(username='admin').first()
-    if admin:
-        db.session.delete(admin)
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'MenToraAdmin123')
+    print(f"[DEBUG] Contraseña admin fija usada: '{admin_password}'")
+    # Buscar usuario admin por ID fijo (1) o username
+    admin = User.query.filter_by(id=1, username='admin').first()
+    if not admin:
+        admin_user = User(
+            id=1,
+            username='admin',
+            email=None,
+            password=generate_password_hash(admin_password),
+            area='general',
+            is_admin=True,
+            points=0,
+            level=1
+        )
+        db.session.add(admin_user)
         db.session.commit()
-        print("⚠️ Usuario admin eliminado para recreación.")
-    #
-    admin_user = User(
-        username='admin',
-        email=None,
-        password=generate_password_hash(admin_password),
-        area='general',
-        is_admin=True,
-        points=0,
-        level=1
-    )
-    db.session.add(admin_user)
-    db.session.commit()
-    print(f"👑 Usuario administrador creado (contraseña: {admin_password})")
+        print(f"👑 Usuario administrador creado (ID=1, contraseña: {admin_password})")
+    else:
+        # Si existe, asegurar que la contraseña esté correctamente hasheada
+        if not check_password_hash(admin.password, admin_password):
+            admin.password = generate_password_hash(admin_password)
+            db.session.commit()
+            print("🔒 Contraseña de admin actualizada.")
+        else:
+            print("👑 Usuario administrador ya existe y contraseña válida.")
 
 
 @app.route('/')
@@ -566,10 +571,17 @@ def send_notification():
     else:
         try:
             user_id = int(to_user)
+            user = User.query.get(user_id)
+            if not user:
+                flash('Usuario destino no existe.')
+                return redirect(url_for('admin_panel'))
             notif = Notification(message=message, to_user=user_id)
             db.session.add(notif)
-        except Exception:
-            flash('Usuario destino inválido.')
+        except ValueError:
+            flash('ID de usuario inválido.')
+            return redirect(url_for('admin_panel'))
+        except Exception as exc:
+            flash(f'Error inesperado: {exc}')
             return redirect(url_for('admin_panel'))
     db.session.commit()
     flash('Notificación enviada.')
@@ -674,33 +686,45 @@ def create_game():
     session.pop('game_to_edit', None)
     return redirect(url_for('admin_panel'))
 
-# Eliminar juego
-@app.route('/admin/delete_game/<int:game_id>', methods=['POST'])
-def delete_game(game_id):
-    if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
-        return redirect(url_for('login'))
-    
-    from models import Game
-    game = Game.query.get_or_404(game_id)
-    
-    try:
-        db.session.delete(game)
-        db.session.commit()
-        flash(f'Juego "{game.name}" eliminado correctamente.')
-    except Exception as e:
-        db.session.rollback()
-        flash(f'Error al eliminar el juego: {e}')
-    
-    return redirect(url_for('admin_panel'))
-
-# Editar juego (cargar en formulario)
-@app.route('/admin/edit_game/<int:game_id>', methods=['GET'])
-def edit_game(game_id):
-    if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
-        return redirect(url_for('login'))
-    
+    # Evaluar código
+    # Seguridad: nunca ejecutar código arbitrario del usuario
+    if game.name.lower() == 'hola mundo':
+        buf = io.StringIO()
+        try:
+            # Solo permitir impresión de texto, sin eval ni exec
+            if code.strip().replace(' ', '').lower() == "print('holamundo')" or code.strip().replace(' ', '').lower() == 'print("holamundo")':
+                print('Hola mundo', file=buf)
+            else:
+                print('Código no permitido.', file=buf)
+            output = buf.getvalue()
+        except Exception as exc:
+            output = f'Error: {exc}'
+        # Validar si acertó (print exacto)
+        if output.strip() == 'Hola mundo':
+            feedback = '¡Correcto!'
+            attempts += 1
+        else:
+            feedback = 'Intenta de nuevo.'
+            attempts += 1
+    elif game.name.lower() == 'la suma de dos números':
+        buf = io.StringIO()
+        try:
+            # Solo permitir impresión de suma, sin eval ni exec
+            nums = re.findall(r'(\d+)', code)
+            if len(nums) >= 2:
+                suma = int(nums[0]) + int(nums[1])
+                print(suma, file=buf)
+                output = buf.getvalue()
+                feedback = f'Resultado: {suma}'
+                attempts += 1
+            else:
+                print('Código no permitido.', file=buf)
+                output = buf.getvalue()
+                feedback = 'Intenta de nuevo.'
+                attempts += 1
+        except Exception as exc:
+            output = f'Error: {exc}'
+    return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts)
     from models import Game
     game = Game.query.get_or_404(game_id)
     session['game_to_edit'] = {
@@ -1035,7 +1059,7 @@ def quiz_attempt(quiz_id):
         session[session_key] = 0
         session.pop(session_cooldown_key, None)
     if attempts >= max_attempts:
-        session[cooldown_minutes] = now + cooldown_minutes * 60
+        session[session_cooldown_key] = now + cooldown_minutes * 60
         mins_left = cooldown_minutes
         return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left)
     if request.method == 'POST':
@@ -1314,7 +1338,8 @@ def teacher_dashboard():
         except Exception as e:
             # Fallback: generar preguntas básicas
             ia_questions = []
-            for i in range(cantidad):
+            safe_cantidad = min(max(int(cantidad), 1), 20) if str(cantidad).isdigit() else 5
+            for i in range(safe_cantidad):
                 if tipo_examen == 'opciones':
                     ia_questions.append({
                         'pregunta': f"Pregunta {i+1} sobre {tema}",
@@ -1481,7 +1506,7 @@ def download_exam_word():
                 print(f"DEBUG - Generando preguntas de respaldo desde tema: {tema}")
                 try:
                     from ai_local import generate_local_exam
-                    preguntas = generate_local_exam(tema, 5, tipo_examen, 'offline')
+                    preguntas = generate_local_exam(tema, min(5, 20), tipo_examen, 'offline')
                     print(f"DEBUG - Preguntas de respaldo generadas: {len(preguntas)}")
                 except Exception as e4:
                     print(f"DEBUG - Generación de respaldo falló: {e4}")
@@ -1589,15 +1614,11 @@ def download_exam_pdf():
             print(f"DEBUG PDF - Preguntas extraídas con ast: {len(preguntas)}")
         except Exception as e2:
             print(f"DEBUG PDF - ast también falló: {e2}")
-            try:
-                preguntas = eval(preguntas_raw)
-                print(f"DEBUG PDF - Preguntas extraídas con eval: {len(preguntas)}")
-            except Exception as e3:
-                print(f"DEBUG PDF - eval también falló: {e3}")
-                preguntas = [{
-                    'pregunta': f'ERROR AL PROCESAR PREGUNTAS: JSON inválido. Error: {str(e)[:100]}',
-                    'opciones': [
-                        'Regenerar el examen con IA Local',
+            # Eliminar uso de eval por seguridad
+            preguntas = [{
+                'pregunta': f'ERROR AL PROCESAR PREGUNTAS: JSON inválido. Error: {str(e)[:100]}',
+                'opciones': [
+                    'Regenerar el examen con IA Local',
                         'Usar formato de preguntas simples',
                         'Verificar generación de preguntas',
                         'Contactar administrador'
@@ -1729,13 +1750,14 @@ def download_exam_simple():
         from ai_local import generate_local_exam
         try:
             tema_normalizado = tema.lower()
+            safe_cantidad = 5
             if 'programacion' in tema_normalizado or 'programming' in tema_normalizado:
-                preguntas = generate_local_exam("programacion", 5, tipo_examen, "offline")
+                preguntas = generate_local_exam("programacion", safe_cantidad, tipo_examen, "offline")
                 print(f"DEBUG SIMPLE - Fallback con IA: {len(preguntas)} preguntas generadas")
             else:
                 if tipo_examen == 'opciones':
                     preguntas = []
-                    for i in range(5):
+                    for i in range(safe_cantidad):
                         preguntas.append({
                             'pregunta': f'Pregunta {i+1} sobre {tema}: ¿Cuál es un concepto importante en esta materia?',
                             'opciones': [
