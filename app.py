@@ -647,31 +647,31 @@ def delete_achievement(badge_id):
 def create_game():
     if 'user_id' not in session or not session.get('is_admin'):
         flash('Acceso restringido.')
+    import os
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin12345!')
+    admin = User.query.filter_by(username='admin').first()
+    if admin:
+        admin.password = generate_password_hash(admin_password)
+        admin.area = 'general'
+        admin.is_admin = True
+        db.session.commit()
+        print("🔐 Usuario admin actualizado (contraseña por variable de entorno).")
+    else:
+        admin_user = User(
+            username='admin',
+            email=None,
+            password=generate_password_hash(admin_password),
+            area='general',
+            is_admin=True,
+            points=0,
+            level=1
+        )
+        db.session.add(admin_user)
+        db.session.commit()
+        print("👑 Usuario administrador creado (contraseña por variable de entorno).")
+    
     # Limpiar datos de edición
     session.pop('game_to_edit', None)
-
-    # Obtener datos del formulario
-    name = request.form.get('game_name', '').strip()
-    description = request.form.get('game_description', '').strip()
-    rules = request.form.get('game_rules', '').strip()
-    type_ = request.form.get('game_type', '').strip() if 'game_type' in request.form else None
-
-    # Validar campos obligatorios
-    if not name or not description:
-        flash('Todos los campos son obligatorios.')
-        return redirect(url_for('admin_panel'))
-
-    from models import Game
-    new_game = Game(
-        name=name,
-        description=description,
-        rules=rules,
-        type=type_,
-        created_at=datetime.utcnow()
-    )
-    db.session.add(new_game)
-    db.session.commit()
-    flash(f'Juego "{name}" creado correctamente.')
     return redirect(url_for('admin_panel'))
 
 # Eliminar juego
@@ -734,14 +734,12 @@ def create_quiz():
         return redirect(url_for('admin_panel'))
 
     # Si el usuario es admin, teacher_id debe ser None
-    # Buscar el usuario admin y usar su id
-    admin = User.query.filter_by(username='admin').first()
-    admin_id = admin.id if admin else None
+    # Usar id=2 para el admin
     new_quiz = Quiz(
         title=title,
         area=area,
         description=description,
-        created_by=admin_id,
+        created_by=2,
         teacher_id=None,
         created_at=datetime.utcnow()
     )
