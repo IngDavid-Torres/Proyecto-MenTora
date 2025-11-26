@@ -662,15 +662,11 @@ def create_game():
         return redirect(url_for('admin_panel'))
 
     from models import Game
-    # Buscar el usuario admin y usar su id
-    admin = User.query.filter_by(username='admin').first()
-    admin_id = admin.id if admin else None
     new_game = Game(
         name=name,
         description=description,
         rules=rules,
         type=type_,
-        created_by=admin_id,
         created_at=datetime.utcnow()
     )
     db.session.add(new_game)
