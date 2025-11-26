@@ -249,7 +249,8 @@ def login():
             else:
                 return jsonify(success=True, redirect=url_for('dashboard'))
         else:
-            app.logger.error(f"[LOGIN ERROR] Usuario o contraseña incorrectos para username='{username}'")
+            # No registrar datos controlados por el usuario
+            app.logger.error("[LOGIN ERROR] Usuario o contraseña incorrectos.")
             return jsonify(success=False, error="Usuario o contraseña incorrectos"), 401
 
     
