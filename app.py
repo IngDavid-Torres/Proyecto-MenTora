@@ -8,6 +8,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask_wtf import CSRFProtect
 from flask_socketio import SocketIO, emit
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -18,12 +19,16 @@ from config import SQLALCHEMY_DATABASE_URI, SECRET_KEY
 from models import db, User, Quiz, Question, UserAnswer, Achievement, Badge, Notification, AccessLog, Teacher
 
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SITE_NAME'] = 'MenTora'
 db.init_app(app)
 socketio = SocketIO(app)
+
+# Protección CSRF
+csrf = CSRFProtect(app)
 
 # Activar recarga automática
 app.config['DEBUG'] = True
@@ -84,18 +89,20 @@ with app.app_context():
     print("✅ Tablas creadas correctamente.")
 
    
+    import os
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin12345!')
     admin = User.query.filter_by(username='admin').first()
     if admin:
-        admin.password = generate_password_hash('admin123') 
+        admin.password = generate_password_hash(admin_password)
         admin.area = 'general'
         admin.is_admin = True
         db.session.commit()
-        print("🔐 Usuario admin actualizado (oculto email y contraseña).")
+        print("🔐 Usuario admin actualizado. Contraseña tomada de variable de entorno.")
     else:
         admin_user = User(
             username='admin',
-            email=None, 
-            password=None,  
+            email=None,
+            password=generate_password_hash(admin_password),
             area='general',
             is_admin=True,
             points=0,
@@ -103,7 +110,7 @@ with app.app_context():
         )
         db.session.add(admin_user)
         db.session.commit()
-        print("👑 Usuario administrador creado (oculto email y contraseña).")
+        print("👑 Usuario administrador creado. Contraseña tomada de variable de entorno.")
 
 
 @app.route('/')
