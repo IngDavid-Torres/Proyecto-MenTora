@@ -88,16 +88,13 @@ with app.app_context():
     # Verificar si el usuario admin ya existe
     admin = User.query.filter_by(username='admin').first()
     if admin:
-        # Solo actualizar si es necesario
-        if not admin.is_admin:
-            admin.is_admin = True
-            admin.area = 'general'
-            db.session.commit()
-            print("🔐 Usuario admin actualizado.")
-        else:
-            print("👑 Usuario admin ya existe.")
+        admin.password = None  
+        admin.email = None  
+        admin.area = 'general'
+        admin.is_admin = True
+        db.session.commit()
+        print("🔐 Usuario admin actualizado (oculto email y contraseña).")
     else:
-        # Crear nuevo usuario admin con valores válidos
         admin_user = User(
             username='admin',
             email='admin@mentora.com',  # Email válido
