@@ -43,7 +43,7 @@
             {% endwith %}
             <h2>INICIAR SESIÓN</h2>
             <form id="loginForm" method="POST" action="/login" autocomplete="off">
-                {{ csrf_token() }}
+                {% if csrf_token %}{{ csrf_token() }}{% endif %}
                 <div>
                     <label for="username">Usuario: </label>
                     <input type="text" id="username" name="username" required autocomplete="username">
