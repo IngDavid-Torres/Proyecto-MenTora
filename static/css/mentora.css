@@ -15,15 +15,15 @@
     --nav-height: 70px;
     --section-padding: 5rem 2rem;
     --card-padding: 2rem;
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    --transition-slow: 0.5s ease;
-    --reveal-duration: 700ms;
-    --reveal-ease: cubic-bezier(0.15, 0.9, 0.35, 1);
-    --reveal-distance: 22px;
-    --reveal-scale: 0.995;
-    --reveal-blur: 6px;
-    --reveal-stagger-gap: 80ms;
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --reveal-duration: 450ms;
+    --reveal-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --reveal-distance: 18px;
+    --reveal-scale: 0.98;
+    --reveal-blur: 4px;
+    --reveal-stagger-gap: 50ms;
 }
 
 * {
@@ -204,7 +204,7 @@ nav:hover {
 .hero {
     text-align: center;
     padding: 2rem 2rem;
-    animation: fadeIn 1.2s;
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     z-index: 10;
     min-height: 85vh;
@@ -221,7 +221,7 @@ nav:hover {
     font-family: 'Exo 2', sans-serif;
     text-shadow: 0 0 16px #767777, 0 0 2px #ffffff;
     letter-spacing: 1px;
-    animation: slideDown 0.8s ease-out;
+    animation: slideDown 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .hero p {
@@ -230,7 +230,7 @@ nav:hover {
     margin: 0 auto;
     color: #e0e7ef;
     text-shadow: 0 0 4px #B57386;
-    animation: slideUp 0.8s ease-out 0.2s both;
+    animation: slideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both;
 }
 
 .cta-buttonss {
@@ -240,7 +240,7 @@ nav:hover {
     align-items: center;
     flex-wrap: wrap;
     margin-top: 2.5rem;
-    animation: slideUp 0.8s ease-out 0.4s both;
+    animation: slideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
 }
 
 .cta-buttonss a {
@@ -474,8 +474,8 @@ section {
 
 .reveal[data-stagger] > * {
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 520ms var(--reveal-ease), transform 520ms var(--reveal-ease);
+    transform: translateY(10px);
+    transition: opacity 350ms var(--reveal-ease), transform 350ms var(--reveal-ease);
     will-change: opacity, transform;
 }
 
@@ -943,7 +943,7 @@ footer {
     flex-direction: column;
     z-index: 1001;
     overflow: hidden;
-    animation: slideInUp 0.3s ease-out;
+    animation: slideInUp 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .chatbot-header {
@@ -997,7 +997,7 @@ footer {
     padding: 1.2rem;
     border-radius: 12px;
     margin-bottom: 1rem;
-    animation: slideInLeft 0.5s ease-out;
+    animation: slideInLeft 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .welcome-message h3 {
@@ -1039,12 +1039,12 @@ footer {
     gap: 0.75rem;
     margin-bottom: 1rem;
     align-items: flex-start;
-    animation: slideInLeft 0.3s ease-out;
+    animation: slideInLeft 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .user-message {
     justify-content: flex-end;
-    animation: slideInRight 0.3s ease-out;
+    animation: slideInRight 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .user-avatar,
@@ -1170,7 +1170,7 @@ footer {
     inset: 0;
     background: rgba(0, 0, 0, 0.87);
     z-index: 900;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .modal {
@@ -1197,7 +1197,7 @@ footer {
     overflow-y: auto;
     z-index: 1000;
     box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
-    animation: modalSlideIn 0.3s ease;
+    animation: modalSlideIn 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .modal:focus,
@@ -1259,7 +1259,7 @@ main {
     position: relative;
     z-index: 20;
     margin-top: 1rem;
-    animation: scaleIn 0.5s ease-out;
+    animation: scaleIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .login-container h2 {
@@ -1363,7 +1363,7 @@ main {
     align-items: center;
     justify-content: center;
     z-index: 999;
-    animation: fadeIn 0.35s ease forwards;
+    animation: fadeIn 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .mentora-box {
@@ -1375,7 +1375,7 @@ main {
     text-align: center;
     max-width: 420px;
     width: 90%;
-    animation: scaleIn 0.45s ease forwards;
+    animation: scaleIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .mentora-title {
@@ -1419,7 +1419,7 @@ main {
     object-fit: contain;
     display: block;
     margin: 0 auto 1rem;
-    animation: floatSoft 3s ease-in-out infinite;
+    animation: floatSoft 2s ease-in-out infinite;
 }
 
 .mentora-error {
@@ -1436,9 +1436,9 @@ main {
     font-weight: 600;
     box-shadow: 0 6px 26px rgba(0, 0, 0, 0.16);
     z-index: 1100;
-    animation: slideDown 0.35s ease;
+    animation: slideDown 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 1;
-    transition: opacity 350ms ease, transform 350ms ease;
+    transition: opacity 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .alert-success {
@@ -1455,8 +1455,8 @@ main {
     text-align: center;
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(92, 184, 92, 0.3);
-    animation: slideDown 0.5s ease;
-    transition: opacity 350ms ease, transform 350ms ease;
+    animation: slideDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: opacity 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .toast-container {
@@ -1481,7 +1481,7 @@ main {
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
     transform-origin: right top;
-    animation: toastIn 300ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    animation: toastIn 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .toast .icon {
@@ -1506,26 +1506,33 @@ main {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
-.back-button { 
-            position: fixed; 
-            top: 2rem; 
-            left: 2rem; 
-            width: 55px; 
-            height: 55px; 
-            background: rgba(255,255,255,0.95); 
-            border: 2px solid #6A2C3D; 
-            border-radius: 50%; display: 
-            flex; align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            transition: all 0.3s; 
-            z-index: 100; text-decoration: 
-            none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-        }
+.back-button {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    width: 55px;
+    height: 55px;
+    background: rgba(255,255,255,0.95);
+    border: 2px solid #6A2C3D;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 100;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: floatButton 2s ease-in-out infinite;
+}
 
-        .back-button:hover { background: #6A2C3D; transform: translateX(-5px); }
+.back-button:hover {
+    background: #6A2C3D;
+    transform: translateX(-5px);
+    animation: none;
+}
 
-    .back-button svg {
+.back-button svg {
     width: 30px;
     height: 30px;
     stroke: #6A2C3D;
@@ -1534,7 +1541,19 @@ main {
     stroke-linejoin: round;
     transition: stroke 0.25s, transform 0.25s;
 }
-        .back-button:hover svg { stroke: #fff; }
+
+.back-button:hover svg {
+    stroke: #fff;
+}
+
+@keyframes floatButton {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
 
 
 @keyframes fadeIn {
@@ -1549,7 +1568,7 @@ main {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(40px);
+        transform: translateY(25px);
     }
     to {
         opacity: 1;
@@ -1560,7 +1579,7 @@ main {
 @keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-15px);
     }
     to {
         opacity: 1;
@@ -1571,7 +1590,7 @@ main {
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -1582,7 +1601,7 @@ main {
 @keyframes slideInLeft {
     from {
         opacity: 0;
-        transform: translateX(-30px);
+        transform: translateX(-20px);
     }
     to {
         opacity: 1;
@@ -1593,7 +1612,7 @@ main {
 @keyframes slideInRight {
     from {
         opacity: 0;
-        transform: translateX(30px);
+        transform: translateX(20px);
     }
     to {
         opacity: 1;
@@ -1604,7 +1623,7 @@ main {
 @keyframes slideInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -1614,7 +1633,7 @@ main {
 
 @keyframes scaleIn {
     from {
-        transform: scale(0.92);
+        transform: scale(0.95);
         opacity: 0;
     }
     to {
@@ -1626,7 +1645,7 @@ main {
 @keyframes modalSlideIn {
     from {
         opacity: 0;
-        transform: translate(-50%, -60%);
+        transform: translate(-50%, -55%);
     }
     to {
         opacity: 1;
@@ -1640,7 +1659,7 @@ main {
         transform: translateY(0px);
     }
     50% {
-        transform: translateY(-15px);
+        transform: translateY(-10px);
     }
 }
 
@@ -1649,7 +1668,7 @@ main {
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-10px);
+        transform: translateY(-7px);
     }
     100% {
         transform: translateY(0);
@@ -1666,7 +1685,7 @@ main {
     0%,
     80%,
     100% {
-        transform: scale(0.7);
+        transform: scale(0.75);
         opacity: 0.5;
     }
     40% {
@@ -1681,8 +1700,8 @@ main {
         box-shadow: 0 0 10px rgba(255, 111, 0, 0.5);
     }
     50% {
-        transform: scale(1.2);
-        box-shadow: 0 0 20px rgba(255, 111, 0, 0.8);
+        transform: scale(1.15);
+        box-shadow: 0 0 18px rgba(255, 111, 0, 0.8);
     }
     100% {
         transform: scale(1);
@@ -1693,7 +1712,7 @@ main {
 @keyframes toastIn {
     from {
         opacity: 0;
-        transform: translateX(18px) scale(0.98);
+        transform: translateX(15px) scale(0.97);
     }
     to {
         opacity: 1;
@@ -1708,7 +1727,7 @@ main {
     }
     to {
         opacity: 0;
-        transform: translateX(12px) scale(0.98);
+        transform: translateX(10px) scale(0.97);
     }
 }
 
@@ -1920,6 +1939,18 @@ main {
         width: 38px;
         height: 38px;
     }
+
+    .back-button {
+        width: 50px;
+        height: 50px;
+        top: 1.5rem;
+        left: 1.5rem;
+    }
+
+    .back-button svg {
+        width: 26px;
+        height: 26px;
+    }
 }
 
 @media (max-width: 520px) {
@@ -2020,6 +2051,18 @@ main {
     .quick-btn {
         padding: 0.3rem 0.6rem;
         font-size: 0.7rem;
+    }
+
+    .back-button {
+        width: 46px;
+        height: 46px;
+        top: 1.2rem;
+        left: 1.2rem;
+    }
+
+    .back-button svg {
+        width: 24px;
+        height: 24px;
     }
 }
 
@@ -2162,6 +2205,19 @@ main {
         height: 36px;
         font-size: 0.9rem;
     }
+
+    .back-button {
+        width: 44px;
+        height: 44px;
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .back-button svg {
+        width: 22px;
+        height: 22px;
+        stroke-width: 2.2;
+    }
 }
 
 
@@ -2207,6 +2263,19 @@ main {
 
     .chatbot-input {
         font-size: 0.75rem;
+    }
+
+    .back-button {
+        width: 42px;
+        height: 42px;
+        top: 0.8rem;
+        left: 0.8rem;
+    }
+
+    .back-button svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
     }
 }
 
