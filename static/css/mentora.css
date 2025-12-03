@@ -295,7 +295,7 @@ section {
     letter-spacing: 1px;
     font-size: clamp(2rem, 4vw, 2.4rem);
     font-weight: 700;
-    margin-top: 2rem;
+    margin-top: 4rem;
     margin-bottom: 1rem;
 }
 
@@ -1943,7 +1943,7 @@ main {
     .back-button {
         width: 50px;
         height: 50px;
-        top: 2rem;
+        top: 1.5rem;
         left: 1.5rem;
     }
 
@@ -2056,7 +2056,7 @@ main {
     .back-button {
         width: 46px;
         height: 46px;
-        top: 2rem;
+        top: 1.2rem;
         left: 1.2rem;
     }
 
@@ -2112,7 +2112,7 @@ main {
 
     .sectioon-title {
         font-size: 1.5rem;
-        margin-top: 1rem;
+        margin-top: 4rem;
     }
 
     footer {
@@ -2209,7 +2209,7 @@ main {
     .back-button {
         width: 44px;
         height: 44px;
-        top: 2rem;
+        top: 1rem;
         left: 1rem;
     }
 
