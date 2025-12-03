@@ -10,43 +10,11 @@
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_usser.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usser.css') }}">
 </head>
 <body>
-    <nav class="main-navbar">
-        <div class="navbar-content">
-                <a href="/dashboard" class="navbar-logo">
-                    <img src="{{ url_for('static', filename='img/mentora1.png') }}" alt="Logo MenTora">
-                </a>
-            <button id="navToggle" class="menu-button" aria-label="Abrir menú">
-                <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
-            </button>
-
-            <ul class="navbar-links">
-                <li><a href="/dashboard">DASHBOARD</a></li>
-                <li><a href="/games">JUEGOS</a></li> 
-                <li><a href="/quiz">DESAFÍOS</a></li>
-                <li><a href="/biblioteca">BIBLIOTECA</a></li>
-                <li><a href="/noticias">NOTICIAS</a></li>
-                 <li><a href="/juegos-interactivos">ZONA INTECRACTIVA</a></li>
-            </ul>
-            <div class="navbar-user">
-                <img src="{{ avatar_url }}" alt="avatar" class="navbar-avatar">
-                <span class="navbar-username">{{ username }}</span>
-                <button id="userMenuBtn" class="navbar-user-btn"> <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="icono menú" class="menu-icon"> </button>
-
-                <div id="userMenu" class="navbar-user-menu">
-                    <a href="/edit_profile"> PERFIL </a>
-                    <a href="#logros"> TUS LOGROS </a>
-                    <a href="#notificaciones" onclick="scrollToSection('notificaciones')"> NOTIFICACIONES</a>
-                    <a href="#reto-especial" onclick="scrollToSection('reto-especial')"> DESAFÍO DIARIO </a>
-                    <a href="#historial" onclick="scrollToSection('historial')">HISTORIAL</a>
-                    <a href="#" onclick="showModal();return false;" style=" font-weight:700;">CERRAR SESIÓN</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
+    {% include 'background_usser.html' %}  
+    
     <div class="container">
         <div class="stats">
             <div class="stat-card">
@@ -64,11 +32,10 @@
         </div>
 
         <div class="leaderboard glass-card">
-        <h2 style="color:#114c5f;"> <img src="https://api.iconify.design/mdi/trophy.svg?color=%23114c5f" 
-         alt="icono trofeo" 
+        <h2 style="color:#6A2C3D;"> <img src="https://api.iconify.design/mdi/trophy.svg?color=%236A2C3D"
+         alt="icono trofeo"
          style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">
           Ranking de Líderes </h2>
-
 
             <table>
                 <thead>
@@ -90,15 +57,15 @@
                         </tr>
                         {% endif %}
                     {% else %}
-                    <tr><td colspan="4" style="text-align:center; color:#94a1ac;">No hay usuarios en el ranking aún.</td></tr>
+                    <tr><td colspan="4" style="text-align:center; color:#4a3840;">No hay usuarios en el ranking aún.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
 
         <div class="level-progress-section glass-card">
-          <h2 style="color:#114c5f;">
-          <img src="https://api.iconify.design/material-symbols/flag.svg?color=%23114c5f"
+          <h2 style="color:#6A2C3D;">
+          <img src="https://api.iconify.design/material-symbols/flag.svg?color=%236A2C3D"
          alt="icono target"
          style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">
         Progreso de Nivel </h2>
@@ -116,11 +83,11 @@
         </div>
 
         <section id="reto-especial" class="special-section">
-            <h2> <img src="https://api.iconify.design/mdi/lightning-bolt.svg?color=%23114c5f"
+            <h2> <img src="https://api.iconify.design/mdi/lightning-bolt.svg?color=%236A2C3D"
          alt="icono target" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">Reto Especial del Día</h2>
             <p style="font-size:1.1rem; margin-bottom:1.5rem;">
                 ¡Participa en el reto especial y gana puntos extra!<br>
-                <span style="color:#5f7f81;font-weight:bold;">{{ special_challenge.title if special_challenge else 'Próximamente...' }}</span>
+                <span style="color:#8A4255;font-weight:bold;">{{ special_challenge.title if special_challenge else 'Próximamente...' }}</span>
             </p>
             {% if special_challenge %}
             <form method="GET" action="/quiz/{{ special_challenge.id }}">
@@ -129,39 +96,37 @@
             {% endif %}
         </section>
 
-        <!-- Notificaciones -->
+
         <section id="notificaciones" class="special-section">
-            <h2> <img  src="https://api.iconify.design/mdi/bell.svg?color=%23114c5f"
+            <h2> <img  src="https://api.iconify.design/mdi/bell.svg?color=%236A2C3D"
          alt="icono target"
          style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;"> Notificaciones</h2>
             <ul class="notification-list">
                 {% if notifications and notifications|length > 0 %}
                     {% for n in notifications %}
-                        <li>{{ n.message }} <span style="font-size:0.9em;color:#94a1ac;">({{ n.created_at.strftime('%d/%m/%Y %H:%M') }})</span></li>
+                        <li>{{ n.message }} <span style="font-size:0.9em;color:#4a3840;">({{ n.created_at.strftime('%d/%m/%Y %H:%M') }})</span></li>
                     {% endfor %}
                 {% else %}
-                    <li style="color:#94a1ac;">No tienes notificaciones nuevas.</li>
+                    <li style="color:#4a3840;">No tienes notificaciones nuevas.</li>
                 {% endif %}
             </ul>
         </section>
 
-        <!-- Historial de Actividad -->
         <section id="historial" class="special-section">
-            <h2> <img src="https://api.iconify.design/mdi/file-document.svg?color=%23114c5f"
+            <h2> <img src="https://api.iconify.design/mdi/file-document.svg?color=%236A2C3D"
          alt="icono target"
          style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;"> Historial de Actividad</h2>
             <ul class="activity-list">
                 {% if activity_log and activity_log|length > 0 %}
                     {% for a in activity_log %}
-                        <li>{{ a.action }} <span style="font-size:0.9em;color:#94a1ac;">({{ a.timestamp.strftime('%d/%m/%Y %H:%M') }})</span></li>
+                        <li>{{ a.action }} <span style="font-size:0.9em;color:#4a3840;">({{ a.timestamp.strftime('%d/%m/%Y %H:%M') }})</span></li>
                     {% endfor %}
                 {% else %}
-                    <li style="color:#94a1ac;">No hay actividad reciente.</li>
+                    <li style="color:#4a3840;">No hay actividad reciente.</li>
                 {% endif %}
             </ul>
         </section>
 
-        <!-- Insignias destacadas -->
         {% if achievements|length > 0 %}
         <div class="insignias-destacadas">
             {% for logro in achievements[:3] %}
@@ -175,31 +140,31 @@
         {% endif %}
 
         <div class="logros glass-card" id="logros">
-            <h2> <img src="https://api.iconify.design/mdi/medal.svg?color=%23114c5f"
+            <h2> <img src="https://api.iconify.design/mdi/medal.svg?color=%236A2C3D"
          alt="icono target"
          style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">Tus Logros</h2>
             <div style="display:flex; flex-wrap:wrap; gap:1rem;">
                 {% for logro in achievements %}
                 <div class="logro-item">
                     {% if logro.badge and logro.badge.image_url %}
-                        <img src="{{ logro.badge.image_url }}" alt="{{ logro.badge.name }}" style="width:54px; height:54px; border-radius:50%; border:2px solid #5f7f81; background:#fff; object-fit:cover; margin-bottom:0.5rem;">
+                        <img src="{{ logro.badge.image_url }}" alt="{{ logro.badge.name }}" style="width:54px; height:54px; border-radius:50%; border:2px solid #B57386; background:#fff; object-fit:cover; margin-bottom:0.5rem;">
                     {% else %}
                         <div class="insignia-icon" style="width:54px; height:54px; font-size:2rem;" title="{{ logro.badge.name if logro.badge else 'Insignia' }}">🏅</div>
                     {% endif %}
                     <h4>{{ logro.badge.name if logro.badge else logro.title }}</h4>
                     <p>{{ logro.badge.description if logro.badge else logro.description }}</p>
                     {% if logro.earned_at %}
-                    <span style="font-size:0.85em; color:#94a1ac;">Obtenido: {{ logro.earned_at.strftime('%d/%m/%Y') }}</span>
+                    <span style="font-size:0.85em; color:#4a3840;">Obtenido: {{ logro.earned_at.strftime('%d/%m/%Y') }}</span>
                     {% endif %}
                 </div>
                 {% else %}
-                <p style="color:#94a1ac;">No has desbloqueado logros aún.</p>
+                <p style="color:#4a3840;">No has desbloqueado logros aún.</p>
                 {% endfor %}
             </div>
         </div>
 
         <div class="retos glass-card">
-            <h2> <img src="https://api.iconify.design/mdi/brain.svg?color=%23114c5f"
+            <h2> <img src="https://api.iconify.design/mdi/brain.svg?color=%236A2C3D"
          alt="icono target"
          style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;"> Actividades Asignadas</h2>
             <div style="display:flex; flex-wrap:wrap; gap:1rem;">
@@ -227,7 +192,7 @@
                     {% endfor %}
                 {% endif %}
                 {% if not hay_retos %}
-                    <p style="color:#94a1ac;">No hay retos ni juegos creados por el profesor aún.</p>
+                    <p style="color:#4a3840;">No hay retos ni juegos creados por el profesor aún.</p>
                 {% endif %}
             </div>
         </div>

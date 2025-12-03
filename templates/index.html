@@ -7,10 +7,10 @@
     <link href="{{ url_for('static', filename='fontawesome/all.min.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mentora.css') }}">
 </head> 
 <body>
-    {% include 'background_svg.html' %}     
+    {% include 'background_mentora.html' %}     
     <nav>
         <div class="logo-container">
             <img src="/static/img/mentora1.png" alt="Logo MenTora">
@@ -32,7 +32,7 @@
   
     <section class="hero reveal" id="inicio">
         <h2>DESATA TU IMAGINACIÓN</h2>
-        <p>Sumérgete en desafíos épicos donde una línea de código es un movimiento estratégico. 
+        <p>Sumérgete en desafíos donde una línea de código es un movimiento estratégico. 
         ¡Cada partida te hace más sabio y cada logro, más legendario!</p>
         <div class="cta-buttonss">
             <a href="/register">EMPEZAR A CODIFICAR</a>
@@ -46,7 +46,7 @@
     <section class="platform-preview reveal">
         <h2 class="section-title">EXPLORA LA PLATAFORMA</h2>
         <p class="preview-subtitle"> Descubre cómo luce MenTora por dentro. Visualiza tu dashboard, 
-        retos interactivos, sistema de logros y más. Una experiencia para tu aprendizaje.</p>
+        retos interactivos, sistema de logros y más. Una experiencia única.</p>
     <div class="preview-carousel">
         <div class="preview-track" id="previewTrack">
             <div class="preview-slide">
@@ -97,7 +97,7 @@
     <p class="profesores-desc">
         Además de estudiantes, MenTora cuenta con un espacio especial para 
         <strong>docentes y mentores</strong>.  
-        Los profesores pueden crear actividades, asignar retos, evaluar progreso 
+        Los profesores pueden crear actividades, asignar retos,
         y usar inteligencia artificial para generar exámenes y juegos educativos.
     </p>
 
@@ -163,35 +163,35 @@
     <div class="features">
         <div class="feature">
             <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/brain.svg?color=%23114c5f" alt="icono cerebro">
+                <img src="https://api.iconify.design/mdi/brain.svg?color=%236A2C3D" alt="icono cerebro">
             </div>
             <h3>Retos Inteligentes</h3>
             <p>Preguntas diseñadas para activar tu pensamiento crítico y curiosidad única.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/gamepad-variant.svg?color=%23114c5f" alt="icono juego">
+                <img src="https://api.iconify.design/mdi/gamepad-variant.svg?color=%236A2C3D" alt="icono juego">
             </div>
             <h3>Gamificación Real</h3>
             <p>Sube de nivel, desbloquea logros y compite en rankings globales.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/account-group.svg?color=%23114c5f" alt="icono comunidad">
+                <img src="https://api.iconify.design/mdi/account-group.svg?color=%236A2C3D" alt="icono comunidad">
             </div>
             <h3>Comunidad Activa</h3>
             <p>Debate respuestas, comparte ideas y aprende en grupo mediante chat.</p>
         </div>
          <div class="feature">
             <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/account-multiple-check.svg?color=%23114c5f" alt="icono colaborativo">
+                <img src="https://api.iconify.design/mdi/account-multiple-check.svg?color=%236A2C3D" alt="icono colaborativo">
             </div>
             <h3>Retos Colaborativos</h3>
             <p>Trabaja en equipo para ganar más que experiencia colaborativa.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/view-dashboard.svg?color=%23114c5f" alt="icono panel">
+                <img src="https://api.iconify.design/mdi/view-dashboard.svg?color=%236A2C3D" alt="icono panel">
             </div>
             <h3>Tu Panel Personal</h3>
             <p>Visualiza tu progreso, estadísticas y próximos desafíos en un solo lugar.</p>
@@ -199,7 +199,7 @@
 
         <div class="feature">
             <div class="feature-icon">
-                <img src="https://api.iconify.design/mdi/calendar-month.svg?color=%23114c5f" alt="icono calendario">
+                <img src="https://api.iconify.design/mdi/calendar-month.svg?color=%236A2C3D" alt="icono calendario">
             </div>
             <h3>Retos Diarios</h3>
             <p>Un nuevo desafío te espera cada día para mantenerte motivado y línea.</p>
@@ -269,44 +269,55 @@
     <h2 class="section-title">LO QUE DICEN NUESTROS USUARIOS</h2>
     
     <div class="testimonial-slider">
-        
+
         <div class="testimonial">
-            <div class="testimonial-avatar">S</div>
+            <img class="testimonial-avatar"
+                 src="https://api.dicebear.com/7.x/notionists/svg?seed=SofiaStudent22"
+                 alt="Avatar persona">
             <div class="testimonial-rating">★★★★★</div>
             <p>"¡MenTora me motiva a aprender todos los días! Los retos son adictivos y he mejorado increíblemente mis habilidades."</p>
             <div class="author">— Sofía, estudiante</div>
         </div>
 
         <div class="testimonial">
-            <div class="testimonial-avatar">E</div>
+            <img class="testimonial-avatar"
+                 src="https://api.dicebear.com/7.x/notionists/svg?seed=EdgarEngineer27"
+                 alt="Avatar persona">
             <div class="testimonial-rating">★★★★★</div>
             <p>"La gamificación y los logros hacen que el aprendizaje sea divertido. Conseguí mi primer trabajo gracias a MenTora."</p>
             <div class="author">— Edgar, ingeniero</div>
         </div>
 
         <div class="testimonial">
-            <div class="testimonial-avatar">I</div>
+            <img class="testimonial-avatar"
+                 src="https://api.dicebear.com/7.x/notionists/svg?seed=IvonneTeacher30"
+                 alt="Avatar persona">
             <div class="testimonial-rating">★★★★★</div>
             <p>"La comunidad es muy activa y siempre aprendo algo nuevo. Los proyectos futuros me brindan ideas para mi portafolio de evidencias."</p>
             <div class="author">— Ivonne, docente</div>
         </div>
 
         <div class="testimonial">
-            <div class="testimonial-avatar">M</div>
+            <img class="testimonial-avatar"
+                 src="https://api.dicebear.com/7.x/notionists/svg?seed=MarcoYoungDev"
+                 alt="Avatar persona">
             <div class="testimonial-rating">★★★★☆</div>
             <p>"Empecé sin saber nada de código y ahora puedo crear mis propios proyectos. El sistema de niveles es muy motivador."</p>
             <div class="author">— Marco, autodidacta</div>
         </div>
 
         <div class="testimonial">
-            <div class="testimonial-avatar">L</div>
+            <img class="testimonial-avatar"
+                 src="https://api.dicebear.com/7.x/notionists/svg?seed=LauraProgrammer25"
+                 alt="Avatar persona">
             <div class="testimonial-rating">★★★★★</div>
             <p>"Los retos diarios mantienen mi disciplina. He aprendido más aquí que en meses de tutoriales de YouTube."</p>
-            <div class="author">— Laura, desarrolladora junior</div>
+            <div class="author">— Laura, desarrolladora</div>
         </div>
 
     </div>
     </section>
+
  
     <section class="profesores-inicio reveal" id="profesores" >
     <h2 class="section-title">HERRAMIENTAS PARA PROFESORES</h2>
@@ -334,7 +345,7 @@
             </div>
             <h3>Generador IA de Exámenes</h3>
             <p>
-                Crea evaluaciones, test y cuestionarios en segundos usando inteligencia artificial
+                Crea evaluaciones, test y cuestionarios usando inteligencia artificial
                 adaptativa. Solo describe el tema y la IA genera el examen completo automáticamente.
             </p>
             <a class="prof-btn" href="/login">Probar IA Docente</a>
@@ -366,11 +377,18 @@
     </div>
 
     </div>
-        <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-x-twitter"></i></a>
-        </div>
+       <div class="social-links">
+    <a href="https://www.facebook.com" target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="https://www.instagram.com" target="_blank" rel="noopener">
+        <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://twitter.com" target="_blank" rel="noopener">
+        <i class="fab fa-x-twitter"></i>
+    </a>
+    </div>
+
 
         <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados.</p>
     </div>
@@ -437,8 +455,8 @@
             </button>
         </form>
     </div>
-            <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
-    <script defer src="{{ url_for('static', filename='js/script_index.js') }}"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/mentora.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/reveal.js') }}"></script>
 </body>

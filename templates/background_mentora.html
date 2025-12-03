@@ -4,41 +4,66 @@
     inset:0;
     overflow:hidden;
     z-index:-1;
-    background:#0a0f1c;
+    background: linear-gradient(135deg, #0a0406ff 0%, #0c0507ff 50%, #11070aff 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 20s ease infinite;
+}
+
+@keyframes gradientShift{
+    0%, 100%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
 }
 
 .bin{
     position:absolute;
-    font-size:20px;
+    font-size:18px;
     font-family:monospace;
-    color:#5f7f81;
-    opacity:.6;
+    color:#B57386;
+    opacity:.4;
     animation:fall linear infinite;
+    text-shadow: 0 0 10px rgba(181, 115, 134, 0.6);
 }
 
 @keyframes fall{
-    0%{ transform:translateY(-120px); opacity:.2; }
-    100%{ transform:translateY(110vh); opacity:1; }
+    0%{ transform:translateY(-120px); opacity:.1; }
+    50%{ opacity:.5; }
+    100%{ transform:translateY(110vh); opacity:.1; }
 }
 
 .shape{
     position:absolute;
-    width:25px;
-    height:25px;
-    border:3px solid #5f7f81;
+    width:30px;
+    height:30px;
     opacity:.7;
-    animation:spin 10s linear infinite, float 6s ease-in-out infinite;
+    animation: spin 12s linear infinite, float 8s ease-in-out infinite, colorPulse 6s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+.shape::before{
+    content: "★";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    color: inherit;
 }
 
 @keyframes spin{
-    0%{ transform:rotate(0); }
+    0%{ transform:rotate(0deg); }
     100%{ transform:rotate(360deg); }
 }
 
 @keyframes float{
-    0%{ transform:translateY(0); }
-    50%{ transform:translateY(-30px); }
-    100%{ transform:translateY(0); }
+    0%, 100%{ transform:translateY(0px); }
+    50%{ transform:translateY(-40px); }
+}
+
+@keyframes colorPulse{
+    0%, 100%{ color: #B57386; }
+    25%{ color: #E3C8CF; }
+    50%{ color: #8A4255; }
+    75%{ color: #B57386; }
 }
 </style>
 

@@ -1,0 +1,68 @@
+<style>
+   body{
+    background:#0a0f1c;
+    margin:0;
+    overflow:hidden;
+   }
+   .bin{
+    position:absolute;
+    font-size:22px;
+    font-family:monospace;
+    color:#114c5f;
+    opacity:.7;
+    animation:fall linear infinite;
+   }
+    @keyframes fall{
+    0%{ transform:translateY(-120px); opacity:.2; }
+    100%{ transform:translateY(110vh); opacity:1; }
+    }
+  </style>
+
+  <script>
+  for(let i=0;i<60;i++){
+    const b=document.createElement("div");
+    b.className="bin";
+    b.textContent=Math.random()>0.5?"0":"1";
+    b.style.left=Math.random()*window.innerWidth+"px";
+    b.style.animationDuration=3+Math.random()*5+"s";
+    document.body.appendChild(b);
+   }
+</script>
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_usser.css') }}">
+ <nav class="main-navbar">
+        <div class="navbar-content">
+                <a href="/dashboard" class="navbar-logo">
+                    <img src="{{ url_for('static', filename='img/mentora1.png') }}" alt="Logo MenTora">
+                </a>
+            <button id="navToggle" class="menu-button" aria-label="Abrir menú">
+                <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
+            </button>
+
+            <ul class="navbar-links">
+                <li><a href="/games" class="{% if request.path.startswith('/games') %}active{% endif %}">JUEGOS</a></li>
+                <li><a href="/quiz" class="{% if request.path.startswith('/quiz') %}active{% endif %}">DESAFÍOS</a></li>
+                <li><a href="/biblioteca" class="{% if request.path.startswith('/biblioteca') %}active{% endif %}">BIBLIOTECA</a></li>
+                <li><a href="/noticias" class="{% if request.path.startswith('/noticias') %}active{% endif %}">NOTICIAS</a></li>
+                <li><a href="/juegos-interactivos" class="{% if request.path.startswith('/juegos-interactivos') %}active{% endif %}">ZONA INTECRACTIVA</a></li>
+                                <li><a href="/dashboard" class="{% if request.path.startswith('/dashboard') %}active{% endif %}">DASHBOARD</a></li>
+            </ul>
+            <div class="navbar-user">
+                <img src="{{ avatar_url }}" alt="avatar" class="navbar-avatar">
+                <span class="navbar-username">{{ username }}</span>
+                <button id="userMenuBtn" class="navbar-user-btn"> <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="icono menú" class="menu-icon"> </button>
+
+                <div id="userMenu" class="navbar-user-menu">
+                    <a href="/edit_profile"> PERFIL </a>
+                    <a href="/dashboard#logros" class="{% if request.path.startswith('/dashboard') %}active{% endif %}"> TUS LOGROS </a>
+                    <a href="/dashboard#notificaciones" class="{% if request.path.startswith('/dashboard') %}active{% endif %}"> NOTIFICACIONES</a>
+                    <a href="/dashboard#reto-especial" class="{% if request.path.startswith('/dashboard') %}active{% endif %}"> DESAFÍO DIARIO </a>
+                    <a href="/dashboard#historial" class="{% if request.path.startswith('/dashboard') %}active{% endif %}">HISTORIAL</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <script defer src="{{ url_for('static', filename='js/script_usser.js') }}"></script>

@@ -6,28 +6,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mentora.css') }}">
 </head>
 <body>
-    {% include 'background_svg.html' %}  
-    <nav>
-        <div class="logo-container">
-           <img src="/static/img/mentora1.png" alt="Logo MenTora">
-        </div>
-        <div class="nav-links" id="navLinks">
-            <a href="/">INICIO</a>
-            <a href="/login" class="nav-btn">INICIAR SESIÓN</a>
-            <a href="/register" class="nav-btn">REGÍSTRATE</a>
-        </div>
-        <div class="hamburger" id="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
-
+    
+    <a href="/" class="back-button" title="Volver al Index">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+    </a>
      <section>
-        <h2 class="section-title">¡BIENVENIDO!</h2>  
+        <h2 class="sectioon-title">¡BIENVENIDO DE NUEVO!</h2>  
      </section> 
 
     <main>
@@ -61,22 +50,6 @@
      <br>
 
   <footer>
-    <div class="footer-content">
-    <div class="footer-links">
-    <a href="#" onclick="openModal('nosotros')">Sobre Nosotros</a>
-    <a href="#" onclick="openModal('privacidad')">Privacidad</a>
-    <a href="#" onclick="openModal('terminos')">Términos</a>
-    <a href="#" onclick="openModal('contacto')">Contacto</a>
-    <a href="#" onclick="openModal('equipo')">Equipo</a>
-    </div>
-
-    </div>
-        <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-x-twitter"></i></a>
-        </div>
-
         <p>© 2025 {{ config.SITE_NAME }} - Todos los derechos reservados</p>
     </div>
     </footer>
@@ -97,9 +70,7 @@
     Usuario o contraseña incorrectos
     </div>
 
-
-  <script defer src="{{ url_for('static', filename='js/script_index.js') }}"></script>
-    <script defer src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/mentora.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/reveal.js') }}"></script>
 
         {# Flashed messages are shown at top of the login box (see above) #}

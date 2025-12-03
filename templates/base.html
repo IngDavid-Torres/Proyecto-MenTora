@@ -118,9 +118,10 @@
 		   padding: 0.2rem 0.7rem;
 		   border-radius: 6px;
 	   }
-	   .navbar-tecnonauta .nav-links a:hover {
-		   color: #181a2b; background: #00fff1; text-shadow: 0 0 10px #ffe066;
-	   }
+	   .navbar-tecnonauta .nav-links a:hover,
+	   .navbar-tecnonauta .nav-links a.active {
+			   color: #181a2b; background: #00fff1; text-shadow: 0 0 10px #ffe066;
+		   }
 	   .navbar-tecnonauta .user-info {
 		   margin-left: 2.5rem;
 		   margin-right: auto;
@@ -166,11 +167,11 @@
 		   <div style="display:flex; align-items:center; flex:1;">
 			   <div class="nav-links">
 				   {% if not session.get('user_id') %}
-					   <a href="/register">Registro</a>
-					   <a href="/login">Iniciar sesión</a>
+					   <a href="/register" class="{% if request.path.startswith('/register') %}active{% endif %}">Registro</a>
+					   <a href="/login" class="{% if request.path.startswith('/login') %}active{% endif %}">Iniciar sesión</a>
 				   {% else %}
-					   <a href="/dashboard">Dashboard</a>
-					   <a href="/logout">Cerrar sesión</a>
+					   <a href="/dashboard" class="{% if request.path.startswith('/dashboard') %}active{% endif %}">Dashboard</a>
+					   <a href="/logout" class="{% if request.path.startswith('/logout') %}active{% endif %}">Cerrar sesión</a>
 				   {% endif %}
 			   </div>
 			   {% if session.get('user_id') %}
