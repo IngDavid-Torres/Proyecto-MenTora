@@ -3,11 +3,38 @@ Generador de exámenes con IA local para MenTora
 Soporta múltiples métodos: Ollama, Hugging Face y plantillas
 """
 import json
+
+# Constantes para literales duplicados
+FUNCION = "función"
+METODO = "método"
+ARBOLES = "árboles"
+ENCAPSULACION = "encapsulación"
+ITERACION = "iteración"
 import random
 import requests
 from typing import List, Dict, Optional
 
 class LocalAIExamGenerator:
+    def _get_tema_key(self, tema_lower, tema_synonyms):
+        import unicodedata
+        tema_normalized = unicodedata.normalize('NFD', tema_lower)
+        tema_normalized = ''.join(char for char in tema_normalized if unicodedata.category(char) != 'Mn')
+        for key, synonyms in tema_synonyms.items():
+            if any(syn in tema_normalized for syn in synonyms) or any(tema_normalized in syn for syn in synonyms):
+                return key
+        for key in self.question_templates.keys():
+            if key in tema_normalized or tema_normalized in key:
+                return key
+        return 'programacion'
+
+    def _generate_question(self, template, knowledge):
+        filled_question = template
+        for placeholder, values in knowledge.items():
+            if f'{{{placeholder}}}' in template:
+                filled_question = filled_question.replace(
+                    f'{{{placeholder}}}', str(random.choice(values))
+                )
+        return filled_question
     def __init__(self):
         self.question_templates = {
             'matematicas': [
@@ -73,12 +100,12 @@ class LocalAIExamGenerator:
             'programacion': {
                 'function': ['print()', 'len()', 'input()', 'range()', 'append()', 'split()', 'join()', 'sort()'],
                 'language': ['Python', 'JavaScript', 'Java', 'C++', 'C#', 'PHP', 'Ruby'],
-                'concept1': ['variable', 'función', 'clase', 'objeto', 'array', 'lista'],
-                'concept2': ['constante', 'método', 'instancia', 'atributo', 'tupla', 'diccionario'],
+                'concept1': ['variable', FUNCION, 'clase', 'objeto', 'array', 'lista'],
+                'concept2': ['constante', METODO, 'instancia', 'atributo', 'tupla', 'diccionario'],
                 'method': ['substring()', 'charAt()', 'indexOf()', 'replace()', 'toLowerCase()', 'toUpperCase()'],
-                'structure': ['arrays', 'listas enlazadas', 'pilas', 'colas', 'árboles', 'grafos', 'hash tables'],
-                'operation': ['declarar una variable', 'crear un bucle for', 'definir una función', 'crear una clase'],
-                'term': ['polimorfismo', 'herencia', 'encapsulación', 'abstracción', 'recursión', 'iteración'],
+                'structure': ['arrays', 'listas enlazadas', 'pilas', 'colas', ARBOLES, 'grafos', 'hash tables'],
+                'operation': ['declarar una variable', 'crear un bucle for', 'definir una ' + FUNCION, 'crear una clase'],
+                'term': ['polimorfismo', 'herencia', ENCAPSULACION, 'abstracción', 'recursión', ITERACION],
                 'paradigm': ['programación orientada a objetos', 'programación funcional', 'programación estructurada'],
                 'algorithm': ['búsqueda binaria', 'ordenamiento burbuja', 'quicksort', 'mergesort', 'búsqueda lineal'],
                 'problem': ['creación de objetos', 'notificación de cambios', 'acceso a datos', 'estado de objeto'],
@@ -159,13 +186,13 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
             
             questions = []
             set_seed(42)
-            
-            for i in range(cantidad):
+            # Limitar cantidad a rango seguro
+            safe_cantidad = min(max(int(cantidad), 1), 20) if str(cantidad).isdigit() else 5
+            for _ in range(safe_cantidad):
                 if tipo_examen == 'opciones':
                     prompt = f"Pregunta de opción múltiple sobre {tema}:"
                 else:
                     prompt = f"Pregunta sobre {tema}:"
-                
                 result = generator(prompt, max_length=100, num_return_sequences=1)
                 question_text = result[0]['generated_text'].replace(prompt, '').strip()
                 
@@ -211,56 +238,36 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
             'geografia': ['geografia', 'geografía', 'geography', 'paises', 'países']
         }
         
-        # Buscar por sinónimos
-        for key, synonyms in tema_synonyms.items():
-            if any(syn in tema_normalized for syn in synonyms) or any(tema_normalized in syn for syn in synonyms):
-                tema_key = key
-                break
-        
-        # Si no se encuentra, buscar en las llaves originales
-        if not tema_key:
-            for key in self.question_templates.keys():
-                if key in tema_normalized or tema_normalized in key:
-                    tema_key = key
-                    break
-        
-        # Por defecto usar programación si no se encuentra nada
-        if not tema_key:
-            tema_key = 'programacion'
-        
+        tema_lower = tema.lower()
+        tema_synonyms = {
+            'programacion': ['programacion', 'programación', 'programming', 'codigo', 'código', 'software', 'desarrollo'],
+            'matematicas': ['matematicas', 'matemáticas', 'math', 'aritmetica', 'aritmética', 'algebra', 'álgebra'],
+            'ciencias': ['ciencias', 'ciencia', 'science', 'biologia', 'biología', 'fisica', 'física', 'quimica', 'química'],
+            'historia': ['historia', 'history', 'historico', 'histórico'],
+            'literatura': ['literatura', 'literature', 'letras', 'escritura'],
+            'geografia': ['geografia', 'geografía', 'geography', 'paises', 'países']
+        }
+        tema_key = self._get_tema_key(tema_lower, tema_synonyms)
         templates = self.question_templates[tema_key]
         knowledge = self.knowledge_base[tema_key]
         questions = []
-        
-        for i in range(cantidad):
+        safe_cantidad = min(max(int(cantidad), 1), 20) if str(cantidad).isdigit() else 5
+        for i in range(safe_cantidad):
             template = random.choice(templates)
-            
-            # Rellenar plantilla con datos aleatorios
-            filled_question = template
-            for placeholder, values in knowledge.items():
-                if f'{{{placeholder}}}' in template:
-                    filled_question = filled_question.replace(
-                        f'{{{placeholder}}}', str(random.choice(values))
-                    )
-            
+            filled_question = self._generate_question(template, knowledge)
             if tipo_examen == 'opciones':
-                # Generar opciones múltiples
                 if tema_key == 'matematicas' and any(op in filled_question for op in ['+', '-', '×', '%']):
-                    # Para matemáticas, calcular respuesta correcta
                     correct_answer = self._calculate_math_answer(filled_question)
                     wrong_answers = self._generate_wrong_math_answers(correct_answer)
-                    
                     opciones = [correct_answer] + wrong_answers
                     random.shuffle(opciones)
-                    correct_letter = chr(65 + opciones.index(correct_answer))  # A, B, C, D
-                    
+                    correct_letter = chr(65 + opciones.index(correct_answer))
                     questions.append({
                         'pregunta': filled_question,
                         'opciones': opciones,
                         'respuesta': correct_letter
                     })
                 else:
-                    # Para otras materias, opciones genéricas
                     opciones, respuesta_correcta = self._generate_smart_options(tema_key, filled_question, i)
                     questions.append({
                         'pregunta': filled_question,
@@ -269,13 +276,11 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
                     })
             else:
                 questions.append(filled_question)
-        
         return questions
 
     def _calculate_math_answer(self, question: str) -> str:
-        """Calcula la respuesta correcta para preguntas de matemáticas"""
+        """Calcula la respuesta correcta para preguntas matemáticas simples"""
         try:
-            # Extraer operación matemática
             if '+' in question:
                 nums = [int(x) for x in question.split() if x.isdigit()]
                 if len(nums) >= 2:
@@ -292,7 +297,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
                 nums = [int(x) for x in question.replace('%', ' ').split() if x.isdigit()]
                 if len(nums) >= 2:
                     return str(int(nums[0] * nums[1] / 100))
-        except:
+        except (ValueError, TypeError):
             pass
         return "42"  # Respuesta por defecto
 
@@ -306,7 +311,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
                 str(num + random.randint(11, 20))
             ]
             return wrong
-        except:
+        except (ValueError, TypeError):
             return ["10", "20", "30"]
 
     def _generate_generic_options(self, tema: str, question: str) -> List[str]:
@@ -427,7 +432,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
         question_lower = question.lower()
         
         # Detectar conceptos generales de programación primero
-        if 'iteración' in question_lower or 'iteracion' in question_lower:
+        if ITERACION in question_lower or 'iteracion' in question_lower:
             if 'programación estructurada' in question_lower or 'programacion estructurada' in question_lower:
                 return ["Repetición controlada de instrucciones", "Función recursiva", "Variable temporal", "Clase abstracta"]
             else:
@@ -443,7 +448,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
         
         # Opciones para diferentes tipos de preguntas de programación por lenguaje
         if 'python' in question_lower:
-            if 'función' in question_lower or 'function' in question_lower:
+            if FUNCION in question_lower or 'function' in question_lower:
                 if 'print' in question_lower:
                     return ["Muestra texto en pantalla", "Declara una variable", "Crea un objeto", "Termina el programa"]
                 elif 'len' in question_lower:
@@ -747,7 +752,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
         
         # Opciones por defecto mejoradas y más específicas para programación
         # Analizar la pregunta para dar opciones contextualmente apropiadas
-        if any(word in question_lower for word in ['función', 'funcion', 'method', 'método']):
+        if any(word in question_lower for word in [FUNCION, 'funcion', 'method', METODO]):
             return ["Ejecuta una operación específica", "Declara una variable global", "Crea un objeto nuevo", "Termina el programa"]
         elif any(word in question_lower for word in ['variable', 'constante', 'dato']):
             return ["Almacena y manipula información", "Solo para números enteros", "Controla el flujo del programa", "Optimiza la memoria"]
@@ -755,7 +760,7 @@ Formato: pregunta|opcionA|opcionB|opcionC|opcionD|respuesta_correcta"""
             return ["Define estructura y comportamiento", "Solo para matemáticas", "Acelera la ejecución", "Maneja errores"]
         elif any(word in question_lower for word in ['algoritmo', 'complejidad', 'eficiencia']):
             return ["Optimiza tiempo y recursos", "Solo para ordenar datos", "Mejora la interfaz", "Reduce el código"]
-        elif any(word in question_lower for word in ['herencia', 'polimorfismo', 'encapsulación']):
+        elif any(word in question_lower for word in ['herencia', 'polimorfismo', ENCAPSULACION]):
             return ["Principio de programación orientada a objetos", "Función matemática", "Comando de terminal", "Tipo de variable"]
         elif any(word in question_lower for word in ['framework', 'biblioteca', 'library']):
             return ["Facilita el desarrollo de aplicaciones", "Solo para diseño web", "Optimiza la base de datos", "Acelera la red"]
