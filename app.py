@@ -131,9 +131,54 @@ def health():
     try:
         # Intentar una consulta simple a la BD
         user_count = User.query.count()
-        return jsonify(status='ok', users=user_count)
+        return jsonify(status='ok', users=user_count, message='Base de datos disponible')
     except Exception as e:
         return jsonify(status='error', message=str(e)), 500
+
+
+@app.route('/test-register', methods=['POST'])
+def test_register():
+    """Endpoint de prueba para debug de registro"""
+    try:
+        username = request.form.get('username', 'testuser')
+        email = request.form.get('email', 'test@test.com')
+        password = 'testpass123'
+        
+        # Paso 1: Verificar BD
+        user_count = User.query.count()
+        
+        # Paso 2: Hashear contraseña
+        hashed = generate_password_hash(password)
+        
+        # Paso 3: Crear usuario
+        new_user = User(
+            username=username,
+            email=email,
+            password=hashed,
+            area='Programación',
+            points=0,
+            level=1,
+            is_admin=False
+        )
+        
+        # Paso 4: Guardar en BD
+        db.session.add(new_user)
+        db.session.commit()
+        
+        return jsonify(
+            success=True,
+            message='Usuario creado exitosamente',
+            user_count_before=user_count,
+            user_id=new_user.id
+        )
+    except Exception as e:
+        db.session.rollback()
+        import traceback
+        return jsonify(
+            success=False,
+            error=str(e),
+            traceback=traceback.format_exc()
+        ), 500
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -177,8 +222,12 @@ def register():
             
             # Si es profesor, crear el perfil de profesor
             if user_type == 'teacher':
-                teacher = Teacher(user_id=new_user.id, area=area)
-                db.session.add(teacher)
+                try:
+                    teacher = Teacher(user_id=new_user.id, area=area)
+                    db.session.add(teacher)
+                except Exception as teacher_error:
+                    print(f"Error al crear profesor: {teacher_error}")
+                    # Continuar sin crear profesor si falla
             
             db.session.commit()
             msg = 'Registro exitoso. Ahora puedes iniciar sesión.'
@@ -186,8 +235,12 @@ def register():
             
         except Exception as e:
             db.session.rollback()
-            app.logger.error(f"Error en registro: {str(e)}")
-            return jsonify(success=False, message='Error al registrar usuario.'), 500
+            error_msg = str(e)
+            print(f"Error en registro: {error_msg}")
+            import traceback
+            print(traceback.format_exc())
+            app.logger.error(f"Error en registro: {error_msg}")
+            return jsonify(success=False, message='Error al registrar usuario. Por favor intenta de nuevo.'), 500
 
     return render_template('register.html')
 
