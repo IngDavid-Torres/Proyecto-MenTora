@@ -3,7 +3,8 @@
     "allow": [
       "Bash(mkdir:*)",
       "Bash(python migrate_cedula.py:*)",
-      "Bash(python -c:*)"
+      "Bash(python -c:*)",
+      "Bash(python migrate_teacher_table.py:*)"
     ],
     "deny": [],
     "ask": []

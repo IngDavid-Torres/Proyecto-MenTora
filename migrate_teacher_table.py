@@ -1,9 +1,15 @@
 """
-Script de migración para agregar columnas faltantes a la tabla teachers
+Script de migracion para agregar columnas faltantes a la tabla teachers
 """
 import os
 import sys
 from sqlalchemy import text
+
+# Configurar encoding para Windows
+if sys.platform == 'win32':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
 
 # Agregar el directorio actual al path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -25,24 +31,65 @@ def migrate_teacher_table():
             result = db.session.execute(check_column).fetchone()
 
             if result is None:
-                print("📝 Agregando columna 'cedula_profesional_img' a la tabla teachers...")
-                alter_table = text("""
-                    ALTER TABLE teachers
-                    ADD COLUMN cedula_profesional_img VARCHAR(300),
-                    ADD COLUMN cedula_verified BOOLEAN DEFAULT FALSE
-                """)
-                db.session.execute(alter_table)
+                print("📝 Agregando columnas a la tabla teachers...")
+
+                # Agregar las columnas una por una para mejor compatibilidad
+                try:
+                    db.session.execute(text("""
+                        ALTER TABLE teachers
+                        ADD COLUMN IF NOT EXISTS cedula_profesional_img VARCHAR(300)
+                    """))
+                    print("  ✓ Columna 'cedula_profesional_img' agregada")
+                except Exception as e:
+                    print(f"  ⚠ cedula_profesional_img: {e}")
+
+                try:
+                    db.session.execute(text("""
+                        ALTER TABLE teachers
+                        ADD COLUMN IF NOT EXISTS cedula_verified BOOLEAN DEFAULT FALSE
+                    """))
+                    print("  ✓ Columna 'cedula_verified' agregada")
+                except Exception as e:
+                    print(f"  ⚠ cedula_verified: {e}")
+
                 db.session.commit()
-                print("✅ Columnas agregadas exitosamente!")
+                print("✅ Migración completada!")
             else:
                 print("✅ Las columnas ya existen en la tabla teachers")
 
         except Exception as e:
             print(f"❌ Error durante la migración: {e}")
+            print(f"   Traceback: {e}")
             db.session.rollback()
-            raise
+
+            # Intentar método alternativo sin IF NOT EXISTS (para PostgreSQL antiguo)
+            print("\n🔄 Intentando método alternativo...")
+            try:
+                db.session.execute(text("""
+                    ALTER TABLE teachers
+                    ADD COLUMN cedula_profesional_img VARCHAR(300)
+                """))
+                print("  ✓ Columna 'cedula_profesional_img' agregada")
+            except Exception as e2:
+                print(f"  ⚠ Ya existe o error: {e2}")
+
+            try:
+                db.session.execute(text("""
+                    ALTER TABLE teachers
+                    ADD COLUMN cedula_verified BOOLEAN DEFAULT FALSE
+                """))
+                print("  ✓ Columna 'cedula_verified' agregada")
+            except Exception as e2:
+                print(f"  ⚠ Ya existe o error: {e2}")
+
+            try:
+                db.session.commit()
+                print("✅ Migración alternativa completada!")
+            except Exception as e3:
+                print(f"❌ Error en commit: {e3}")
+                db.session.rollback()
 
 if __name__ == "__main__":
     print("🚀 Iniciando migración de la tabla teachers...")
     migrate_teacher_table()
-    print("🎉 Migración completada!")
+    print("🎉 Proceso finalizado!")

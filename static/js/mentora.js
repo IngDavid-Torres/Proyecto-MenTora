@@ -798,6 +798,14 @@ const AuthForms = {
                     const errorMsg = (res && res.message) || `Error en el registro (${response.status})`;
                     AlertSystem.showOrToast('error', errorMsg);
                     console.error('Register error:', response.status, res);
+
+                    // Mostrar detalles del error en consola para debugging
+                    if (res && res.error) {
+                        console.error('Error detallado:', res.error);
+                        if (res.traceback) {
+                            console.error('Traceback:', res.traceback);
+                        }
+                    }
                 }
             } catch (err) {
                 console.error('Register exception:', err);

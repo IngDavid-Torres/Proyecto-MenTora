@@ -270,9 +270,10 @@ def register():
                 try:
                     teacher = Teacher(user_id=new_user.id, area=area)
                     db.session.add(teacher)
+                    app.logger.info(f"Perfil de profesor creado para user_id={new_user.id}")
                 except Exception as teacher_error:
-                    print(f"Error al crear profesor: {teacher_error}")
-                    # Continuar sin crear profesor si falla
+                    app.logger.warning(f"No se pudo crear perfil de profesor: {teacher_error}")
+                    # Continuar sin crear profesor si falla - el usuario se registra de todas formas
             
             db.session.commit()
             msg = 'Registro exitoso. Ahora puedes iniciar sesión.'
@@ -399,10 +400,11 @@ def dashboard():
    
     from models import Teacher
     teacher = None
-    if hasattr(user, 'teacher_profile') and user.teacher_profile is not None:
-        teacher = user.teacher_profile
-    else:
+    try:
         teacher = Teacher.query.filter_by(user_id=user.id).first()
+    except Exception as teacher_error:
+        app.logger.warning(f"Error al obtener perfil de profesor en dashboard: {teacher_error}")
+        teacher = None
 
     from sqlalchemy import or_
     quizzes_all = Quiz.query.filter(
