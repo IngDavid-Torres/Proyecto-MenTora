@@ -107,12 +107,19 @@
             transition: all 0.3s;
             font-family: 'Poppins';
             font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         .filter-btn:hover, .filter-btn.active {
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             color: var(--white);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(106, 44, 61, 0.4);
+        }
+        .filter-btn svg {
+            width: 18px;
+            height: 18px;
         }
 
         .controls {

@@ -6,6 +6,7 @@
     <title> Noticias | MenTora</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
@@ -19,7 +20,7 @@
 
     <div class="container">
         <div class="news-header">
-            <h1>Programación a tu Alcance</h1>
+            <h1><i data-lucide="rss" style="display: inline; width: 1.2em; height: 1.2em; vertical-align: -0.2em;"></i> Programación a tu Alcance</h1>
             <p>Las últimas actualizaciones y noticias del mundo tecnológico. 
                 Mantente informado con contenido de calidad sobre desarrollo, 
                 frameworks e inteligencia artificial, todo a en solo click.</p>
@@ -28,11 +29,26 @@
         <div class="filters-section">
             <div class="filters-wrapper">
                 <div class="filters">
-                    <button class="filter-btn active" onclick="filterNews('all')">Todas</button>
-                    <button class="filter-btn" onclick="filterNews('javascript')">JavaScript</button>
-                    <button class="filter-btn" onclick="filterNews('python')">Python</button>
-                    <button class="filter-btn" onclick="filterNews('web')">Web Dev</button>
-                    <button class="filter-btn" onclick="filterNews('ai')">IA & ML</button>
+                    <button class="filter-btn active" onclick="filterNews('all')">
+                        <i data-lucide="globe"></i>
+                        Todas
+                    </button>
+                    <button class="filter-btn" onclick="filterNews('javascript')">
+                        <i data-lucide="file-code"></i>
+                        JavaScript
+                    </button>
+                    <button class="filter-btn" onclick="filterNews('python')">
+                        <i data-lucide="code-2"></i>
+                        Python
+                    </button>
+                    <button class="filter-btn" onclick="filterNews('web')">
+                        <i data-lucide="layout"></i>
+                        Web Dev
+                    </button>
+                    <button class="filter-btn" onclick="filterNews('ai')">
+                        <i data-lucide="brain"></i>
+                        IA & ML
+                    </button>
                 </div>
                 <div class="controls">
                     <div class="search-box">
@@ -57,6 +73,12 @@
         <p>&copy; 2025 MenTora - Todos los derechos reservados.</p>
     </footer>
 
-        <script defer src="{{ url_for('static', filename='js/usser_news.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/usser_news.js') }}"></script>
+    <script>
+        // Inicializar iconos de Lucide
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
 </body>
 </html>

@@ -31,6 +31,8 @@ class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True, nullable=False)
     area = db.Column(db.String(50))  # Opcional: área principal del profesor
+    cedula_profesional_img = db.Column(db.String(300), nullable=True)  # Ruta de la imagen de la cédula
+    cedula_verified = db.Column(db.Boolean, default=False)  # Estado de verificación
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship('User', backref=db.backref('teacher_profile', uselist=False))

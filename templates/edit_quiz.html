@@ -2,37 +2,80 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Quiz | MenTora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body { font-family: 'Segoe UI', 'Poppins', sans-serif; background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%); color: #2c3e50; margin: 0; }
-        .container { max-width: 600px; margin: 3rem auto; padding: 2.5rem 2rem; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px #2a52981a; }
-        h1 { color: #2a5298; font-size: 2rem; margin-bottom: 1.2rem; }
-        label { font-weight: bold; color: #2a5298; }
-        input[type="text"] { width: 100%; padding: 0.7rem; border-radius: 7px; border: 1px solid #e0e7ef; font-size: 1rem; margin-bottom: 1rem; }
-        .btn { background: linear-gradient(90deg, #ffe066, #fab005); color: #2a5298; border: none; border-radius: 7px; padding: 0.7rem 1.5rem; font-weight: bold; cursor: pointer; transition: background 0.3s, color 0.3s, transform 0.2s; box-shadow: 0 2px 8px #fab00522; font-size: 1.08rem; display: inline-flex; align-items: center; gap: 0.6rem; }
-        .btn:hover { background: #2a5298; color: #ffe066; transform: scale(1.04); }
-        .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Exo+2:wght@600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/teacher_dashboard.css">
 </head>
 <body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <img src="/static/img/mentora1.png" alt="MenTora Logo">
+        </a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('teacher_dashboard') }}">VOLVER AL DASHBOARD</a></li>
+        </ul>
+    </nav>
+
     <div class="container">
-        <h1><i class="fa-solid fa-pen"></i> Editar Quiz</h1>
-        <form method="POST">
-            <label for="title">Título:</label>
-            <input type="text" name="title" id="title" required value="{{ quiz.title }}">
+        <h1><i class="fa-solid fa-pen"></i> EDITAR QUIZ</h1>
 
-            <label for="area">Área:</label>
-            <input type="text" name="area" id="area" required value="{{ quiz.area }}">
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="background: linear-gradient(90deg, var(--accent-color), var(--light-blue)); color: var(--primary-color); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 600; text-align: center; box-shadow: var(--shadow-md);">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-            <label for="description">Descripción:</label>
-            <input type="text" name="description" id="description" value="{{ quiz.description }}">
+        <div class="section">
+            <form method="POST" class="ai-form" style="background:rgba(255,255,255,0.3); border-radius:12px; padding:2rem;">
+                <label for="title"><i class="fa-solid fa-heading"></i> Título del Quiz:</label>
+                <input type="text" name="title" id="title" required value="{{ quiz.title }}" placeholder="Ej: Examen de Matemáticas">
 
-            <div class="actions">
-                <button type="submit" class="btn"><i class="fa-solid fa-save"></i> Guardar cambios</button>
-                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:#e0e7ef; color:#2a5298;"><i class="fa-solid fa-arrow-left"></i> Cancelar</a>
-            </div>
-        </form>
+                <label for="area"><i class="fa-solid fa-chalkboard"></i> Área:</label>
+                <input type="text" name="area" id="area" required value="{{ quiz.area }}" placeholder="Ej: Matemáticas">
+
+                <label for="description"><i class="fa-solid fa-align-left"></i> Descripción (Opcional):</label>
+                <input type="text" name="description" id="description" value="{{ quiz.description or '' }}" placeholder="Breve descripción del quiz">
+
+                <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+                    <button type="submit" class="btn">
+                        <i class="fa-solid fa-save"></i> GUARDAR CAMBIOS
+                    </button>
+                    <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:var(--text-gray); text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-arrow-left"></i> CANCELAR
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <footer class="footer">
+        &copy; 2025 MenTora | Aprende jugando. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
+    </script>
 </body>
 </html>

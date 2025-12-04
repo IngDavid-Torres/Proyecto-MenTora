@@ -90,7 +90,7 @@ from werkzeug.security import generate_password_hash
 
 with app.app_context():
     db.create_all()
-    print("✅ Tablas creadas correctamente.")
+    print("OK - Tablas creadas correctamente.")
 
     admin_password = os.environ.get('ADMIN_PASSWORD', 'MenToraAdmin123')
     # Buscar usuario admin por username
@@ -117,7 +117,7 @@ with app.app_context():
         if not check_password_hash(admin.password, admin_password):
             admin.password = generate_password_hash(admin_password)
         db.session.commit()
-        print("🔒 Usuario admin actualizado con ID=1 y contraseña fija.")
+        print("OK - Usuario admin actualizado con ID=1 y contrasena fija.")
 
 
 @app.route('/')
@@ -1947,6 +1947,68 @@ def edit_question(question_id):
         flash('Pregunta actualizada correctamente.')
         return redirect(url_for('teacher_dashboard'))
     return render_template('edit_question.html', question=question)
+
+# === RUTA PARA SUBIR CÉDULA PROFESIONAL ===
+@app.route('/teacher/upload_cedula', methods=['POST'])
+def upload_cedula():
+    if 'user_id' not in session:
+        flash('Acceso restringido.')
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    teacher = Teacher.query.filter_by(user_id=user.id).first()
+
+    if not teacher:
+        flash('No tienes perfil de profesor.')
+        return redirect(url_for('dashboard'))
+
+    # Verificar que se haya enviado un archivo
+    if 'cedula_file' not in request.files:
+        flash('No se ha seleccionado ningún archivo.')
+        return redirect(url_for('teacher_dashboard'))
+
+    file = request.files['cedula_file']
+
+    # Verificar que el archivo tenga nombre
+    if file.filename == '':
+        flash('No se ha seleccionado ningún archivo.')
+        return redirect(url_for('teacher_dashboard'))
+
+    # Verificar extensión del archivo
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    if '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in allowed_extensions:
+        filename = secure_filename(file.filename)
+        # Crear nombre único con timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        unique_filename = f"cedula_{teacher.id}_{timestamp}_{filename}"
+
+        # Crear carpeta si no existe
+        upload_folder = os.path.join('static', 'uploads', 'cedulas')
+        os.makedirs(upload_folder, exist_ok=True)
+
+        # Guardar archivo
+        filepath = os.path.join(upload_folder, unique_filename)
+        file.save(filepath)
+
+        # Eliminar archivo anterior si existe
+        if teacher.cedula_profesional_img:
+            old_file = os.path.join(teacher.cedula_profesional_img)
+            if os.path.exists(old_file):
+                try:
+                    os.remove(old_file)
+                except:
+                    pass
+
+        # Actualizar base de datos
+        teacher.cedula_profesional_img = filepath.replace('\\', '/')
+        teacher.cedula_verified = False  # Resetear verificación al subir nueva imagen
+        db.session.commit()
+
+        flash('Cédula profesional subida correctamente. Pendiente de verificación.')
+        return redirect(url_for('teacher_dashboard'))
+    else:
+        flash('Formato de archivo no válido. Solo se permiten imágenes (PNG, JPG, JPEG, GIF, WEBP).')
+        return redirect(url_for('teacher_dashboard'))
 
 
 if __name__ == '__main__':

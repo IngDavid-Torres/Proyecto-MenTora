@@ -2,197 +2,45 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Juego | MenTora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', 'Poppins', sans-serif;
-            margin: 0;
-            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
-            color: #2c3e50;
-            overflow-x: hidden;
-        }
-        .navbar {
-            width: 100vw;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: rgba(176, 224, 230, 0.18);
-            color: #2a5298;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.7rem 2.5rem;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-bottom: 2.5px solid #7fd8f6;
-            box-shadow: 0 2px 18px 0 #b2f0e6cc;
-        }
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #2a5298;
-            letter-spacing: 1px;
-            text-decoration: none;
-        }
-        .navbar .logo img {
-            height: 44px;
-            width: 44px;
-            border-radius: 50%;
-            background: #fff;
-            border: 2px solid #ffe066;
-            box-shadow: 0 1px 4px #2a529810;
-        }
-        .navbar .nav-links a {
-            color: #2a5298;
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-weight: 500;
-            font-size: 1.08rem;
-            transition: color 0.2s;
-            background: #e3f6fd;
-            border-radius: 6px;
-            padding: 0.2rem 0.7rem;
-        }
-        .navbar .nav-links a:hover {
-            color: #fff;
-            background: #7fd8f6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 5rem auto 3rem auto;
-            padding: 2.5rem 2rem;
-            background: rgba(255,255,255,0.13);
-            border-radius: 22px;
-            box-shadow: 0 8px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 2px solid #b2f0e6;
-        }
-        h1 {
-            color: #2a5298;
-            font-size: 2.3rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 8px #b2f0e6cc;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #2a5298;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        .form-group input[type="text"], 
-        .form-group textarea, 
-        .form-group select {
-            width: 100%;
-            padding: 0.8rem;
-            border-radius: 8px;
-            border: 2px solid #b2f0e6;
-            font-size: 1rem;
-            background: rgba(255,255,255,0.9);
-            color: #2a5298;
-            box-shadow: 0 2px 8px #b2f0e633;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .form-group input[type="text"]:focus, 
-        .form-group textarea:focus, 
-        .form-group select:focus {
-            outline: none;
-            border-color: #7fd8f6;
-            box-shadow: 0 4px 12px #7fd8f6cc;
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .btn {
-            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
-            color: #2a5298;
-            border: none;
-            border-radius: 9px;
-            padding: 0.8rem 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s, color 0.3s, transform 0.2s;
-            box-shadow: 0 2px 12px #b2f0e6cc;
-            font-size: 1.08rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            text-decoration: none;
-            margin-right: 1rem;
-        }
-        .btn:hover {
-            background: linear-gradient(90deg, #7fd8f6, #b2f0e6);
-            color: #181a2b;
-            transform: scale(1.04);
-            box-shadow: 0 4px 18px #b2f0e6cc;
-        }
-        .btn-secondary {
-            background: #e0e7ef;
-            color: #2a5298;
-        }
-        .btn-secondary:hover {
-            background: #d0d7df;
-            color: #1a3b73;
-        }
-        .btn-container {
-            text-align: center;
-            margin-top: 2rem;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 1rem;
-            color: #4fc3f7;
-            text-decoration: none;
-            font-size: 1rem;
-        }
-        .back-link:hover {
-            color: #2a5298;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Exo+2:wght@600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/teacher_dashboard.css">
 </head>
 <body>
     <!-- Barra de navegación -->
     <nav class="navbar">
         <a href="/" class="logo">
-            <img src="/static/img/mentora.png" alt="MenTora Logo">
-            MenTora
+            <img src="/static/img/mentora1.png" alt="MenTora Logo">
         </a>
-        <div class="nav-links">
-            <a href="{{ url_for('teacher_dashboard') }}"><i class="fa-solid fa-arrow-left"></i> Volver al Dashboard</a>
-            <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
-        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('teacher_dashboard') }}">VOLVER AL DASHBOARD</a></li>
+        </ul>
     </nav>
 
     <div class="container">
-        <a href="{{ url_for('teacher_dashboard') }}" class="back-link">
-            <i class="fa-solid fa-arrow-left"></i> Volver al Panel de Profesor
-        </a>
-        
-        <h1><i class="fa-solid fa-gamepad"></i> Editar Juego/Reto</h1>
-        
-        <form method="POST" action="{{ url_for('editar_juego', game_id=game.id) }}">
-            <div class="form-group">
-                <label for="name">
-                    <i class="fa-solid fa-tag"></i> Nombre del Juego/Reto
-                </label>
-                <input type="text" id="name" name="name" value="{{ game.name }}" required 
-                       placeholder="Ej: Quiz de Matemáticas, Sopa de Letras Historia">
-            </div>
-            
-            <div class="form-group">
-                <label for="type">
-                    <i class="fa-solid fa-puzzle-piece"></i> Tipo de Juego
-                </label>
+        <h1><i class="fa-solid fa-gamepad"></i> EDITAR JUEGO/RETO</h1>
+
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="background: linear-gradient(90deg, var(--accent-color), var(--light-blue)); color: var(--primary-color); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 600; text-align: center; box-shadow: var(--shadow-md);">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="section">
+            <form method="POST" action="{{ url_for('editar_juego', game_id=game.id) }}" class="ai-form" style="background:rgba(255,255,255,0.3); border-radius:12px; padding:2rem;">
+                <label for="name"><i class="fa-solid fa-tag"></i> Nombre del Juego/Reto:</label>
+                <input type="text" id="name" name="name" value="{{ game.name }}" required placeholder="Ej: Quiz de Matemáticas, Sopa de Letras Historia">
+
+                <label for="type"><i class="fa-solid fa-puzzle-piece"></i> Tipo de Juego:</label>
                 <select id="type" name="type" required>
                     <option value="">Selecciona un tipo</option>
                     <option value="quiz" {% if game.type == 'quiz' %}selected{% endif %}>Quiz Interactivo</option>
@@ -205,33 +53,37 @@
                     <option value="simulation" {% if game.type == 'simulation' %}selected{% endif %}>Simulación</option>
                     <option value="other" {% if game.type == 'other' %}selected{% endif %}>Otro</option>
                 </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="description">
-                    <i class="fa-solid fa-file-text"></i> Descripción (Opcional)
-                </label>
-                <textarea id="description" name="description" 
-                          placeholder="Describe brevemente el juego o reto...">{{ game.description or '' }}</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="rules">
-                    <i class="fa-solid fa-list-ul"></i> Reglas del Juego (Opcional)
-                </label>
-                <textarea id="rules" name="rules" 
-                          placeholder="Especifica las reglas del juego...">{{ game.rules or '' }}</textarea>
-            </div>
-            
-            <div class="btn-container">
-                <button type="submit" class="btn">
-                    <i class="fa-solid fa-save"></i> Actualizar Juego
-                </button>
-                <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-secondary">
-                    <i class="fa-solid fa-times"></i> Cancelar
-                </a>
-            </div>
-        </form>
+
+                <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+                    <button type="submit" class="btn">
+                        <i class="fa-solid fa-save"></i> GUARDAR CAMBIOS
+                    </button>
+                    <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:var(--text-gray); text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-arrow-left"></i> CANCELAR
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <footer class="footer">
+        &copy; 2025 MenTora | Aprende jugando. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
+    </script>
 </body>
 </html>

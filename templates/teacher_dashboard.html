@@ -2,428 +2,108 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Profesor | MenTora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', 'Poppins', sans-serif;
-            margin: 0;
-            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
-            color: #2c3e50;
-            overflow-x: hidden;
-        }
-        .navbar {
-            width: 100vw;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: rgba(176, 224, 230, 0.18);
-            color: #2a5298;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.7rem 2.5rem;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-bottom: 2.5px solid #7fd8f6;
-            box-shadow: 0 2px 18px 0 #b2f0e6cc;
-        }
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #2a5298;
-            letter-spacing: 1px;
-            text-decoration: none;
-        }
-        .navbar .logo img {
-            height: 44px;
-            width: 44px;
-            border-radius: 50%;
-            background: #fff;
-            border: 2px solid #ffe066;
-            box-shadow: 0 1px 4px #2a529810;
-        }
-        .navbar .nav-links a {
-            color: #2a5298;
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-weight: 500;
-            font-size: 1.08rem;
-            transition: color 0.2s;
-            background: #e3f6fd;
-            border-radius: 6px;
-            padding: 0.2rem 0.7rem;
-            margin: 0 5.15rem 0 0.15rem;
-        }
-        .navbar .nav-links a:hover {
-            color: #fff;
-            background: #7fd8f6;
-        }
-        .footer {
-            width: 100vw;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            background: rgba(176, 224, 230, 0.18);
-            color: #2a5298;
-            text-align: center;
-            padding: 1rem 0 0.7rem 0;
-            font-size: 1rem;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-top: 2.5px solid #7fd8f6;
-            box-shadow: 0 -2px 18px 0 #b2f0e6cc;
-        }
-        @media (max-width: 900px) {
-            .navbar { flex-direction: column; gap: 0.7rem; padding: 0.7rem 0.5rem; }
-            .navbar .nav-links a { margin-left: 0.7rem; }
-            .navbar .nav-links a {
-                margin: 0 0.3rem 0 0.2rem;
-            }
-        }
-        .container {
-            max-width: 1200px;
-            margin: 3.5rem auto 4.5rem auto;
-            padding: 2.5rem 2rem;
-            background: rgba(255,255,255,0.13);
-            border-radius: 22px;
-            box-shadow: 0 8px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 2px solid #b2f0e6;
-        }
-        h1, h2, h3 {
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            letter-spacing: 1px;
-        }
-        h1 {
-            color: #2a5298;
-            font-size: 2.3rem;
-            margin-bottom: 0.7rem;
-            text-shadow: 0 0 8px #b2f0e6cc;
-        }
-        h2 {
-            color: #4fc3f7;
-            font-size: 1.4rem;
-            margin-bottom: 1.1rem;
-            text-shadow: 0 0 6px #b2f0e6cc;
-        }
-        .dashboard-cards {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
-        }
-        .dashboard-card {
-            flex: 1 1 220px;
-            background: linear-gradient(120deg, #e3f6fd 0%, #b2f0e6 100%);
-            color: #2a5298;
-            border-radius: 18px;
-            padding: 1.7rem 1.3rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 2px 18px #b2f0e6cc, 0 1.5px 18px #7fd8f6cc;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid #7fd8f6;
-            transition: transform 0.18s, box-shadow 0.18s;
-        }
-        .dashboard-card:hover {
-            transform: scale(1.04) rotate(-1deg);
-            box-shadow: 0 4px 32px #b2f0e6cc, 0 2px 18px #7fd8f6cc;
-        }
-        .dashboard-card i {
-            font-size: 2.7rem;
-            margin-bottom: 0.7rem;
-            color: #4fc3f7;
-            text-shadow: 0 0 8px #b2f0e6cc;
-        }
-        .dashboard-card .count {
-            font-size: 2.3rem;
-            font-weight: bold;
-            margin-bottom: 0.2rem;
-            color: #2a5298;
-            text-shadow: 0 0 8px #b2f0e6cc;
-        }
-        .dashboard-card .label {
-            font-size: 1.1rem;
-            color: #4fc3f7;
-            text-shadow: 0 0 6px #b2f0e6cc;
-        }
-        .dashboard-card .area {
-            font-size: 1.1rem;
-            color: #2a5298;
-            margin-top: 0.5rem;
-            text-shadow: 0 0 6px #b2f0e6cc;
-        }
-        .section {
-            margin-bottom: 2.7rem;
-        }
-        .btn {
-            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
-            color: #2a5298;
-            border: none;
-            border-radius: 9px;
-            padding: 0.7rem 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s, color 0.3s, transform 0.2s;
-            box-shadow: 0 2px 12px #b2f0e6cc;
-            font-size: 1.08rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            text-shadow: 0 0 6px #e3f6fdcc;
-        }
-        .btn:hover {
-            background: linear-gradient(90deg, #7fd8f6, #b2f0e6);
-            color: #181a2b;
-            transform: scale(1.04);
-            box-shadow: 0 4px 18px #b2f0e6cc;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background: rgba(255,255,255,0.10);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px #b2f0e633;
-        }
-        th, td {
-            padding: 0.8rem;
-            border-bottom: 1px solid #b2f0e6;
-            text-align: left;
-        }
-        th {
-            background: #e3f6fd;
-            color: #2a5298;
-            font-size: 1.05rem;
-            text-shadow: 0 0 6px #b2f0e6cc;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        .empty-row {
-            text-align: center;
-            color: #888;
-            font-style: italic;
-        }
-        .ai-form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        .ai-form input[type="text"], .ai-form input[type="number"] {
-            padding: 0.6rem;
-            border-radius: 7px;
-            border: 1.5px solid #b2f0e6;
-            font-size: 1rem;
-            background: rgba(255,255,255,0.18);
-            color: #2a5298;
-            box-shadow: 0 1px 4px #b2f0e633;
-        }
-        .ai-form button { margin-left: 0.5rem; }
-        ul.notifications {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        ul.notifications li {
-            background: #e3f6fd;
-            border-radius: 7px;
-            margin-bottom: 0.7rem;
-            padding: 0.8rem 1.1rem;
-            color: #2a5298;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            box-shadow: 0 1px 4px #b2f0e633;
-        }
-        ul.notifications li .fa-bell {
-            color: #7fd8f6;
-            text-shadow: 0 0 6px #b2f0e6cc;
-        }
-        @media (max-width: 900px) {
-            .dashboard-cards { flex-direction: column; gap: 1.2rem; }
-            .container { padding: 1.2rem 0.2rem; }
-        }
-        /* NAVBAR y FOOTER personalizados */
-        .navbar-tecnonauta {
-            background: rgba(176, 224, 230, 0.18) !important;
-            color: #2a5298 !important;
-            box-shadow: 0 2px 18px 0 #b2f0e6cc !important;
-            border-bottom: 2.5px solid #7fd8f6 !important;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .navbar-tecnonauta .logo span {
-            color: #2a5298 !important;
-            text-shadow: 0 0 8px #b2f0e6cc;
-        }
-        .navbar-tecnonauta .nav-links a {
-            color: #2a5298 !important;
-            background: #e3f6fd;
-            border-radius: 6px;
-            padding: 0.2rem 0.7rem;
-            margin: 0 1.5rem 0 0.2rem !important; /* Más margen a la derecha, menos a la izquierda */
-            text-shadow: none;
-            transition: background 0.2s, color 0.2s;
-        }
-        .navbar-tecnonauta .nav-links a:hover {
-            color: #fff !important;
-            background: #7fd8f6;
-        }
-        .navbar-tecnonauta .user-info span {
-            color: #2a5298 !important;
-        }
-        .footer-tecnonauta {
-            background: rgba(176, 224, 230, 0.18) !important;
-            color: #2a5298 !important;
-            border-top: 2.5px solid #7fd8f6 !important;
-            box-shadow: 0 -2px 18px 0 #b2f0e6cc !important;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        /* Chat flotante tecnonauta */
-        .chatbot-toggle, .livechat-toggle {
-            position: fixed;
-            bottom: 2.2rem;
-            z-index: 1200;
-            background: linear-gradient(90deg, #7fd8f6, #b2f0e6);
-            color: #2a5298;
-            border: none;
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            box-shadow: 0 2px 18px #b2f0e6cc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-        }
-        .chatbot-toggle:hover, .livechat-toggle:hover {
-            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
-            color: #fff;
-            transform: scale(1.08);
-        }
-        .livechat-toggle { right: 5.5rem; }
-        .chatbot-box, .livechat-box {
-            position: fixed;
-            bottom: 5.5rem;
-            right: 5.5rem;
-            width: 340px;
-            max-width: 95vw;
-            background: rgba(255,255,255,0.18);
-            border-radius: 18px;
-            box-shadow: 0 4px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc;
-            border: 2px solid #b2f0e6;
-            z-index: 1201;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .livechat-box { right: 5.5rem; }
-        .chatbot-header, .livechat-header {
-            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
-            color: #2a5298;
-            padding: 1rem 1.2rem;
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1.5px solid #7fd8f6;
-        }
-        .chatbot-messages, .livechat-messages {
-            flex: 1;
-            padding: 1rem 1.2rem;
-            overflow-y: auto;
-            background: rgba(255,255,255,0.10);
-            font-size: 1.05rem;
-            color: #2a5298;
-            max-height: 260px;
-        }
-        .chatbot-input-area, .livechat-input-area {
-            display: flex;
-            padding: 0.7rem 1rem;
-            background: rgba(255,255,255,0.13);
-            border-top: 1.5px solid #b2f0e6;
-        }
-        .chatbot-input, .livechat-input {
-            flex: 1;
-            border: 1.5px solid #b2f0e6;
-            border-radius: 8px;
-            padding: 0.5rem 0.8rem;
-            font-size: 1rem;
-            background: #fff;
-            color: #2a5298;
-            margin-right: 0.7rem;
-        }
-        .chatbot-send, .livechat-send {
-            background: linear-gradient(90deg, #7fd8f6, #b2f0e6);
-            color: #2a5298;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1.1rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .chatbot-send:hover, .livechat-send:hover {
-            background: linear-gradient(90deg, #b2f0e6, #7fd8f6);
-            color: #fff;
-        }
-        .chatbot-close, .livechat-close {
-            background: none;
-            border: none;
-            color: #2a5298;
-            font-size: 1.3rem;
-            cursor: pointer;
-            margin-left: 0.5rem;
-            transition: color 0.2s;
-        }
-        .chatbot-close:hover, .livechat-close:hover {
-            color: #e74c3c;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Exo+2:wght@600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/teacher_dashboard.css">
 </head>
 <body>
     <!-- Barra de navegación -->
     <nav class="navbar">
         <a href="/" class="logo">
-            <img src="/static/img/mentora.png" alt="MenTora Logo">
-            MenTora
+            <img src="/static/img/mentora1.png" alt="MenTora Logo">
         </a>
-        <div class="nav-links">
-            <a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
-            <!-- Modal de confirmación de logout -->
-            <div id="logoutModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(44,62,80,0.45); z-index:10000; justify-content:center; align-items:center;">
-                <div style="background:#fff; color:#2a5298; border-radius:18px; padding:2.2rem 2.5rem; box-shadow:0 4px 32px rgba(44,62,80,0.18); display:flex; flex-direction:column; align-items:center; min-width:320px; max-width:90vw;">
-                    <div style="font-size:2.1rem; font-weight:bold; margin-bottom:1.1rem;"><i class="fa-solid fa-circle-question" style="color:#fab005;"></i> ¿Seguro que quieres cerrar sesión?</div>
-                    <div style="margin-bottom:1.2rem; color:#444; font-size:1.1rem;">Tu sesión se cerrará y deberás volver a iniciar sesión para acceder de nuevo.</div>
-                    <div style="display:flex; gap:1.2rem;">
-                        <button id="confirmLogout" style="padding:0.7rem 1.5rem; background:linear-gradient(90deg,#ffe066,#fab005); color:#2a5298; font-weight:bold; border:none; border-radius:8px; font-size:1.08rem; cursor:pointer; box-shadow:0 2px 8px #fab00522;">Sí, cerrar sesión</button>
-                        <button id="cancelLogout" style="padding:0.7rem 1.5rem; background:#e0e7ef; color:#2a5298; font-weight:bold; border:none; border-radius:8px; font-size:1.08rem; cursor:pointer;">Cancelar</button>
-                    </div>
-                </div>
+        <button id="navToggle" class="menu-button" aria-label="Abrir menú">
+            <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#estadisticas" onclick="scrollToSection('estadisticas')">ESTADÍSTICAS</a></li>
+            <li><a href="#mis-quizzes" onclick="scrollToSection('mis-quizzes')">MIS QUIZZES</a></li>
+            <li><a href="#generador-ia" onclick="scrollToSection('generador-ia')">GENERADOR IA</a></li>
+            <li><a href="#mis-juegos" onclick="scrollToSection('mis-juegos')">MIS JUEGOS</a></li>
+            <li><a href="#preguntas" onclick="scrollToSection('preguntas')">PREGUNTAS</a></li>
+            <li><a href="#" id="logoutBtn" style="font-weight:700;">CERRAR SESIÓN</a></li>
+        </ul>
+    </nav>
+    <!-- Modal de confirmación de logout -->
+    <div id="logoutModal" class="modal">
+        <div style="background:#fff; color:var(--primary-color); border-radius:18px; padding:2.2rem 2.5rem; box-shadow:0 4px 32px rgba(106, 44, 61, 0.3); display:flex; flex-direction:column; align-items:center; min-width:320px; max-width:90vw; border:3px solid var(--accent-color);">
+            <div style="font-size:2.1rem; font-weight:bold; margin-bottom:1.1rem;">¿Seguro que quieres cerrar sesión?</div>
+            <div style="margin-bottom:1.2rem; color:var(--text-gray); font-size:1.1rem;">Tu sesión se cerrará y deberás volver a iniciar sesión para acceder de nuevo.</div>
+            <div style="display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:center;">
+                <button id="confirmLogout" class="btn" style="background:var(--primary-color);">Sí, cerrar sesión</button>
+                <button id="cancelLogout" class="btn" style="background:var(--text-gray);">Cancelar</button>
             </div>
         </div>
-    </nav>
+    </div>
     <div class="container">
-        <h1><i class="fa-solid fa-chalkboard-user"></i> Bienvenido, {{ user.username }} <span style="font-size:1.1rem; color:#ffe066;">(Profesor)</span></h1>
-        <div class="dashboard-cards">
+        <h1><i class="fa-solid fa-chalkboard-user"></i> BIENVENIDO, {{ user.username|upper }} <span style="font-size:1.1rem; color:var(--accent-color);">(PROFESOR)</span></h1>
+
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="background: linear-gradient(90deg, var(--accent-color), var(--light-blue)); color: var(--primary-color); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 600; text-align: center; box-shadow: var(--shadow-md);">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Sección de Cédula Profesional -->
+        <div id="cedula" class="section" style="margin-bottom:var(--spacing-xl);">
+            <h2><i class="fa-solid fa-id-card"></i> Verificación de Cédula Profesional</h2>
+            {% if teacher.cedula_profesional_img %}
+                <div style="background:rgba(255,255,255,0.3); border-radius:12px; padding:var(--spacing-md); margin-bottom:var(--spacing-md); border:2px solid var(--accent-color);">
+                    <div style="display:flex; align-items:center; gap:var(--spacing-md); flex-wrap:wrap;">
+                        <div style="flex:1; min-width:250px;">
+                            <h3 style="margin-bottom:var(--spacing-sm);">
+                                <i class="fa-solid fa-image"></i> Cédula Profesional Subida
+                            </h3>
+                            <p style="color:var(--text-gray); margin-bottom:var(--spacing-sm);">
+                                {% if teacher.cedula_verified %}
+                                    <span style="color:#28a745; font-weight:600;">
+                                        <i class="fa-solid fa-check-circle"></i> Verificada
+                                    </span>
+                                {% else %}
+                                    <span style="color:#ffc107; font-weight:600;">
+                                        <i class="fa-solid fa-clock"></i> Pendiente de verificación
+                                    </span>
+                                {% endif %}
+                            </p>
+                            <p style="color:var(--text-gray); font-size:0.9rem; margin-bottom:var(--spacing-sm);">
+                                La cédula profesional es necesaria para validar tu identidad como docente.
+                            </p>
+                            <button onclick="document.getElementById('uploadCedulaModal').style.display='flex'" class="btn" style="margin-top:var(--spacing-sm);">
+                                <i class="fa-solid fa-upload"></i> Actualizar Cédula
+                            </button>
+                        </div>
+                        <div style="flex:1; min-width:250px; max-width:400px;">
+                            <img src="/{{ teacher.cedula_profesional_img }}" alt="Cédula Profesional" style="width:100%; height:auto; border-radius:var(--radius-md); box-shadow:var(--shadow-md); cursor:pointer;" onclick="openImageModal('/{{ teacher.cedula_profesional_img }}')">
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div style="background:rgba(255,220,100,0.15); border-radius:12px; padding:var(--spacing-lg); text-align:center; border:2px dashed var(--accent-color);">
+                    <i class="fa-solid fa-exclamation-triangle" style="font-size:3rem; color:var(--accent-color); margin-bottom:var(--spacing-sm);"></i>
+                    <h3 style="margin-bottom:var(--spacing-sm); color:var(--primary-color);">
+                        Cédula Profesional Requerida
+                    </h3>
+                    <p style="color:var(--text-gray); margin-bottom:var(--spacing-md); max-width:600px; margin-left:auto; margin-right:auto;">
+                        Para verificar tu identidad como docente, necesitas subir una imagen de tu cédula profesional.
+                        Esta información es confidencial y solo será utilizada para verificación.
+                    </p>
+                    <button onclick="document.getElementById('uploadCedulaModal').style.display='flex'" class="btn">
+                        <i class="fa-solid fa-upload"></i> Subir Cédula Profesional
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+
+        <div id="estadisticas" class="dashboard-cards">
             <div class="dashboard-card">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <div class="count" id="quizCount">{{ quizzes|length }}</div>
@@ -455,7 +135,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="section">
+        <div id="mis-quizzes" class="section">
             <h2><i class="fa-solid fa-list-check"></i> Mis Quizzes/Exámenes</h2>
             <a href="#" class="btn" id="openQuizModal"><i class="fa-solid fa-plus"></i> Crear nuevo quiz/examen</a>
             <table>
@@ -479,11 +159,11 @@
                 </tbody>
             </table>
         </div>
-        <div class="section">
+        <div id="generador-ia" class="section">
             <h2><i class="fa-solid fa-robot"></i> Generador de Exámenes con IA Local</h2>
-            <div style="background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.5rem 1.2rem; margin-bottom:1rem;">
-                <div style="color:#2a5298; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
-                    <i class="fa-solid fa-microchip" style="color:#4fc3f7;"></i>
+            <div style="background:rgba(255,255,255,0.2); border-radius:12px; box-shadow:var(--shadow-sm); padding:1.5rem 1.2rem; margin-bottom:1rem; border:1px solid var(--accent-color);">
+                <div style="color:var(--primary-color); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fa-solid fa-microchip" style="color:var(--accent-color);"></i>
                     <strong>IA Local - Sin necesidad de internet</strong>
                 </div>
                 <form method="POST" action="" class="ai-form">
@@ -501,17 +181,17 @@
                     
                     <label><i class="fa-solid fa-cogs"></i> Método de IA:</label>
                     <select name="ai_method" style="padding:0.5rem; border-radius:7px; border:1px solid #b2f0e6; font-size:1rem;">
-                        <option value="offline">🚀 Plantillas (Rápido)</option>
-                        <option value="ollama">🦙 Ollama (Requiere instalación)</option>
-                        <option value="huggingface">🤗 Hugging Face (Requiere descarga)</option>
+                        <option value="offline"><i class="fa-solid fa-rocket"></i> Plantillas (Rápido)</option>
+                        <option value="ollama"><i class="fa-solid fa-brain"></i> Ollama (Requiere instalación)</option>
+                        <option value="huggingface"><i class="fa-solid fa-face-smile"></i> Hugging Face (Requiere descarga)</option>
                     </select>
                     
                     <button type="submit" class="btn"><i class="fa-solid fa-microchip"></i> Generar con IA Local</button>
                 </form>
                 
-                <div style="margin-top:1rem; padding:0.8rem; background:rgba(76,195,247,0.1); border-radius:8px; border-left:4px solid #4fc3f7;">
-                    <strong style="color:#2a5298;">💡 Métodos disponibles:</strong>
-                    <ul style="margin:0.5rem 0 0 1rem; color:#2c3e50;">
+                <div style="margin-top:1rem; padding:0.8rem; background:rgba(181, 115, 134, 0.1); border-radius:8px; border-left:4px solid var(--accent-color);">
+                    <strong style="color:var(--primary-color);"><i class="fa-solid fa-lightbulb"></i> Métodos disponibles:</strong>
+                    <ul style="margin:0.5rem 0 0 1rem; color:var(--text-gray);">
                         <li><strong>Plantillas:</strong> Rápido, funciona siempre, ideal para demostración</li>
                         <li><strong>Ollama:</strong> IA avanzada local (requiere instalar Ollama + modelo)</li>
                         <li><strong>Hugging Face:</strong> Modelos preentrenados (descarga automática)</li>
@@ -519,16 +199,16 @@
                 </div>
             </div>
             {% if ia_questions %}
-            <div style="margin-top:1.5rem; background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.5rem 1.2rem;">
-                <h3 style="color:#2a5298; margin-bottom:0.7rem;">
-                    <i class="fa-solid fa-microchip"></i> Examen generado con IA Local 
-                    <span style="color:#4fc3f7;">{{ teacher.area or 'General' }}</span>
-                    <span style="font-size:0.9rem; color:#888; margin-left:1rem;">
+            <div style="margin-top:1.5rem; background:rgba(255,255,255,0.3); border-radius:12px; box-shadow:var(--shadow-md); padding:1.5rem 1.2rem; border:1px solid var(--accent-color);">
+                <h3>
+                    <i class="fa-solid fa-microchip"></i> Examen generado con IA Local
+                    <span style="color:var(--accent-color);">{{ teacher.area or 'General' }}</span>
+                    <span style="font-size:0.9rem; color:var(--text-gray); margin-left:1rem;">
                         <i class="fa-solid fa-wifi-slash"></i> Sin conexión a internet
                     </span>
                 </h3>
                 {% if ia_tipo_examen == 'opciones' and ia_questions and ia_questions[0] is mapping %}
-                    <ol style="font-size:1.08rem; color:#2c3e50;">
+                    <ol style="font-size:1.08rem; color:var(--text-gray);">
                     {% for q in ia_questions %}
                         <li>
                             <strong>{{ q.pregunta }}</strong>
@@ -537,12 +217,12 @@
                                 <li style="list-style-type: lower-alpha;">{{ opt }}</li>
                                 {% endfor %}
                             </ul>
-                            <span style="color:#2a5298; font-size:0.98rem;"><b>Respuesta correcta:</b> {{ q.respuesta }}</span>
+                            <span style="color:var(--primary-color); font-size:0.98rem;"><b>Respuesta correcta:</b> {{ q.respuesta }}</span>
                         </li>
                     {% endfor %}
                     </ol>
                 {% else %}
-                    <ol style="font-size:1.08rem; color:#2c3e50;">
+                    <ol style="font-size:1.08rem; color:var(--text-gray);">
                     {% for q in ia_questions %}
                         <li>{{ q }}</li>
                     {% endfor %}
@@ -554,8 +234,8 @@
                         <input type="hidden" name="area" value="{{ teacher.area }}">
                         <input type="hidden" name="tipo_examen" value="{{ ia_tipo_examen }}">
                         <input type="hidden" name="preguntas" value="{{ ia_questions|safe_json }}">
-                        <button type="submit" class="btn" style="background:linear-gradient(90deg,#b2f0e6,#7fd8f6); border:2px solid #4fc3f7;">
-                            <i class="fa-solid fa-file-text"></i> Descargar TXT (Siempre funciona)
+                        <button type="submit" class="btn" style="background:var(--secondary-color);">
+                            <i class="fa-solid fa-file-lines"></i> Descargar TXT
                         </button>
                     </form>
                     <form method="post" action="{{ url_for('download_exam_word') }}" style="display:inline;">
@@ -569,7 +249,7 @@
             </div>
             {% endif %}
         </div>
-        <div class="section">
+        <div id="mis-juegos" class="section">
             <h2><i class="fa-solid fa-puzzle-piece"></i> Mis Juegos/Retos</h2>
             <a href="#" class="btn" id="openGameModal"><i class="fa-solid fa-plus"></i> Crear nuevo juego/reto</a>
             <table>
@@ -604,50 +284,80 @@
             </ul>
         </div>
         <!-- Modales -->
-        <div id="modalQuiz" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(44,62,80,0.45); z-index:10001; justify-content:center; align-items:center;">
-            <form method="POST" action="{{ url_for('teacher_create_quiz') }}" style="background:rgba(255,255,255,0.98); border-radius:18px; padding:2rem 2.5rem; box-shadow:0 4px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; display:flex; flex-direction:column; gap:1rem; min-width:320px; max-width:90vw; border:2px solid #b2f0e6;">
-                <h3 style="color:#2a5298;">{{ 'Editar Quiz/Examen' if quiz_to_edit else 'Crear nuevo Quiz/Examen' }}</h3>
+        <!-- Modal para subir cédula profesional -->
+        <div id="uploadCedulaModal" class="modal">
+            <form method="POST" action="{{ url_for('upload_cedula') }}" enctype="multipart/form-data" style="background:rgba(255,255,255,0.98); border-radius:18px; padding:2rem 2.5rem; box-shadow:0 4px 32px rgba(106, 44, 61, 0.3); display:flex; flex-direction:column; gap:1rem; min-width:320px; max-width:500px; width:90%; border:3px solid var(--accent-color);">
+                <h3 style="color:var(--primary-color); text-align:center; margin-bottom:var(--spacing-sm);">
+                    <i class="fa-solid fa-id-card"></i> Subir Cédula Profesional
+                </h3>
+                <p style="color:var(--text-gray); font-size:0.95rem; text-align:center; margin-bottom:var(--spacing-md);">
+                    Selecciona una imagen de tu cédula profesional para verificar tu identidad como docente.
+                </p>
+                <div style="border:2px dashed var(--accent-color); border-radius:var(--radius-md); padding:var(--spacing-lg); text-align:center; background:rgba(181, 115, 134, 0.05);">
+                    <i class="fa-solid fa-cloud-upload-alt" style="font-size:3rem; color:var(--accent-color); margin-bottom:var(--spacing-sm);"></i>
+                    <input type="file" name="cedula_file" id="cedula_file" accept="image/*" required style="display:none;" onchange="updateFileName(this)">
+                    <label for="cedula_file" style="display:block; cursor:pointer; color:var(--primary-color); font-weight:600; margin-bottom:var(--spacing-xs);">
+                        Haz clic para seleccionar una imagen
+                    </label>
+                    <p id="file-name" style="color:var(--text-gray); font-size:0.9rem; margin-top:var(--spacing-xs);">
+                        Formatos: PNG, JPG, JPEG, GIF, WEBP
+                    </p>
+                </div>
+                <div style="display:flex; gap:var(--spacing-sm); justify-content:center; margin-top:var(--spacing-sm);">
+                    <button type="submit" class="btn">
+                        <i class="fa-solid fa-upload"></i> Subir
+                    </button>
+                    <button type="button" class="btn" style="background:var(--text-gray);" onclick="document.getElementById('uploadCedulaModal').style.display='none'">
+                        <i class="fa-solid fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="modalQuiz" class="modal">
+            <form method="POST" action="{{ url_for('teacher_create_quiz') }}">
+                <h3>{{ 'Editar Quiz/Examen' if quiz_to_edit else 'Crear nuevo Quiz/Examen' }}</h3>
                 <input type="hidden" name="quiz_id" value="{{ quiz_to_edit.id if quiz_to_edit else '' }}">
                 <input type="text" name="title" placeholder="Título" required value="{{ quiz_to_edit.title if quiz_to_edit else '' }}">
                 <input type="text" name="area" placeholder="Área" value="{{ quiz_to_edit.area if quiz_to_edit else teacher.area or '' }}" required>
                 <button type="submit" class="btn">{{ 'Actualizar' if quiz_to_edit else 'Guardar' }}</button>
-                <button type="button" class="btn" style="background:#e0e7ef; color:#2a5298;" onclick="document.getElementById('modalQuiz').style.display='none'">Cancelar</button>
+                <button type="button" class="btn" style="background:var(--text-gray);" onclick="document.getElementById('modalQuiz').style.display='none'">Cancelar</button>
                 {% if quiz_to_edit %}
-                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:#e0e7ef; color:#2a5298;">Cancelar edición</a>
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:var(--text-gray);">Cancelar edición</a>
                 {% endif %}
             </form>
         </div>
-        <div id="modalGame" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(44,62,80,0.45); z-index:10001; justify-content:center; align-items:center;">
-            <form method="POST" action="{{ url_for('teacher_create_game') }}" style="background:rgba(255,255,255,0.98); border-radius:18px; padding:2rem 2.5rem; box-shadow:0 4px 32px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; display:flex; flex-direction:column; gap:1rem; min-width:320px; max-width:90vw; border:2px solid #b2f0e6;">
-                <h3 style="color:#2a5298;">{{ 'Editar Juego/Reto' if game_to_edit else 'Crear nuevo Juego/Reto' }}</h3>
+        <div id="modalGame" class="modal">
+            <form method="POST" action="{{ url_for('teacher_create_game') }}">
+                <h3>{{ 'Editar Juego/Reto' if game_to_edit else 'Crear nuevo Juego/Reto' }}</h3>
                 <input type="hidden" name="game_id" value="{{ game_to_edit.id if game_to_edit else '' }}">
                 <input type="text" name="name" placeholder="Nombre del juego" required value="{{ game_to_edit.name if game_to_edit else '' }}">
                 <input type="text" name="type" placeholder="Tipo de juego" required value="{{ game_to_edit.type if game_to_edit else '' }}">
                 <button type="submit" class="btn">{{ 'Actualizar' if game_to_edit else 'Guardar' }}</button>
-                <button type="button" class="btn" style="background:#e0e7ef; color:#2a5298;" onclick="document.getElementById('modalGame').style.display='none'">Cancelar</button>
+                <button type="button" class="btn" style="background:var(--text-gray);" onclick="document.getElementById('modalGame').style.display='none'">Cancelar</button>
                 {% if game_to_edit %}
-                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:#e0e7ef; color:#2a5298;">Cancelar edición</a>
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn" style="background:var(--text-gray);">Cancelar edición</a>
                 {% endif %}
             </form>
         </div>
-        <div class="section">
+        <div id="preguntas" class="section">
             <h2><i class="fa-solid fa-question"></i> Agregar preguntas a un Quiz</h2>
-            <form method="POST" action="{{ url_for('teacher_add_question') }}" style="background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.5rem 1.2rem; margin-bottom:1.5rem;">
-                <label for="quiz_id"><b>Quiz:</b></label>
-                <select name="quiz_id" required style="margin-bottom:0.7rem; padding:0.5rem; border-radius:7px; border:1.5px solid #b2f0e6;">
+            <form method="POST" action="{{ url_for('teacher_add_question') }}" class="ai-form" style="background:rgba(255,255,255,0.2); border-radius:12px; padding:1.5rem 1.2rem; margin-bottom:1.5rem;">
+                <label for="quiz_id"><i class="fa-solid fa-clipboard-question"></i> Quiz:</label>
+                <select name="quiz_id" required>
                     {% for quiz in quizzes %}
                     <option value="{{ quiz.id }}">{{ quiz.title }} ({{ quiz.area }})</option>
                     {% endfor %}
                 </select>
-                <label for="question_text"><b>Pregunta:</b></label>
-                <input type="text" name="question_text" required placeholder="Escribe la pregunta" style="margin-bottom:0.7rem; width:100%; padding:0.5rem; border-radius:7px; border:1.5px solid #b2f0e6;">
-                <label><b>Opciones:</b></label>
-                <input type="text" name="option1" required placeholder="Opción 1" style="margin-bottom:0.5rem; width:100%;">
-                <input type="text" name="option2" required placeholder="Opción 2" style="margin-bottom:0.5rem; width:100%;">
-                <input type="text" name="option3" required placeholder="Opción 3" style="margin-bottom:0.5rem; width:100%;">
-                <input type="text" name="option4" required placeholder="Opción 4" style="margin-bottom:0.5rem; width:100%;">
-                <label for="correct_answer"><b>Respuesta correcta:</b></label>
-                <select name="correct_answer" required style="margin-bottom:1rem; padding:0.5rem; border-radius:7px; border:1.5px solid #b2f0e6;">
+                <label for="question_text"><i class="fa-solid fa-circle-question"></i> Pregunta:</label>
+                <input type="text" name="question_text" required placeholder="Escribe la pregunta">
+                <label><i class="fa-solid fa-list"></i> Opciones:</label>
+                <input type="text" name="option1" required placeholder="Opción 1">
+                <input type="text" name="option2" required placeholder="Opción 2">
+                <input type="text" name="option3" required placeholder="Opción 3">
+                <input type="text" name="option4" required placeholder="Opción 4">
+                <label for="correct_answer"><i class="fa-solid fa-check-circle"></i> Respuesta correcta:</label>
+                <select name="correct_answer" required>
                     <option value="1">Opción 1</option>
                     <option value="2">Opción 2</option>
                     <option value="3">Opción 3</option>
@@ -659,8 +369,8 @@
         <div class="section">
             <h2><i class="fa-solid fa-list-ul"></i> Preguntas agregadas a los Quizzes</h2>
             {% for quiz in quizzes %}
-            <div style="margin-bottom:1.5rem; background:rgba(255,255,255,0.13); border-radius:12px; box-shadow:0 2px 8px #7fd8f6cc, 0 1.5px 18px #b2f0e6cc; padding:1.2rem 1rem;">
-                <h3 style="color:#2a5298; margin-bottom:0.5rem;"><i class="fa-solid fa-file-lines"></i> {{ quiz.title }} ({{ quiz.area }})</h3>
+            <div style="margin-bottom:1.5rem; background:rgba(255,255,255,0.3); border-radius:12px; box-shadow:var(--shadow-sm); padding:1.2rem 1rem; border:1px solid var(--accent-color);">
+                <h3><i class="fa-solid fa-file-lines"></i> {{ quiz.title }} ({{ quiz.area }})</h3>
                 {% if quiz.questions %}
                 <table style="width:100%;">
                     <thead><tr><th>Pregunta</th><th>Opciones</th><th>Respuesta correcta</th><th>Acciones</th></tr></thead>
@@ -699,6 +409,51 @@
     <!-- Socket.IO client for live chat -->
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script>
+    // Smooth scroll function
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            const navHeight = document.querySelector('.navbar').offsetHeight;
+            const targetPosition = section.offsetTop - navHeight - 20;
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            // Close mobile menu if open
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        }
+        return false;
+    }
+
+    // Mobile menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (navToggle && navLinks) {
+            navToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        }
+    });
+
+    // Auto-hide flash messages after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            }, 5000);
+        });
+    });
+
     // Modal de confirmación de logout
     const logoutBtn = document.getElementById('logoutBtn');
     const logoutModal = document.getElementById('logoutModal');
@@ -840,6 +595,26 @@
     }
     animateCount('quizCount', parseInt(document.getElementById('quizCount').textContent));
     animateCount('gameCount', parseInt(document.getElementById('gameCount').textContent));
+
+    // Función para actualizar el nombre del archivo seleccionado
+    function updateFileName(input) {
+        const fileName = input.files[0] ? input.files[0].name : 'No se ha seleccionado ningún archivo';
+        document.getElementById('file-name').textContent = fileName;
+    }
+
+    // Función para abrir modal de imagen
+    function openImageModal(imageSrc) {
+        const modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);z-index:10000;display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+        modal.onclick = function() { document.body.removeChild(modal); };
+
+        const img = document.createElement('img');
+        img.src = imageSrc;
+        img.style.cssText = 'max-width:90%;max-height:90%;border-radius:var(--radius-md);box-shadow:0 0 50px rgba(255,255,255,0.3);';
+
+        modal.appendChild(img);
+        document.body.appendChild(modal);
+    }
     </script>
     <!-- Botones flotantes -->
     <button class="livechat-toggle" id="livechat-toggle" title="Chat en vivo" onclick="toggleLiveChat()"><i class="fa-solid fa-comments"></i></button>
@@ -851,7 +626,7 @@
             <button class="livechat-close" onclick="toggleLiveChat()"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div style="padding:0.7rem 1.2rem 0.2rem 1.2rem;">
-            <input class="livechat-username" id="livechat-username" type="text" placeholder="Tu nombre o usuario" style="width:100%;margin-bottom:0.5rem;padding:0.4rem 0.7rem;border-radius:7px;border:1.5px solid #b2f0e6;font-size:1rem;" maxlength="32">
+            <input class="livechat-username" id="livechat-username" type="text" placeholder="Tu nombre o usuario" maxlength="32">
         </div>
         <div class="livechat-messages" id="livechat-messages"></div>
         <form class="livechat-input-area" onsubmit="sendLiveChatMessage(event)">
@@ -902,7 +677,7 @@
         const messages = document.getElementById('chatbot-messages');
         const userMsg = input.value.trim();
         if (!userMsg) return;
-        messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:#b2f0e6;color:#2a5298;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;'>${userMsg}</span></div>`;
+        messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:var(--light-blue);color:var(--primary-color);padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;'>${userMsg}</span></div>`;
         input.value = '';
         messages.scrollTop = messages.scrollHeight;
         try {
@@ -912,10 +687,10 @@
                 body: JSON.stringify({ message: userMsg })
             });
             const data = await res.json();
-            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#b2f0e6;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>${data.response}</span></div>`;
+            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:var(--primary-color);color:var(--light-blue);padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>${data.response}</span></div>`;
             messages.scrollTop = messages.scrollHeight;
         } catch (err) {
-            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#2a5298;color:#b2f0e6;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>Error de conexión con el bot.</span></div>`;
+            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:var(--primary-color);color:var(--light-blue);padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>Error de conexión con el bot.</span></div>`;
         }
     }
     // Chat en Vivo: enviar mensaje (requiere socket.io en backend)
@@ -929,7 +704,7 @@
                 const isUser = usernameInput && data.username === usernameInput.value.trim();
                 const msgDiv = document.createElement('div');
                 msgDiv.className = 'msg' + (isUser ? ' user' : '');
-                msgDiv.innerHTML = `<span style='font-size:0.9rem;color:#7fd8f6;margin:0 0.5rem;'>${data.username}</span><span style='max-width:70%;padding:0.7rem 1.1rem;border-radius:16px 16px 2px 16px;background:${isUser ? '#2a5298' : '#b2f0e6'};color:${isUser ? '#b2f0e6' : '#2a5298'};font-weight:500;font-size:1.05rem;box-shadow:0 1px 4px #b2f0e633;display:inline-block;'>${data.message}</span>`;
+                msgDiv.innerHTML = `<span style='font-size:0.9rem;color:var(--accent-color);margin:0 0.5rem;'>${data.username}</span><span style='max-width:70%;padding:0.7rem 1.1rem;border-radius:16px 16px 2px 16px;background:${isUser ? 'var(--primary-color)' : 'var(--light-blue)'};color:${isUser ? 'var(--light-blue)' : 'var(--primary-color)'};font-weight:500;font-size:1.05rem;box-shadow:0 1px 4px rgba(106, 44, 61, 0.2);display:inline-block;'>${data.message}</span>`;
                 messages.appendChild(msgDiv);
                 messages.scrollTop = messages.scrollHeight;
             });
