@@ -324,24 +324,47 @@ def login():
                 app.logger.warning(f"No se pudo guardar log de acceso: {log_error}")
 
             if success:
-                session['user_id'] = user.id
-                session['username'] = user.username
-                session['is_admin'] = user.is_admin
-                session['avatar_url'] = user.avatar_url if user.avatar_url else ''
-                session['theme'] = user.theme if user.theme else 'default'
-                
-                if user.is_admin:
-                    return jsonify(success=True, redirect=url_for('admin_panel'))
-                elif hasattr(user, 'teacher_profile') and user.teacher_profile is not None:
-                    return jsonify(success=True, redirect=url_for('teacher_dashboard'))
-                else:
-                    return jsonify(success=True, redirect=url_for('dashboard'))
+                app.logger.debug(f"Login exitoso para usuario: {username!r}")
+
+                try:
+                    session['user_id'] = user.id
+                    session['username'] = user.username
+                    session['is_admin'] = user.is_admin
+                    session['avatar_url'] = user.avatar_url if user.avatar_url else ''
+                    session['theme'] = user.theme if user.theme else 'default'
+
+                    app.logger.debug(f"Usuario es admin: {user.is_admin}")
+
+                    # Determinar la URL de redirección
+                    redirect_url = '/dashboard'  # Default
+
+                    if user.is_admin:
+                        redirect_url = '/admin'
+                        app.logger.debug(f"Redirigiendo a admin panel")
+                    elif hasattr(user, 'teacher_profile') and user.teacher_profile is not None:
+                        redirect_url = '/teacher/dashboard'
+                        app.logger.debug(f"Usuario tiene perfil de profesor, redirigiendo a teacher dashboard")
+                    else:
+                        app.logger.debug(f"Redirigiendo a dashboard normal")
+
+                    return jsonify(success=True, redirect=redirect_url)
+
+                except Exception as session_error:
+                    app.logger.error(f"Error al configurar sesión: {session_error}")
+                    raise
             else:
+                app.logger.debug(f"Login fallido para usuario: {username!r}")
                 return jsonify(success=False, message="Usuario o contraseña incorrectos"), 401
-                
+
         except Exception as e:
             app.logger.error(f"Error en login: {str(e)}")
-            return jsonify(success=False, message="Error al procesar login"), 500
+            app.logger.error(f"Traceback completo: {traceback.format_exc()}")
+
+            # En modo debug, enviar el error completo
+            if app.config.get('DEBUG') or os.environ.get('SHOW_ERROR_JSON') == '1':
+                return jsonify(success=False, message="Error al procesar login", error=str(e), traceback=traceback.format_exc()), 500
+            else:
+                return jsonify(success=False, message="Error al procesar login"), 500
 
     return render_template('login.html')
 
