@@ -214,6 +214,10 @@ def test_register():
 def register():
     if request.method == 'POST':
         try:
+            # Log de headers para debug
+            app.logger.debug(f"Register request - Content-Type: {request.content_type}")
+            app.logger.debug(f"Register request - Form data keys: {list(request.form.keys())}")
+
             username = request.form.get('username', '').strip()
             email = request.form.get('email', '').strip()
             password = request.form.get('password', '')
@@ -294,8 +298,14 @@ def register():
 def login():
     if request.method == 'POST':
         try:
+            # Log de headers para debug
+            app.logger.debug(f"Login request - Content-Type: {request.content_type}")
+            app.logger.debug(f"Login request - Form data keys: {list(request.form.keys())}")
+
             username = request.form.get('username', '').strip()
             password = request.form.get('password', '')
+
+            app.logger.debug(f"Login intento para usuario: {username!r}")
 
             if not username or not password:
                 return jsonify(success=False, message="Usuario o contraseña incorrectos"), 400

@@ -693,12 +693,12 @@ const AuthForms = {
     initLoginForm() {
         const loginForm = document.getElementById('loginForm');
         const alertMentoraModal = document.getElementById('alert-mentora-modal');
-        
+
         if (!loginForm) return;
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const errorEl = document.getElementById('alert-error');
             if (errorEl) {
                 errorEl.style.display = 'none';
@@ -706,7 +706,7 @@ const AuthForms = {
             }
 
             const formData = new FormData(loginForm);
-            
+
             try {
                 const response = await fetch('/login', {
                     method: 'POST',
@@ -714,12 +714,15 @@ const AuthForms = {
                     credentials: 'same-origin'
                 });
 
-                // Intentar parsear JSON del cuerpo siempre que sea posible
                 let res = null;
-                try {
-                    res = await response.json();
-                } catch (err) {
-                    // noop - we'll fallback to generic messages
+                const contentType = response.headers.get('content-type');
+
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        res = await response.json();
+                    } catch (err) {
+                        console.error('Error parsing JSON:', err);
+                    }
                 }
 
                 if (response.ok) {
@@ -732,40 +735,46 @@ const AuthForms = {
                         AlertSystem.showOrToast('error', (res && res.message) || 'Usuario o contraseña incorrectos');
                     }
                 } else {
-                    AlertSystem.showOrToast('error', (res && res.message) || 'Usuario o contraseña incorrectos');
+                    const errorMsg = (res && res.message) || 'Usuario o contraseña incorrectos';
+                    AlertSystem.showOrToast('error', errorMsg);
+                    console.error('Login error:', response.status, res);
                 }
             } catch (err) {
-                AlertSystem.showOrToast('error', 'Error de conexión. Intenta de nuevo.');
+                console.error('Login exception:', err);
+                AlertSystem.showOrToast('error', 'Error de conexión. Verifica tu conexión a internet.');
             }
         });
     },
 
     initRegisterForm() {
         const registerForm = document.getElementById('registerForm');
-        
+
         if (!registerForm) return;
 
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             if (registerForm.dataset.processing === '1') return;
             registerForm.dataset.processing = '1';
 
             const formData = new FormData(registerForm);
-            
+
             try {
                 const response = await fetch('/register', {
                     method: 'POST',
-                    headers: { 'Accept': 'application/json' },
                     body: formData,
                     credentials: 'same-origin'
                 });
 
                 let res = null;
-                try {
-                    res = await response.json();
-                } catch (err) {
-                    // ignore - we'll use generic messages if JSON not available
+                const contentType = response.headers.get('content-type');
+
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        res = await response.json();
+                    } catch (err) {
+                        console.error('Error parsing JSON:', err);
+                    }
                 }
 
                 if (response.ok) {
@@ -778,10 +787,13 @@ const AuthForms = {
                         AlertSystem.showOrToast('error', (res && res.message) || 'Error en el registro.');
                     }
                 } else {
-                    AlertSystem.showOrToast('error', (res && res.message) || 'Error en el registro.');
+                    const errorMsg = (res && res.message) || `Error en el registro (${response.status})`;
+                    AlertSystem.showOrToast('error', errorMsg);
+                    console.error('Register error:', response.status, res);
                 }
             } catch (err) {
-                AlertSystem.showOrToast('error', 'Error de conexión.');
+                console.error('Register exception:', err);
+                AlertSystem.showOrToast('error', 'Error de conexión. Verifica tu conexión a internet.');
             } finally {
                 try {
                     registerForm.dataset.processing = '0';
