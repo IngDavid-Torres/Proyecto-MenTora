@@ -128,40 +128,36 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
-        password = request.form.get('password', '')
-        user_type = request.form.get('user_type', 'student')
-        area = 'Programación'  # Área fija
-
-        print(f"[REGISTRO] Datos recibidos: username={username}, email={email}, user_type={user_type}")
-
-        if not username or not email or not password or not user_type:
-            msg = 'Todos los campos son obligatorios.'
-            print(f"[REGISTRO ERROR] Campos faltantes")
-            if request.headers.get('Accept') == 'application/json':
-                return jsonify(success=False, message=msg), 400
-            flash(msg, 'error')
-            return redirect(url_for('register'))
-
-        existing_user = User.query.filter_by(username=username).first()
-        existing_email = User.query.filter_by(email=email).first()
-        if existing_user:
-            msg = 'El nombre de usuario ya está en uso.'
-            print(f"[REGISTRO ERROR] {msg}")
-            if request.headers.get('Accept') == 'application/json':
-                return jsonify(success=False, message=msg), 400
-            flash(msg, 'error')
-            return redirect(url_for('register'))
-        if existing_email:
-            msg = 'El correo electrónico ya está registrado.'
-            print(f"[REGISTRO ERROR] {msg}")
-            if request.headers.get('Accept') == 'application/json':
-                return jsonify(success=False, message=msg), 400
-            flash(msg, 'error')
-            return redirect(url_for('register'))
-
         try:
+            username = request.form.get('username', '').strip()
+            email = request.form.get('email', '').strip()
+            password = request.form.get('password', '')
+            user_type = request.form.get('user_type', 'student')
+            area = 'Programación'  # Área fija
+
+            if not username or not email or not password or not user_type:
+                msg = 'Todos los campos son obligatorios.'
+                if request.headers.get('Accept') == 'application/json':
+                    return jsonify(success=False, message=msg), 400
+                flash(msg, 'error')
+                return redirect(url_for('register'))
+
+            existing_user = User.query.filter_by(username=username).first()
+            if existing_user:
+                msg = 'El nombre de usuario ya está en uso.'
+                if request.headers.get('Accept') == 'application/json':
+                    return jsonify(success=False, message=msg), 400
+                flash(msg, 'error')
+                return redirect(url_for('register'))
+            
+            existing_email = User.query.filter_by(email=email).first()
+            if existing_email:
+                msg = 'El correo electrónico ya está registrado.'
+                if request.headers.get('Accept') == 'application/json':
+                    return jsonify(success=False, message=msg), 400
+                flash(msg, 'error')
+                return redirect(url_for('register'))
+
             hashed_password = generate_password_hash(password)
             new_user = User(
                 username=username,
@@ -173,29 +169,26 @@ def register():
                 is_admin=False
             )
             db.session.add(new_user)
-            db.session.flush()  # Para obtener el id
-            print(f"[REGISTRO] Usuario creado: id={new_user.id}, area={area}")
+            db.session.flush()
+            
             if user_type == 'teacher':
                 teacher = Teacher(user_id=new_user.id, area=area)
                 db.session.add(teacher)
-                print(f"[REGISTRO] Profesor creado para user_id={new_user.id}")
+            
             db.session.commit()
             msg = 'Registro exitoso. Ahora puedes iniciar sesión.'
-            print(f"[REGISTRO] ✅ Éxito para {username}")
             if request.headers.get('Accept') == 'application/json':
                 return jsonify(success=True, message=msg)
             flash(msg, 'success')
             return redirect(url_for('login'))
+            
         except Exception as e:
             db.session.rollback()
-            print(f"[REGISTRO ERROR] Exception: {str(e)}")
-            import traceback
-            traceback.print_exc()
-            app.logger.exception('Error al registrar usuario:')
-            err_msg = 'Error al registrar usuario. Intenta de nuevo más tarde.'
+            err_msg = f'Error al registrar: {str(e)}'
+            app.logger.error(err_msg)
             if request.headers.get('Accept') == 'application/json':
-                return jsonify(success=False, message=err_msg), 500
-            flash(err_msg, 'error')
+                return jsonify(success=False, message='Error al registrar usuario.'), 500
+            flash('Error al registrar usuario.', 'error')
             return redirect(url_for('register'))
 
     return render_template('register.html')
