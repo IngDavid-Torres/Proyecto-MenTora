@@ -93,7 +93,6 @@ with app.app_context():
     print("✅ Tablas creadas correctamente.")
 
     admin_password = os.environ.get('ADMIN_PASSWORD', 'MenToraAdmin123')
-    print(f"[DEBUG] Contraseña admin fija usada: '{admin_password}'")
     # Buscar usuario admin por username
     admin = User.query.filter_by(username='admin').first()
     if not admin:
@@ -110,7 +109,7 @@ with app.app_context():
         )
         db.session.add(admin_user)
         db.session.commit()
-        print(f"👑 Usuario administrador creado (ID=1, contraseña: {admin_password})")
+        print("👑 Usuario administrador creado.")
     else:
         # Si existe, actualizar ID y contraseña si es necesario
         if admin.id != 1:
@@ -1949,3 +1948,8 @@ def edit_question(question_id):
         return redirect(url_for('teacher_dashboard'))
     return render_template('edit_question.html', question=question)
 
+
+if __name__ == '__main__':
+    print("MenTora está en línea")
+    print("Abre tu navegador: http://127.0.0.1:5000")
+    socketio.run(app, host='127.0.0.1', port=5000, debug=False)
