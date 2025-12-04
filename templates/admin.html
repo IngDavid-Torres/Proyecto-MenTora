@@ -429,7 +429,7 @@
                         </div>
                         <div style="flex:1; min-width:180px;">
                             <label for="password" style="font-weight:bold;">Contraseña:</label>
-                            <input type="password" id="password" name="password" {% if not user_to_edit %}required{% endif %} style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
+                            <input type="password" id="password" name="password" {% if not user_to_edit %}required{% endif %} autocomplete="new-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
                         </div>
                         <button type="submit">{{ 'Actualizar' if user_to_edit else 'Agregar' }} usuario</button>
                         {% if user_to_edit %}
@@ -821,15 +821,15 @@
                         <h3 style="font-size:1.1rem; margin-bottom:0.7rem;">Cambiar contraseña de administrador</h3>
                         <div style="margin-bottom:0.7rem;">
                             <label for="current_password" style="font-weight:bold;">Contraseña actual:</label>
-                            <input type="password" id="current_password" name="current_password" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
+                            <input type="password" id="current_password" name="current_password" required autocomplete="current-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
                         </div>
                         <div style="margin-bottom:0.7rem;">
                             <label for="new_password" style="font-weight:bold;">Nueva contraseña:</label>
-                            <input type="password" id="new_password" name="new_password" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
+                            <input type="password" id="new_password" name="new_password" required autocomplete="new-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
                         </div>
                         <div style="margin-bottom:0.7rem;">
                             <label for="confirm_password" style="font-weight:bold;">Confirmar nueva contraseña:</label>
-                            <input type="password" id="confirm_password" name="confirm_password" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
+                            <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
                         </div>
                         <button type="submit">Actualizar contraseña</button>
                     </form>

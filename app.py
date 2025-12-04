@@ -22,7 +22,13 @@ from models import db, User, Quiz, Question, UserAnswer, Achievement, Badge, Not
 
 import logging
 import traceback
-app = Flask(__name__)
+
+# Configurar rutas de archivos estáticos y templates
+base_dir = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(base_dir, 'static')
+templates_dir = os.path.join(base_dir, 'templates')
+
+app = Flask(__name__, static_folder=static_dir, static_url_path='/static', template_folder=templates_dir)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SITE_NAME'] = 'MenTora'
@@ -135,6 +141,28 @@ def health():
         return jsonify(status='ok', users=user_count, message='Base de datos disponible')
     except Exception as e:
         return jsonify(status='error', message=str(e)), 500
+
+
+@app.route('/debug/static-files')
+def debug_static_files():
+    """Endpoint para debug: lista archivos estáticos disponibles"""
+    import os
+    static_path = app.static_folder
+    js_path = os.path.join(static_path, 'js')
+    
+    if not os.path.exists(js_path):
+        return jsonify(status='error', message='Carpeta js no existe', path=js_path), 404
+    
+    files = {
+        'static_folder': static_path,
+        'static_url_path': app.static_url_path,
+        'js_files': []
+    }
+    
+    if os.path.exists(js_path):
+        files['js_files'] = os.listdir(js_path)
+    
+    return jsonify(files)
 
 
 @app.route('/test-register', methods=['POST'])
