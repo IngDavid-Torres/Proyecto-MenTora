@@ -16,33 +16,29 @@
     {% include 'background_usser.html' %}  
     <nav class="main-navbar">
         <div class="navbar-content">
-                <a href="/dashboard" class="navbar-logo">
-                    <img src="{{ url_for('static', filename='img/mentora1.png') }}" alt="Logo MenTora">
-                </a>
+            <a href="/dashboard" class="navbar-logo">
+                <img src="{{ url_for('static', filename='img/mentora1.png') }}" alt="Logo MenTora">
+            </a>
             <button id="navToggle" class="menu-button" aria-label="Abrir menú">
                 <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
             </button>
 
-            <ul class="navbar-links">
+            <ul class="navbar-links" id="navLinks">
                 <li><a href="/games" class="{% if request.path.startswith('/games') %}active{% endif %}">JUEGOS</a></li>
                 <li><a href="/biblioteca" class="{% if request.path.startswith('/biblioteca') %}active{% endif %}">BIBLIOTECA</a></li>
                 <li><a href="/noticias" class="{% if request.path.startswith('/noticias') %}active{% endif %}">NOTICIAS</a></li>
                 <li><a href="/juegos-interactivos" class="{% if request.path.startswith('/juegos-interactivos') %}active{% endif %}">ZONA INTECRACTIVA</a></li>
-                                <li><a href="/dashboard" class="{% if request.path.startswith('/dashboard') %}active{% endif %}">DASHBOARD</a></li>
+                <li><a href="/dashboard" class="{% if request.path.startswith('/dashboard') %}active{% endif %}">DASHBOARD</a></li>
+                <li><a href="/edit_profile">PERFIL</a></li>
+                <li><a href="#logros">TUS LOGROS</a></li>
+                <li><a href="#notificaciones" onclick="scrollToSection('notificaciones')">NOTIFICACIONES</a></li>
+                <li><a href="#reto-especial" onclick="scrollToSection('reto-especial')">DESAFÍO DIARIO</a></li>
+                <li><a href="#historial" onclick="scrollToSection('historial')">HISTORIAL</a></li>
+                <li><a href="#" onclick="showModal();return false;" style="font-weight:700;">CERRAR SESIÓN</a></li>
             </ul>
             <div class="navbar-user">
                 <img src="{{ avatar_url }}" alt="avatar" class="navbar-avatar">
                 <span class="navbar-username">{{ username }}</span>
-                <button id="userMenuBtn" class="navbar-user-btn"> <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="icono menú" class="menu-icon"> </button>
-
-                <div id="userMenu" class="navbar-user-menu">
-                    <a href="/edit_profile"> PERFIL </a>
-                    <a href="#logros"> TUS LOGROS </a>
-                    <a href="#notificaciones" onclick="scrollToSection('notificaciones')"> NOTIFICACIONES</a>
-                    <a href="#reto-especial" onclick="scrollToSection('reto-especial')"> DESAFÍO DIARIO </a>
-                    <a href="#historial" onclick="scrollToSection('historial')">HISTORIAL</a>
-                    <a href="#" onclick="showModal();return false;" style="font-weight:700;">CERRAR SESIÓN</a>
-                </div>
             </div>
         </div>
     </nav>
