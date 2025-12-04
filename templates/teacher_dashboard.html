@@ -118,46 +118,50 @@
         </div>
         <div class="section">
             <h2><i class="fa-solid fa-users"></i> Alumnos inscritos en tu área</h2>
-            <table>
-                <thead><tr><th>Nombre</th><th>Correo</th><th>Puntaje en tus quizzes</th></tr></thead>
-                <tbody>
-                {% for s in student_scores %}
-                {% if s.student.id != user.id %}
-                <tr>
-                    <td>{{ s.student.username }}</td>
-                    <td>{{ s.student.email }}</td>
-                    <td>{{ s.quiz_points }}</td>
-                </tr>
-                {% endif %}
-                {% else %}
-                <tr><td colspan="3" class="empty-row">No hay alumnos inscritos en tu área.</td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Nombre</th><th>Correo</th><th>Puntaje en tus quizzes</th></tr></thead>
+                    <tbody>
+                    {% for s in student_scores %}
+                    {% if s.student.id != user.id %}
+                    <tr>
+                        <td>{{ s.student.username }}</td>
+                        <td>{{ s.student.email }}</td>
+                        <td>{{ s.quiz_points }}</td>
+                    </tr>
+                    {% endif %}
+                    {% else %}
+                    <tr><td colspan="3" class="empty-row">No hay alumnos inscritos en tu área.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div id="mis-quizzes" class="section">
             <h2><i class="fa-solid fa-list-check"></i> Mis Quizzes/Exámenes</h2>
             <a href="#" class="btn" id="openQuizModal"><i class="fa-solid fa-plus"></i> Crear nuevo quiz/examen</a>
-            <table>
-                <thead><tr><th>Título</th><th>Área</th><th>Fecha</th><th>Acciones</th></tr></thead>
-                <tbody>
-                {% for quiz in quizzes %}
-                <tr>
-                    <td>{{ quiz.title }}</td>
-                    <td>{{ quiz.area }}</td>
-                    <td>{{ quiz.created_at.strftime('%Y-%m-%d') }}</td>
-                    <td>
-                        <a href="{{ url_for('editar_quiz', quiz_id=quiz.id) }}" class="btn"><i class="fa-solid fa-pen"></i> Editar</a>
-                        <form method="POST" action="{{ url_for('eliminar_quiz', quiz_id=quiz.id) }}" style="display:inline;">
-                            <button type="submit" class="btn" style="background:#e74c3c; color:#fff;"><i class="fa-solid fa-trash"></i> Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-                {% else %}
-                <tr><td colspan="4" class="empty-row">No has creado quizzes aún.</td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Título</th><th>Área</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                    {% for quiz in quizzes %}
+                    <tr>
+                        <td>{{ quiz.title }}</td>
+                        <td>{{ quiz.area }}</td>
+                        <td>{{ quiz.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('editar_quiz', quiz_id=quiz.id) }}" class="btn"><i class="fa-solid fa-pen"></i> Editar</a>
+                            <form method="POST" action="{{ url_for('eliminar_quiz', quiz_id=quiz.id) }}" style="display:inline;">
+                                <button type="submit" class="btn" style="background:#e74c3c; color:#fff;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="empty-row">No has creado quizzes aún.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div id="generador-ia" class="section">
             <h2><i class="fa-solid fa-robot"></i> Generador de Exámenes con IA Local</h2>
@@ -252,26 +256,28 @@
         <div id="mis-juegos" class="section">
             <h2><i class="fa-solid fa-puzzle-piece"></i> Mis Juegos/Retos</h2>
             <a href="#" class="btn" id="openGameModal"><i class="fa-solid fa-plus"></i> Crear nuevo juego/reto</a>
-            <table>
-                <thead><tr><th>Nombre</th><th>Tipo</th><th>Fecha</th><th>Acciones</th></tr></thead>
-                <tbody>
-                {% for game in games %}
-                <tr>
-                    <td>{{ game.name }}</td>
-                    <td>{{ game.type }}</td>
-                    <td>{{ game.created_at.strftime('%Y-%m-%d') }}</td>
-                    <td>
-                        <a href="{{ url_for('editar_juego', game_id=game.id) }}" class="btn"><i class="fa-solid fa-pen"></i> Editar</a>
-                        <form method="POST" action="{{ url_for('eliminar_juego', game_id=game.id) }}" style="display:inline;">
-                            <button type="submit" class="btn" style="background:#e74c3c; color:#fff;"><i class="fa-solid fa-trash"></i> Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-                {% else %}
-                <tr><td colspan="4" class="empty-row">No has creado juegos aún.</td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Nombre</th><th>Tipo</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                    {% for game in games %}
+                    <tr>
+                        <td>{{ game.name }}</td>
+                        <td>{{ game.type }}</td>
+                        <td>{{ game.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('editar_juego', game_id=game.id) }}" class="btn"><i class="fa-solid fa-pen"></i> Editar</a>
+                            <form method="POST" action="{{ url_for('eliminar_juego', game_id=game.id) }}" style="display:inline;">
+                                <button type="submit" class="btn" style="background:#e74c3c; color:#fff;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="empty-row">No has creado juegos aún.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="section">
             <h2><i class="fa-solid fa-bell"></i> Notificaciones recientes</h2>
