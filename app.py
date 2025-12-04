@@ -128,15 +128,18 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username'].strip()
-        email = request.form['email'].strip()
-        password = request.form['password']
-        area = request.form['area']
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
         user_type = request.form.get('user_type', 'student')
+        area = 'Programación'  # Área fija
 
-        if not username or not email or not password or not area or not user_type:
+        print(f"[REGISTRO] Datos recibidos: username={username}, email={email}, user_type={user_type}")
+
+        if not username or not email or not password or not user_type:
             msg = 'Todos los campos son obligatorios.'
-            if request.accept_mimetypes['application/json']:
+            print(f"[REGISTRO ERROR] Campos faltantes")
+            if request.headers.get('Accept') == 'application/json':
                 return jsonify(success=False, message=msg), 400
             flash(msg, 'error')
             return redirect(url_for('register'))
@@ -145,13 +148,15 @@ def register():
         existing_email = User.query.filter_by(email=email).first()
         if existing_user:
             msg = 'El nombre de usuario ya está en uso.'
-            if request.accept_mimetypes['application/json']:
+            print(f"[REGISTRO ERROR] {msg}")
+            if request.headers.get('Accept') == 'application/json':
                 return jsonify(success=False, message=msg), 400
             flash(msg, 'error')
             return redirect(url_for('register'))
         if existing_email:
             msg = 'El correo electrónico ya está registrado.'
-            if request.accept_mimetypes['application/json']:
+            print(f"[REGISTRO ERROR] {msg}")
+            if request.headers.get('Accept') == 'application/json':
                 return jsonify(success=False, message=msg), 400
             flash(msg, 'error')
             return redirect(url_for('register'))
@@ -169,21 +174,26 @@ def register():
             )
             db.session.add(new_user)
             db.session.flush()  # Para obtener el id
+            print(f"[REGISTRO] Usuario creado: id={new_user.id}, area={area}")
             if user_type == 'teacher':
                 teacher = Teacher(user_id=new_user.id, area=area)
                 db.session.add(teacher)
+                print(f"[REGISTRO] Profesor creado para user_id={new_user.id}")
             db.session.commit()
             msg = 'Registro exitoso. Ahora puedes iniciar sesión.'
-            if request.accept_mimetypes['application/json']:
+            print(f"[REGISTRO] ✅ Éxito para {username}")
+            if request.headers.get('Accept') == 'application/json':
                 return jsonify(success=True, message=msg)
             flash(msg, 'success')
             return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
+            print(f"[REGISTRO ERROR] Exception: {str(e)}")
+            import traceback
+            traceback.print_exc()
             app.logger.exception('Error al registrar usuario:')
-            # Devolver un mensaje de error correcto (no reutilizar el mensaje de éxito)
             err_msg = 'Error al registrar usuario. Intenta de nuevo más tarde.'
-            if request.accept_mimetypes['application/json']:
+            if request.headers.get('Accept') == 'application/json':
                 return jsonify(success=False, message=err_msg), 500
             flash(err_msg, 'error')
             return redirect(url_for('register'))
@@ -2012,9 +2022,6 @@ def upload_cedula():
 
 
 if __name__ == '__main__':
-    print("\n" + "="*60)
-    print("🚀 MenTora está en línea")
-    print("="*60)
-    print("📱 Local: http://127.0.0.1:5001")
-    print("="*60 + "\n")
+    print(" MenTora está en línea")
+    print(" Local: http://127.0.0.1:5001")
     socketio.run(app, host='127.0.0.1', port=5001, debug=False)
