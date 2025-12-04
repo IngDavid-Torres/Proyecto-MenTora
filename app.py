@@ -21,6 +21,7 @@ from models import db, User, Quiz, Question, UserAnswer, Achievement, Badge, Not
 
 
 import logging
+import traceback
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
@@ -236,11 +237,16 @@ def register():
         except Exception as e:
             db.session.rollback()
             error_msg = str(e)
+            tb = traceback.format_exc()
             print(f"Error en registro: {error_msg}")
-            import traceback
-            print(traceback.format_exc())
-            app.logger.error(f"Error en registro: {error_msg}")
-            return jsonify(success=False, message='Error al registrar usuario. Por favor intenta de nuevo.'), 500
+            print(tb)
+            app.logger.error(f"Error en registro: {error_msg}\n{tb}")
+
+            # Mostrar detalles en JSON sólo en DEBUG o cuando se habilite SHOW_ERROR_JSON
+            if app.config.get('DEBUG') or os.environ.get('SHOW_ERROR_JSON') == '1':
+                return jsonify(success=False, message='Error al registrar usuario. Por favor intenta de nuevo.', error=error_msg, traceback=tb), 500
+            else:
+                return jsonify(success=False, message='Error al registrar usuario. Por favor intenta de nuevo.'), 500
 
     return render_template('register.html')
 

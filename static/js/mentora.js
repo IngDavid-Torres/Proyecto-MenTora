@@ -714,25 +714,25 @@ const AuthForms = {
                     credentials: 'same-origin'
                 });
 
-                if (response.ok) {
-                    let res;
-                    try {
-                        res = await response.json();
-                    } catch (err) {
-                        AlertSystem.showOrToast('error', 'Usuario o contraseña incorrectos');
-                        return;
-                    }
+                // Intentar parsear JSON del cuerpo siempre que sea posible
+                let res = null;
+                try {
+                    res = await response.json();
+                } catch (err) {
+                    // noop - we'll fallback to generic messages
+                }
 
-                    if (res.success) {
+                if (response.ok) {
+                    if (res && res.success) {
                         if (alertMentoraModal) alertMentoraModal.style.display = 'flex';
                         setTimeout(() => {
                             window.location.href = res.redirect || '/dashboard';
                         }, CONFIG.LOGIN_REDIRECT_DELAY);
                     } else {
-                        AlertSystem.showOrToast('error', res.message || 'Usuario o contraseña incorrectos');
+                        AlertSystem.showOrToast('error', (res && res.message) || 'Usuario o contraseña incorrectos');
                     }
                 } else {
-                    AlertSystem.showOrToast('error', 'Usuario o contraseña incorrectos');
+                    AlertSystem.showOrToast('error', (res && res.message) || 'Usuario o contraseña incorrectos');
                 }
             } catch (err) {
                 AlertSystem.showOrToast('error', 'Error de conexión. Intenta de nuevo.');
@@ -761,18 +761,24 @@ const AuthForms = {
                     credentials: 'same-origin'
                 });
 
+                let res = null;
+                try {
+                    res = await response.json();
+                } catch (err) {
+                    // ignore - we'll use generic messages if JSON not available
+                }
+
                 if (response.ok) {
-                    const res = await response.json();
-                    if (res.success) {
+                    if (res && res.success) {
                         AlertSystem.showOrToast('success', res.message || 'Registro exitoso. Ahora puedes iniciar sesión.');
                         setTimeout(() => {
                             window.location.href = '/login';
                         }, CONFIG.REGISTER_REDIRECT_DELAY);
                     } else {
-                        AlertSystem.showOrToast('error', res.message || 'Error en el registro.');
+                        AlertSystem.showOrToast('error', (res && res.message) || 'Error en el registro.');
                     }
                 } else {
-                    AlertSystem.showOrToast('error', 'Error en el registro.');
+                    AlertSystem.showOrToast('error', (res && res.message) || 'Error en el registro.');
                 }
             } catch (err) {
                 AlertSystem.showOrToast('error', 'Error de conexión.');
