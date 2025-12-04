@@ -192,20 +192,32 @@ def register():
             user_type = request.form.get('user_type', 'student')
             area = 'Programación'  # Área fija
 
+            # Log de formulario (no incluir contraseña en logs por seguridad)
+            app.logger.debug(f"Registro intento: username={username!r}, email={email!r}, user_type={user_type!r}")
+
             if not username or not email or not password or not user_type:
                 msg = 'Todos los campos son obligatorios.'
-                return jsonify(success=False, message=msg), 400
+                payload = {'success': False, 'message': msg}
+                if app.config.get('DEBUG') or os.environ.get('SHOW_ERROR_JSON') == '1':
+                    payload['form'] = {'username': username, 'email': email, 'user_type': user_type}
+                return jsonify(payload), 400
 
             # Verificar si el usuario ya existe
             existing_user = User.query.filter_by(username=username).first()
             if existing_user:
                 msg = 'El nombre de usuario ya está en uso.'
-                return jsonify(success=False, message=msg), 400
+                payload = {'success': False, 'message': msg}
+                if app.config.get('DEBUG') or os.environ.get('SHOW_ERROR_JSON') == '1':
+                    payload['conflict'] = {'field': 'username', 'value': username}
+                return jsonify(payload), 400
             
             existing_email = User.query.filter_by(email=email).first()
             if existing_email:
                 msg = 'El correo electrónico ya está registrado.'
-                return jsonify(success=False, message=msg), 400
+                payload = {'success': False, 'message': msg}
+                if app.config.get('DEBUG') or os.environ.get('SHOW_ERROR_JSON') == '1':
+                    payload['conflict'] = {'field': 'email', 'value': email}
+                return jsonify(payload), 400
 
             # Crear el nuevo usuario
             hashed_password = generate_password_hash(password)
