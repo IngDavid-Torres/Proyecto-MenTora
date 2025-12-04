@@ -2012,6 +2012,9 @@ def upload_cedula():
 
 
 if __name__ == '__main__':
-    print("MenTora está en línea")
-    print("Abre tu navegador: http://127.0.0.1:5000")
-    socketio.run(app, host='127.0.0.1', port=5000, debug=False)
+    print("\n" + "="*60)
+    print("🚀 MenTora está en línea")
+    print("="*60)
+    print("📱 Local: http://127.0.0.1:5001")
+    print("="*60 + "\n")
+    socketio.run(app, host='127.0.0.1', port=5001, debug=False)
