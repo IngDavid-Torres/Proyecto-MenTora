@@ -16,7 +16,7 @@ class User(db.Model):
     level = db.Column(db.Integer, default=1)
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
-    avatar_url = db.Column(db.String(300), default='https://api.dicebear.com/7.x/identicon/svg?seed=default')
+    avatar_url = db.Column(db.String(300), default='https://api.dicebear.com/7.x/notionists/svg?seed=default')
     theme = db.Column(db.String(30), default='default')
 
     quizzes_created = db.relationship('Quiz', backref='creator', lazy=True)

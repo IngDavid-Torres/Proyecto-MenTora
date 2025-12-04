@@ -239,8 +239,7 @@ body, html {
 .filter-btn {
     background: var(--white);
     color: var(--primary-color);
-    border: 0px solid var(--accent-color);
-    border-radius: 12px;
+    border-radius: 15px;
     padding: 0.7rem 1.5rem;
     font-weight: 600;
     cursor: pointer;
@@ -287,7 +286,6 @@ body, html {
 }
 
 .stat-card {
-    border: 2px solid var(--accent-color);
     background: rgba(255, 255, 255, 0.95);
     color: var(--primary-color);
     box-shadow: var(--shadow-md);
@@ -784,7 +782,7 @@ h2 {
 .filter-btn {
     background: rgba(255, 255, 255, 0.95);
     color: var(--primary-color);
-    border: 2px solid var(--accent-color);
+
     border-radius: var(--radius-md);
     padding: 0.7rem var(--spacing-md);
     font-weight: 600;

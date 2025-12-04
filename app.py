@@ -384,7 +384,10 @@ def dashboard():
 
     user = User.query.get(session['user_id'])
 
-   
+    # Sincronizar avatar_url en la sesión si cambió en la BD
+    if user.avatar_url and session.get('avatar_url') != user.avatar_url:
+        session['avatar_url'] = user.avatar_url
+
     from datetime import date
     import random
     daily_seed = int(date.today().strftime('%Y%m%d'))
@@ -942,7 +945,7 @@ def update_profile():
     if new_area:
         user.area = new_area
     if new_avatar_seed:
-        user.avatar_url = f"https://api.dicebear.com/7.x/identicon/svg?seed={new_avatar_seed}"
+        user.avatar_url = f"https://api.dicebear.com/7.x/notionists/svg?seed={new_avatar_seed}"
     if new_theme:
         user.theme = new_theme
 

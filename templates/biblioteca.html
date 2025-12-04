@@ -3,331 +3,673 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Aprende más - Biblioteca Digital | MenTora</title>
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap" rel="stylesheet">
-</head>
+    <title>Aprende más - Biblioteca Digital | MenTora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Estilos adicionales específicos para biblioteca */
+        .categories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(106, 44, 61, 0.25);
+            border-color: var(--accent-color);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-icon svg {
+            width: 60px;
+            height: 60px;
+        }
+
+        .category-title {
+            font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .category-description {
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .category-count {
+            display: inline-block;
+            background: var(--dark-teal);
+            color: var(--white);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .resources-section {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 3rem;
+        }
+
+        .resources-section h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: var(--white);
+            border: 2px solid var(--light-blue);
+            border-radius: 18px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(106, 44, 61, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .resource-type {
+            display: inline-block;
+            background: var(--dark-teal);
+            color: var(--white);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .resource-title {
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .resource-description {
+            color: var(--text-gray);
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .resource-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--dark-teal);
+            color: var(--white);
+            padding: 0.65rem 1.3rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(106, 44, 61, 0.4);
+            background: var(--primary-color);
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 700px;
+            margin: 2rem auto;
+        }
+
+        .search-input {
+            padding: 0.9rem 1rem 0.9rem 3rem;
+            background: var(--white);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            color: var(--text-dark);
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            width: 100%;
+            transition: all 0.3s;
+            font-family: 'Poppins';
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(181, 115, 134, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .categories-container {
+                grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+                gap: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .categories-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .category-card {
+                padding: 1.5rem;
+            }
+
+            .category-icon svg {
+                width: 45px;
+                height: 45px;
+            }
+
+            .resources-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .categories-container {
+                grid-template-columns: 1fr;
+            }
+
+            .category-card {
+                padding: 1.2rem;
+            }
+
+            .resources-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .resource-card {
+                padding: 1.2rem;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .resource-card, .category-card {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .category-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.3s; }
+    </style>
 </head>
 <body>
-    
-        {% include 'navar_usser.html' %}  
+    {% include 'background_usser.html' %}
 
-    <button class="back-button" onclick="window.history.back()" title="Volver">
-        ←
-    </button>
+    <a href="/dashboard" class="back-button" title="Volver al Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+    </a>
 
-    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+    <div class="container">
         <!-- Header de la biblioteca -->
-        <div class="biblioteca-header">
-            <h1 class="biblioteca-title">📚 Biblioteca Digital</h1>
-            <p class="biblioteca-subtitle">Explora recursos de aprendizaje para mejorar en juegos y retos</p>
-            
+        <div class="news-header">
+            <h1><i data-lucide="book-open" style="display: inline; width: 1.2em; height: 1.2em; vertical-align: -0.2em;"></i> Biblioteca Digital</h1>
+            <p>Explora recursos de aprendizaje tecnológico para mejorar tus habilidades. Descubre tutoriales, guías completas y referencias avanzadas en programación y desarrollo.</p>
+
             <!-- Buscador -->
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar recursos, temas, programación...">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar recursos, lenguajes, tecnologías...">
             </div>
         </div>
 
         <!-- Categorías principales -->
         <div class="categories-container">
-            <div class="category-card" onclick="filterByCategory('programacion')">
-                <span class="category-icon">💻</span>
-                <h3 class="category-title">Programación</h3>
-                <p class="category-description">Aprende lenguajes, algoritmos y estructuras de datos</p>
+            <div class="category-card" onclick="filterByCategory('lenguajes')">
+                <div class="category-icon">
+                    <i data-lucide="code-2"></i>
+                </div>
+                <h3 class="category-title">Lenguajes de Programación</h3>
+                <p class="category-description">Python, JavaScript, Java, C++ y más</p>
                 <span class="category-count">12 recursos</span>
             </div>
-            
-            <div class="category-card" onclick="filterByCategory('matematicas')">
-                <span class="category-icon">🧮</span>
-                <h3 class="category-title">Matemáticas</h3>
-                <p class="category-description">Fundamentos matemáticos y lógica</p>
-                <span class="category-count">12 recursos</span>
-            </div>
-            
-            <div class="category-card" onclick="filterByCategory('ciencias')">
-                <span class="category-icon">🔬</span>
-                <h3 class="category-title">Ciencias</h3>
-                <p class="category-description">Física, química y ciencias naturales</p>
+
+            <div class="category-card" onclick="filterByCategory('web')">
+                <div class="category-icon">
+                    <i data-lucide="globe"></i>
+                </div>
+                <h3 class="category-title">Desarrollo Web</h3>
+                <p class="category-description">Frontend, Backend y Full Stack</p>
                 <span class="category-count">8 recursos</span>
             </div>
-            
-            <div class="category-card" onclick="filterByCategory('historia')">
-                <span class="category-icon">🏛️</span>
-                <h3 class="category-title">Historia</h3>
-                <p class="category-description">Eventos históricos y culturas</p>
-                <span class="category-count">6 recursos</span>
-            </div>
-            
-            <div class="category-card" onclick="filterByCategory('literatura')">
-                <span class="category-icon">📖</span>
-                <h3 class="category-title">Literatura</h3>
-                <p class="category-description">Obras clásicas y análisis literario</p>
-                <span class="category-count">10 recursos</span>
-            </div>
-            
-            <div class="category-card" onclick="filterByCategory('tecnologia')">
-                <span class="category-icon">⚡</span>
-                <h3 class="category-title">Tecnología</h3>
-                <p class="category-description">Innovaciones y tendencias tech</p>
-                <span class="category-count">9 recursos</span>
+
+            <div class="category-card" onclick="filterByCategory('avanzado')">
+                <div class="category-icon">
+                    <i data-lucide="cpu"></i>
+                </div>
+                <h3 class="category-title">Temas Avanzados</h3>
+                <p class="category-description">APIs, Patrones, Testing y más</p>
+                <span class="category-count">8 recursos</span>
             </div>
         </div>
 
         <!-- Sección de recursos -->
-        <div class="resources-section glass-card">
-            <h2 style="color:#00fff1;text-align:center;margin-bottom:2rem;font-size:2rem;">🎯 Recursos Disponibles</h2>
+        <div class="resources-section">
+            <h2><i data-lucide="target" style="display: inline; width: 1em; height: 1em; vertical-align: -0.15em;"></i> Recursos Disponibles</h2>
             <div class="resources-grid" id="resourcesGrid">
-                <!-- Recursos de Programación -->
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Tutorial Interactivo</div>
+                <!-- Recursos de Lenguajes de Programación -->
+                <div class="resource-card" data-category="lenguajes">
+                    <div class="resource-type">Tutorial Completo</div>
                     <h4 class="resource-title">Python para Principiantes</h4>
-                    <p class="resource-description">Aprende los fundamentos de Python: variables, funciones, bucles, listas, diccionarios y manejo de archivos con ejercicios prácticos.</p>
+                    <p class="resource-description">Aprende Python desde cero: variables, tipos de datos, funciones, POO, manejo de excepciones y más.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 3 horas</span>
-                        <span>📈 Básico</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 6 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Básico</span>
                     </div>
-                    <a href="#" onclick="openResource('python-basico')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('python-basico')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
-                
-                <div class="resource-card" data-category="programacion">
+
+                <div class="resource-card" data-category="lenguajes">
                     <div class="resource-type">Guía Completa</div>
                     <h4 class="resource-title">Algoritmos y Estructuras de Datos</h4>
-                    <p class="resource-description">Domina arrays, listas enlazadas, pilas, colas, árboles y algoritmos de ordenamiento: bubble sort, quicksort, mergesort.</p>
+                    <p class="resource-description">Domina estructuras fundamentales y algoritmos de ordenamiento con análisis de complejidad temporal.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 5 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 8 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('algoritmos')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('algoritmos')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
-                
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Referencia Avanzada</div>
+
+                <div class="resource-card" data-category="lenguajes">
+                    <div class="resource-type">Referencia Moderna</div>
                     <h4 class="resource-title">JavaScript ES6+ Moderno</h4>
-                    <p class="resource-description">Arrow functions, destructuring, async/await, promises, modules, clases y programación funcional en JavaScript.</p>
+                    <p class="resource-description">Programación funcional, async/await, módulos ES6 y características avanzadas de JavaScript moderno.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 4 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 7 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('javascript-moderno')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('javascript-moderno')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Tutorial Práctico</div>
+                <div class="resource-card" data-category="lenguajes">
+                    <div class="resource-type">Tutorial POO</div>
                     <h4 class="resource-title">Java Fundamentos</h4>
-                    <p class="resource-description">Programación orientada a objetos, clases, herencia, polimorfismo, interfaces y manejo de excepciones en Java.</p>
+                    <p class="resource-description">Programación orientada a objetos, herencia, polimorfismo, interfaces, colecciones y streams en Java.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 6 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 10 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('java-fundamentos')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('java-fundamentos')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Guía Técnica</div>
+                <div class="resource-card" data-category="lenguajes">
+                    <div class="resource-type">Guía Avanzada</div>
                     <h4 class="resource-title">C++ Avanzado</h4>
-                    <p class="resource-description">Punteros, memoria dinámica, templates, STL, programación de sistemas y optimización de rendimiento.</p>
+                    <p class="resource-description">Gestión de memoria, punteros inteligentes, templates, STL, optimización y mejores prácticas en C++.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 8 horas</span>
-                        <span>📈 Avanzado</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 12 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
                     </div>
-                    <a href="#" onclick="openResource('cpp-avanzado')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('cpp-avanzado')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Tutorial Web</div>
+                <div class="resource-card" data-category="lenguajes">
+                    <div class="resource-type">Curso Práctico</div>
+                    <h4 class="resource-title">TypeScript Profesional</h4>
+                    <p class="resource-description">Tipado estático, interfaces, generics, decoradores y desarrollo escalable con TypeScript.</p>
+                    <div class="resource-meta">
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 6 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
+                    </div>
+                    <button onclick="openResource('typescript')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
+                </div>
+
+                <!-- Recursos de Desarrollo Web -->
+                <div class="resource-card" data-category="web">
+                    <div class="resource-type">Tutorial Frontend</div>
                     <h4 class="resource-title">HTML5 y CSS3 Moderno</h4>
-                    <p class="resource-description">Estructura semántica, flexbox, grid, animaciones, responsive design y mejores prácticas de desarrollo web.</p>
+                    <p class="resource-description">HTML semántico, Flexbox, Grid, animaciones CSS, responsive design y accesibilidad web.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 4 horas</span>
-                        <span>📈 Básico</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 8 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Básico</span>
                     </div>
-                    <a href="#" onclick="openResource('html-css')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('html-css')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Frameworks</div>
-                    <h4 class="resource-title">React.js Fundamentos</h4>
-                    <p class="resource-description">Componentes, props, state, hooks (useState, useEffect), contexto y creación de aplicaciones web modernas.</p>
+                <div class="resource-card" data-category="web">
+                    <div class="resource-type">Framework Frontend</div>
+                    <h4 class="resource-title">React.js Completo</h4>
+                    <p class="resource-description">Componentes, hooks, estado global, React Router, optimización de rendimiento y patrones avanzados.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 7 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 15 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('react-fundamentos')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('react-completo')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
+                <div class="resource-card" data-category="web">
+                    <div class="resource-type">Framework Backend</div>
+                    <h4 class="resource-title">Node.js y Express</h4>
+                    <p class="resource-description">Servidor HTTP, middleware, routing, autenticación JWT, integración de bases de datos y APIs RESTful.</p>
+                    <div class="resource-meta">
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 10 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
+                    </div>
+                    <button onclick="openResource('nodejs-express')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
+                </div>
+
+                <div class="resource-card" data-category="web">
+                    <div class="resource-type">Framework Python</div>
+                    <h4 class="resource-title">Flask y Django</h4>
+                    <p class="resource-description">Desarrollo web con Python, ORM, templates, formularios, autenticación y despliegue de aplicaciones.</p>
+                    <div class="resource-meta">
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 12 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
+                    </div>
+                    <button onclick="openResource('flask-django')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
+                </div>
+
+                <div class="resource-card" data-category="web">
                     <div class="resource-type">Base de Datos</div>
                     <h4 class="resource-title">SQL y Bases de Datos</h4>
-                    <p class="resource-description">Consultas SELECT, JOIN, subconsultas, normalización, índices y optimización de bases de datos relacionales.</p>
+                    <p class="resource-description">Consultas avanzadas, índices, transacciones, normalización, optimización y diseño de bases de datos.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 5 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 9 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('sql-databases')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('sql-databases')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Metodologías</div>
-                    <h4 class="resource-title">Git y Control de Versiones</h4>
-                    <p class="resource-description">Comandos básicos, branching, merging, resolución de conflictos, GitHub y flujos de trabajo colaborativos.</p>
+                <div class="resource-card" data-category="web">
+                    <div class="resource-type">NoSQL</div>
+                    <h4 class="resource-title">MongoDB y Mongoose</h4>
+                    <p class="resource-description">Bases de datos NoSQL, modelado de documentos, agregaciones, índices y operaciones CRUD avanzadas.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 3 horas</span>
-                        <span>📈 Básico</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 7 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('git-control')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('mongodb')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Patrones de Diseño</div>
-                    <h4 class="resource-title">Design Patterns</h4>
-                    <p class="resource-description">Singleton, Factory, Observer, Strategy, MVC, y otros patrones esenciales para código limpio y mantenible.</p>
+                <div class="resource-card" data-category="web">
+                    <div class="resource-type">Herramientas</div>
+                    <h4 class="resource-title">Git y GitHub Avanzado</h4>
+                    <p class="resource-description">Control de versiones, branching strategies, Git Flow, GitHub Actions, CI/CD y colaboración en equipo.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 6 horas</span>
-                        <span>📈 Avanzado</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 5 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('design-patterns')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('git-avanzado')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
+                <div class="resource-card" data-category="web">
+                    <div class="resource-type">CSS Framework</div>
+                    <h4 class="resource-title">Tailwind CSS</h4>
+                    <p class="resource-description">Utility-first CSS, configuración, customización, componentes reutilizables y optimización de producción.</p>
+                    <div class="resource-meta">
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 4 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Básico</span>
+                    </div>
+                    <button onclick="openResource('tailwind')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
+                </div>
+
+                <!-- Recursos Avanzados -->
+                <div class="resource-card" data-category="avanzado">
+                    <div class="resource-type">Arquitectura</div>
+                    <h4 class="resource-title">Patrones de Diseño</h4>
+                    <p class="resource-description">Singleton, Factory, Observer, Strategy, MVC, SOLID principles y arquitecturas limpias en programación.</p>
+                    <div class="resource-meta">
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 10 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
+                    </div>
+                    <button onclick="openResource('design-patterns')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
+                </div>
+
+                <div class="resource-card" data-category="avanzado">
                     <div class="resource-type">API Development</div>
-                    <h4 class="resource-title">APIs REST y Flask</h4>
-                    <p class="resource-description">Creación de APIs REST, autenticación JWT, documentación con Swagger, pruebas y mejores prácticas.</p>
+                    <h4 class="resource-title">APIs REST y GraphQL</h4>
+                    <p class="resource-description">Diseño de APIs, REST best practices, GraphQL queries y mutations, autenticación, rate limiting y documentación.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 5 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 11 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
                     </div>
-                    <a href="#" onclick="openResource('apis-rest')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('apis-rest-graphql')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <div class="resource-card" data-category="programacion">
-                    <div class="resource-type">Debugging</div>
+                <div class="resource-card" data-category="avanzado">
+                    <div class="resource-type">Testing</div>
                     <h4 class="resource-title">Testing y Depuración</h4>
-                    <p class="resource-description">Unit testing, integration testing, TDD, herramientas de debugging y técnicas de resolución de problemas.</p>
+                    <p class="resource-description">Unit testing, integration testing, E2E testing, TDD, mocking, debugging avanzado y herramientas de testing.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 4 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 8 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Intermedio</span>
                     </div>
-                    <a href="#" onclick="openResource('testing-debug')" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('testing-avanzado')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <!-- Recursos de Matemáticas -->
-                <div class="resource-card" data-category="matematicas">
-                    <div class="resource-type">Tutorial</div>
-                    <h4 class="resource-title">Álgebra Lineal Básica</h4>
-                    <p class="resource-description">Vectores, matrices, operaciones básicas y aplicaciones en programación.</p>
+                <div class="resource-card" data-category="avanzado">
+                    <div class="resource-type">Seguridad</div>
+                    <h4 class="resource-title">Seguridad en Aplicaciones Web</h4>
+                    <p class="resource-description">OWASP Top 10, XSS, CSRF, SQL Injection, autenticación segura, encriptación y mejores prácticas de seguridad.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 2.5 horas</span>
-                        <span>📈 Básico</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 9 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
                     </div>
-                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
-                </div>
-                
-                <div class="resource-card" data-category="matematicas">
-                    <div class="resource-type">Ejercicios</div>
-                    <h4 class="resource-title">Cálculo Diferencial</h4>
-                    <p class="resource-description">Límites, derivadas y aplicaciones prácticas con ejercicios resueltos paso a paso.</p>
-                    <div class="resource-meta">
-                        <span>⏱️ 5 horas</span>
-                        <span>📈 Avanzado</span>
-                    </div>
-                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('seguridad-web')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <!-- Recursos de Ciencias -->
-                <div class="resource-card" data-category="ciencias">
-                    <div class="resource-type">Tutorial</div>
-                    <h4 class="resource-title">Física Clásica</h4>
-                    <p class="resource-description">Mecánica newtoniana, energía, momento y movimiento con ejemplos prácticos.</p>
+                <div class="resource-card" data-category="avanzado">
+                    <div class="resource-type">DevOps</div>
+                    <h4 class="resource-title">Docker y Kubernetes</h4>
+                    <p class="resource-description">Contenedores, imágenes Docker, orquestación, despliegue de microservicios y gestión de clusters con Kubernetes.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 3 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 13 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
                     </div>
-                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
-                </div>
-                
-                <div class="resource-card" data-category="ciencias">
-                    <div class="resource-type">Laboratorio</div>
-                    <h4 class="resource-title">Química Orgánica</h4>
-                    <p class="resource-description">Compuestos orgánicos, reacciones y nomenclatura con simulaciones virtuales.</p>
-                    <div class="resource-meta">
-                        <span>⏱️ 4 horas</span>
-                        <span>📈 Avanzado</span>
-                    </div>
-                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('docker-kubernetes')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <!-- Recursos de Historia -->
-                <div class="resource-card" data-category="historia">
-                    <div class="resource-type">Documental</div>
-                    <h4 class="resource-title">Historia Universal</h4>
-                    <p class="resource-description">Desde las civilizaciones antiguas hasta la era moderna con líneas de tiempo interactivas.</p>
+                <div class="resource-card" data-category="avanzado">
+                    <div class="resource-type">Cloud Computing</div>
+                    <h4 class="resource-title">AWS y Cloud Services</h4>
+                    <p class="resource-description">EC2, S3, Lambda, RDS, arquitecturas serverless, escalabilidad y despliegue en la nube con AWS.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 6 horas</span>
-                        <span>📈 Básico</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 14 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
                     </div>
-                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('aws-cloud')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <!-- Recursos de Literatura -->
-                <div class="resource-card" data-category="literatura">
-                    <div class="resource-type">Análisis</div>
-                    <h4 class="resource-title">Literatura Clásica</h4>
-                    <p class="resource-description">Análisis de obras maestras: Don Quijote, Hamlet, Cien Años de Soledad y más.</p>
+                <div class="resource-card" data-category="avanzado">
+                    <div class="resource-type">Machine Learning</div>
+                    <h4 class="resource-title">Introducción a Machine Learning</h4>
+                    <p class="resource-description">Algoritmos de ML, scikit-learn, TensorFlow, redes neuronales básicas y aplicaciones prácticas de IA.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 8 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 16 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
                     </div>
-                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('machine-learning')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
 
-                <!-- Recursos de Tecnología -->
-                <div class="resource-card" data-category="tecnologia">
-                    <div class="resource-type">Tendencias</div>
-                    <h4 class="resource-title">Inteligencia Artificial</h4>
-                    <p class="resource-description">Fundamentos de IA, machine learning y aplicaciones en la vida cotidiana.</p>
+                <div class="resource-card" data-category="avanzado">
+                    <div class="resource-type">Performance</div>
+                    <h4 class="resource-title">Optimización de Rendimiento</h4>
+                    <p class="resource-description">Profiling, caching strategies, lazy loading, code splitting, optimización de consultas y mejores prácticas.</p>
                     <div class="resource-meta">
-                        <span>⏱️ 4 horas</span>
-                        <span>📈 Intermedio</span>
+                        <span><i data-lucide="clock" style="width: 1em; height: 1em;"></i> 7 horas</span>
+                        <span><i data-lucide="trending-up" style="width: 1em; height: 1em;"></i> Avanzado</span>
                     </div>
-                    <a href="#" class="btn-primary" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.9rem;">Ver Recurso</a>
+                    <button onclick="openResource('performance')" class="btn-primary">
+                        <i data-lucide="eye" style="width: 1em; height: 1em;"></i> Ver Recurso
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 MenTora - Todos los derechos reservados.</p>
+    </footer>
 
     <script>
         // Funcionalidad de búsqueda mejorada
         const searchInput = document.getElementById('searchInput');
         const resourcesGrid = document.getElementById('resourcesGrid');
         let currentFilter = 'all';
-        
+
         // Función de búsqueda en tiempo real
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
             performSearch(searchTerm, currentFilter);
         });
-        
+
         // Función principal de búsqueda
         function performSearch(searchTerm, categoryFilter = 'all') {
             const resourceCards = resourcesGrid.querySelectorAll('.resource-card');
             let visibleCount = 0;
-            
+
             resourceCards.forEach(card => {
                 const title = card.querySelector('.resource-title').textContent.toLowerCase();
                 const description = card.querySelector('.resource-description').textContent.toLowerCase();
                 const type = card.querySelector('.resource-type').textContent.toLowerCase();
                 const category = card.getAttribute('data-category');
-                
-                // Criterios de búsqueda más amplios
-                const matchesSearch = !searchTerm || 
-                    title.includes(searchTerm) || 
-                    description.includes(searchTerm) || 
+
+                const matchesSearch = !searchTerm ||
+                    title.includes(searchTerm) ||
+                    description.includes(searchTerm) ||
                     type.includes(searchTerm) ||
                     category.includes(searchTerm);
-                
+
                 const matchesCategory = categoryFilter === 'all' || category === categoryFilter;
-                
+
                 if (matchesSearch && matchesCategory) {
                     card.style.display = 'block';
                     card.style.animationDelay = (visibleCount * 0.1) + 's';
@@ -336,73 +678,64 @@
                     card.style.display = 'none';
                 }
             });
-            
-            // Mostrar mensaje si no hay resultados
+
             showNoResults(visibleCount === 0 && searchTerm);
         }
-        
-        // Función para mostrar mensaje de "sin resultados"
+
         function showNoResults(show) {
             let noResultsMsg = document.getElementById('noResultsMessage');
-            
+
             if (show && !noResultsMsg) {
                 noResultsMsg = document.createElement('div');
                 noResultsMsg.id = 'noResultsMessage';
                 noResultsMsg.style.cssText = `
                     text-align: center;
                     padding: 3rem;
-                    color: #9ca3af;
+                    color: var(--text-gray);
                     font-size: 1.2rem;
                     grid-column: 1 / -1;
                 `;
                 noResultsMsg.innerHTML = `
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">
+                        <i data-lucide="search-x" style="width: 3rem; height: 3rem; color: var(--accent-color);"></i>
+                    </div>
                     <div>No se encontraron recursos para tu búsqueda.</div>
                     <div style="font-size: 0.9rem; margin-top: 0.5rem;">Intenta con otras palabras clave.</div>
                 `;
                 resourcesGrid.appendChild(noResultsMsg);
+                lucide.createIcons();
             } else if (!show && noResultsMsg) {
                 noResultsMsg.remove();
             }
         }
-        
-        // Funcionalidad de filtrado por categoría mejorada
+
         function filterByCategory(category) {
             currentFilter = category;
             const searchTerm = searchInput.value.toLowerCase();
             performSearch(searchTerm, category);
-            
-            // Actualizar indicador visual de categoría activa
             updateCategoryVisualFeedback(category);
-            
-            // Limpiar mensaje de sin resultados
             showNoResults(false);
-            
-            // Scroll suave a la sección de recursos
-            document.querySelector('.resources-section').scrollIntoView({ 
+
+            document.querySelector('.resources-section').scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
             });
         }
-        
-        // Actualizar indicador visual de categoría activa
+
         function updateCategoryVisualFeedback(activeCategory) {
             const categoryCards = document.querySelectorAll('.category-card');
             categoryCards.forEach(card => {
                 const cardTitle = card.querySelector('.category-title').textContent.toLowerCase();
                 const categoryMap = {
-                    'programación': 'programacion',
-                    'matemáticas': 'matematicas',
-                    'ciencias': 'ciencias',
-                    'historia': 'historia',
-                    'literatura': 'literatura',
-                    'tecnología': 'tecnologia'
+                    'lenguajes de programación': 'lenguajes',
+                    'desarrollo web': 'web',
+                    'temas avanzados': 'avanzado'
                 };
-                
+
                 if (categoryMap[cardTitle] === activeCategory) {
                     card.style.transform = 'translateY(-5px)';
-                    card.style.boxShadow = '0 10px 30px #00fff1a0';
-                    card.style.background = 'rgba(0,255,241,0.15)';
+                    card.style.boxShadow = '0 10px 30px rgba(106, 44, 61, 0.3)';
+                    card.style.background = 'rgba(227, 200, 207, 0.15)';
                 } else {
                     card.style.transform = '';
                     card.style.boxShadow = '';
@@ -410,8 +743,7 @@
                 }
             });
         }
-        
-        // Función para mostrar todos los recursos
+
         function showAllResources() {
             currentFilter = 'all';
             searchInput.value = '';
@@ -419,238 +751,223 @@
             updateCategoryVisualFeedback('');
             showNoResults(false);
         }
-        
-        // Función para abrir recursos (preparada para futuras implementaciones)
+
+        // Contenido detallado de recursos
         function openResource(resourceId) {
-            // Mapeo de recursos a contenido específico
             const resourceContent = {
                 'python-basico': {
+                    category: 'Lenguajes de Programación',
                     title: 'Python para Principiantes',
+                    author: 'Equipo MenTora',
+                    date: '15 de Enero, 2025',
                     content: `
-                        <h3>🐍 Fundamentos de Python</h3>
-                        <p><strong>Temario:</strong></p>
+                        <h3>Fundamentos de Python</h3>
+                        <p>Python es uno de los lenguajes de programación más populares y versátiles del mundo. Este curso te llevará desde los conceptos básicos hasta temas intermedios.</p>
+
+                        <h4>¿Qué aprenderás?</h4>
                         <ul>
-                            <li>Variables y tipos de datos (int, str, float, bool)</li>
-                            <li>Operadores aritméticos y lógicos</li>
-                            <li>Estructuras de control (if, elif, else)</li>
-                            <li>Bucles (for, while)</li>
-                            <li>Listas, tuplas y diccionarios</li>
-                            <li>Funciones y parámetros</li>
-                            <li>Manejo de archivos básico</li>
+                            <li><strong>Sintaxis Básica:</strong> Variables, operadores, entrada/salida</li>
+                            <li><strong>Tipos de Datos:</strong> Enteros, flotantes, strings, booleanos</li>
+                            <li><strong>Estructuras de Control:</strong> if/elif/else, bucles for y while</li>
+                            <li><strong>Estructuras de Datos:</strong> Listas, tuplas, diccionarios, sets</li>
+                            <li><strong>Funciones:</strong> Definición, parámetros, retorno, scope</li>
+                            <li><strong>POO:</strong> Clases, objetos, herencia, encapsulación</li>
+                            <li><strong>Manejo de Archivos:</strong> Lectura y escritura de archivos</li>
+                            <li><strong>Excepciones:</strong> Try/except, manejo de errores</li>
+                            <li><strong>Módulos:</strong> Import, creación de módulos propios</li>
                         </ul>
-                        <p><strong>Ejercicios prácticos:</strong></p>
+
+                        <h4>Proyectos Prácticos</h4>
                         <ul>
-                            <li>Calculadora básica</li>
-                            <li>Lista de tareas</li>
-                            <li>Juego de adivinanza de números</li>
+                            <li>Calculadora interactiva con operaciones avanzadas</li>
+                            <li>Sistema de gestión de tareas con persistencia</li>
+                            <li>Juego de adivinanza de números con niveles</li>
+                            <li>Analizador de texto con estadísticas</li>
+                            <li>Sistema básico de inventario</li>
                         </ul>
+
+                        <h4>Requisitos</h4>
+                        <p>No se requieren conocimientos previos de programación. Solo necesitas una computadora con Python 3.8 o superior instalado.</p>
                     `
                 },
                 'algoritmos': {
+                    category: 'Lenguajes de Programación',
                     title: 'Algoritmos y Estructuras de Datos',
+                    author: 'Equipo MenTora',
+                    date: '15 de Enero, 2025',
                     content: `
-                        <h3>🔄 Algoritmos Fundamentales</h3>
-                        <p><strong>Estructuras de Datos:</strong></p>
+                        <h3>Domina los Fundamentos de la Programación</h3>
+                        <p>Las estructuras de datos y algoritmos son la base de la programación eficiente. Este curso cubre los conceptos esenciales con análisis de complejidad.</p>
+
+                        <h4>Estructuras de Datos</h4>
                         <ul>
-                            <li>Arrays y listas dinámicas</li>
-                            <li>Listas enlazadas (simples y dobles)</li>
-                            <li>Pilas (LIFO) y colas (FIFO)</li>
-                            <li>Árboles binarios y BST</li>
-                            <li>Grafos y recorridos</li>
+                            <li><strong>Arrays y Listas:</strong> Operaciones, complejidad temporal y espacial</li>
+                            <li><strong>Listas Enlazadas:</strong> Simples, dobles, circulares</li>
+                            <li><strong>Pilas (Stack):</strong> Implementación y aplicaciones LIFO</li>
+                            <li><strong>Colas (Queue):</strong> Implementación FIFO y colas de prioridad</li>
+                            <li><strong>Árboles:</strong> Binarios, BST, AVL, recorridos</li>
+                            <li><strong>Grafos:</strong> Representación, BFS, DFS</li>
+                            <li><strong>Hash Tables:</strong> Funciones hash, colisiones, aplicaciones</li>
+                            <li><strong>Heaps:</strong> Min-heap, max-heap, heap sort</li>
                         </ul>
-                        <p><strong>Algoritmos de Ordenamiento:</strong></p>
+
+                        <h4>Algoritmos de Ordenamiento</h4>
                         <ul>
-                            <li>Bubble Sort - O(n²)</li>
-                            <li>Quick Sort - O(n log n)</li>
-                            <li>Merge Sort - O(n log n)</li>
-                            <li>Selection Sort - O(n²)</li>
+                            <li><strong>Bubble Sort:</strong> O(n²) - Concepto básico</li>
+                            <li><strong>Selection Sort:</strong> O(n²) - Selección del mínimo</li>
+                            <li><strong>Insertion Sort:</strong> O(n²) - Inserción ordenada</li>
+                            <li><strong>Merge Sort:</strong> O(n log n) - Divide y conquista</li>
+                            <li><strong>Quick Sort:</strong> O(n log n) - Pivote y partición</li>
+                            <li><strong>Heap Sort:</strong> O(n log n) - Basado en heaps</li>
                         </ul>
-                        <p><strong>Búsqueda:</strong></p>
+
+                        <h4>Algoritmos de Búsqueda</h4>
                         <ul>
-                            <li>Búsqueda lineal - O(n)</li>
-                            <li>Búsqueda binaria - O(log n)</li>
+                            <li><strong>Búsqueda Lineal:</strong> O(n) - Búsqueda secuencial</li>
+                            <li><strong>Búsqueda Binaria:</strong> O(log n) - En arrays ordenados</li>
+                            <li><strong>Búsqueda en Profundidad (DFS):</strong> Para grafos y árboles</li>
+                            <li><strong>Búsqueda en Anchura (BFS):</strong> Nivel por nivel</li>
                         </ul>
+
+                        <h4>Análisis de Complejidad</h4>
+                        <p>Aprende a analizar y optimizar tus algoritmos usando notación Big O, Big Omega y Big Theta.</p>
                     `
                 },
                 'javascript-moderno': {
+                    category: 'Lenguajes de Programación',
                     title: 'JavaScript ES6+ Moderno',
+                    author: 'Equipo MenTora',
+                    date: '15 de Enero, 2025',
                     content: `
-                        <h3>⚡ JavaScript Avanzado</h3>
-                        <p><strong>Características ES6+:</strong></p>
+                        <h3>JavaScript Moderno y Avanzado</h3>
+                        <p>Domina las características más recientes de JavaScript y conviértete en un desarrollador full-stack moderno.</p>
+
+                        <h4>Características ES6+</h4>
                         <ul>
-                            <li>Let, const vs var (block scope)</li>
-                            <li>Arrow functions (() => {})</li>
-                            <li>Template literals (\`\$\{variable\}\`)</li>
-                            <li>Destructuring de objetos y arrays</li>
-                            <li>Spread operator (...)</li>
-                            <li>Modules (import/export)</li>
+                            <li><strong>Let y Const:</strong> Block scope vs function scope</li>
+                            <li><strong>Arrow Functions:</strong> Sintaxis concisa y this lexical</li>
+                            <li><strong>Template Literals:</strong> Strings multilínea e interpolación</li>
+                            <li><strong>Destructuring:</strong> Arrays y objetos</li>
+                            <li><strong>Spread/Rest Operator:</strong> (...) para arrays y objetos</li>
+                            <li><strong>Módulos ES6:</strong> Import/export, módulos dinámicos</li>
+                            <li><strong>Clases:</strong> Sintaxis de clases, herencia, getters/setters</li>
+                            <li><strong>Generadores:</strong> Function* y yield</li>
+                            <li><strong>Símbolos:</strong> Propiedades únicas</li>
                         </ul>
-                        <p><strong>Programación Asíncrona:</strong></p>
+
+                        <h4>Programación Asíncrona</h4>
                         <ul>
-                            <li>Promises y .then()</li>
-                            <li>Async/await</li>
-                            <li>Fetch API para HTTP requests</li>
-                            <li>Error handling con try/catch</li>
+                            <li><strong>Promises:</strong> Then, catch, finally</li>
+                            <li><strong>Async/Await:</strong> Código asíncrono síncrono</li>
+                            <li><strong>Fetch API:</strong> HTTP requests modernos</li>
+                            <li><strong>Error Handling:</strong> Try/catch en async</li>
+                            <li><strong>Promise.all/race:</strong> Operaciones paralelas</li>
+                        </ul>
+
+                        <h4>Programación Funcional</h4>
+                        <ul>
+                            <li><strong>Higher-Order Functions:</strong> Map, filter, reduce</li>
+                            <li><strong>Inmutabilidad:</strong> Datos inmutables</li>
+                            <li><strong>Closures:</strong> Funciones dentro de funciones</li>
+                            <li><strong>Currying:</strong> Funciones parcialmente aplicadas</li>
+                            <li><strong>Pure Functions:</strong> Sin efectos secundarios</li>
+                        </ul>
+
+                        <h4>Temas Avanzados</h4>
+                        <ul>
+                            <li>Event Loop y Call Stack</li>
+                            <li>Prototypes y Herencia Prototípica</li>
+                            <li>Proxy y Reflect</li>
+                            <li>WeakMap y WeakSet</li>
+                            <li>Performance y Optimización</li>
                         </ul>
                     `
                 }
             };
-            
+
             const resource = resourceContent[resourceId];
             if (resource) {
                 showResourceModal(resource);
             } else {
-                alert('¡Recurso en desarrollo! Pronto estará disponible.');
+                showResourceModal({
+                    category: 'Recurso',
+                    title: 'Contenido en Desarrollo',
+                    author: 'Equipo MenTora',
+                    date: '2025',
+                    content: `
+                        <h3>Este recurso estará disponible próximamente</h3>
+                        <p>Estamos trabajando en crear contenido de alta calidad para este tema. Vuelve pronto para acceder a:</p>
+                        <ul>
+                            <li>Tutoriales paso a paso</li>
+                            <li>Ejemplos prácticos de código</li>
+                            <li>Proyectos de práctica</li>
+                            <li>Ejercicios interactivos</li>
+                            <li>Recursos adicionales</li>
+                        </ul>
+                        <p>Mientras tanto, explora nuestros otros recursos disponibles.</p>
+                    `
+                });
             }
         }
-        
-        // Modal para mostrar contenido de recursos
+
+        // Modal con diseño de news.html
         function showResourceModal(resource) {
-            // Crear modal
             const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0,0,0,0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-                backdrop-filter: blur(5px);
-            `;
-            
-            const modalContent = document.createElement('div');
-            modalContent.style.cssText = `
-                background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
-                border: 2.5px solid #00fff1;
-                border-radius: 18px;
-                max-width: 800px;
-                max-height: 80vh;
-                overflow-y: auto;
-                padding: 2rem;
-                color: #e0e7ef;
-                box-shadow: 0 8px 32px #00fff1a0;
-            `;
-            
-            modalContent.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h2 style="color: #00fff1; margin: 0; text-shadow: 0 0 8px #00fff1;">${resource.title}</h2>
-                    <button onclick="this.closest('.resource-modal').remove()" style="
-                        background: #00fff1;
-                        color: #181a2b;
-                        border: none;
-                        border-radius: 50%;
-                        width: 40px;
-                        height: 40px;
-                        font-size: 1.5rem;
-                        cursor: pointer;
-                        font-weight: bold;
-                    ">×</button>
-                </div>
-                <div style="line-height: 1.6;">
-                    ${resource.content}
-                </div>
-                <div style="margin-top: 2rem; text-align: center;">
-                    <button onclick="this.closest('.resource-modal').remove()" style="
-                        background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
-                        color: #181a2b;
-                        border: none;
-                        padding: 0.8rem 2rem;
-                        border-radius: 12px;
-                        font-weight: bold;
-                        cursor: pointer;
-                        font-size: 1rem;
-                    ">Cerrar</button>
+            modal.className = 'news-modal';
+
+            modal.innerHTML = `
+                <div class="modal-container">
+                    <button class="modal-close-btn" onclick="this.closest('.news-modal').remove()">×</button>
+
+                    <div class="modal-body">
+                        <div class="modal-category-tag">${resource.category}</div>
+                        <h1 class="modal-title">${resource.title}</h1>
+
+                        <div class="modal-meta-info">
+                            <div class="modal-meta-item">
+                                <i data-lucide="user"></i>
+                                <span>${resource.author}</span>
+                            </div>
+                            <div class="modal-meta-item">
+                                <i data-lucide="calendar"></i>
+                                <span>${resource.date}</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-description">
+                            ${resource.content}
+                        </div>
+                    </div>
                 </div>
             `;
-            
-            modal.className = 'resource-modal';
-            modal.appendChild(modalContent);
+
             document.body.appendChild(modal);
-            
-            // Cerrar modal al hacer clic fuera
+            lucide.createIcons();
+
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     modal.remove();
                 }
             });
         }
-        
-        // Funciones de utilidad
-        function addSearchSuggestions() {
-            const suggestions = [
-                'python', 'javascript', 'java', 'algoritmos', 'estructuras de datos',
-                'react', 'html', 'css', 'sql', 'git', 'patrones de diseño', 'api', 'testing'
-            ];
-            
-            searchInput.addEventListener('focus', function() {
-                // Aquí se pueden agregar sugerencias en el futuro
-            });
-        }
-        
-        // Animaciones de entrada para las cards
-        function addCardAnimations() {
-            const style = document.createElement('style');
-            style.textContent = `
-                .resource-card {
-                    animation: fadeInUp 0.6s ease-out forwards;
-                }
-                
-                @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             showAllResources();
-            addSearchSuggestions();
-            addCardAnimations();
-            
-            // Agregrar botón para limpiar filtros
-            const clearFiltersBtn = document.createElement('button');
-            clearFiltersBtn.textContent = 'Mostrar Todos';
-            clearFiltersBtn.style.cssText = `
-                background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
-                color: #181a2b;
-                border: none;
-                padding: 0.7rem 1.5rem;
-                border-radius: 12px;
-                font-weight: bold;
-                cursor: pointer;
-                margin-top: 1rem;
-                font-size: 0.9rem;
-            `;
-            clearFiltersBtn.onclick = showAllResources;
-            
-            const searchContainer = document.querySelector('.search-container');
-            searchContainer.appendChild(clearFiltersBtn);
+            lucide.createIcons();
         });
-        
+
         // Atajos de teclado
         document.addEventListener('keydown', function(e) {
-            // Ctrl + / para enfocar la búsqueda
             if (e.ctrlKey && e.key === '/') {
                 e.preventDefault();
                 searchInput.focus();
             }
-            
-            // Escape para limpiar búsqueda
+
             if (e.key === 'Escape') {
-                if (document.querySelector('.resource-modal')) {
-                    document.querySelector('.resource-modal').remove();
+                const modal = document.querySelector('.news-modal');
+                if (modal) {
+                    modal.remove();
                 } else {
                     showAllResources();
                     searchInput.blur();

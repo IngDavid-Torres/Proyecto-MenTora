@@ -8,9 +8,9 @@
 	<style>
 		body {
 			margin: 0;
-			font-family: 'Segoe UI', 'Poppins', sans-serif;
-			background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
-			color: #222;
+			font-family: 'Poppins', 'Segoe UI', sans-serif;
+			background: linear-gradient(135deg, #1a0a1f 0%, #3d1f3d 50%, #2c1a2e 100%);
+			color: #4a3840;
 			min-height: 100vh;
 		}
 		.container {
@@ -19,34 +19,36 @@
 		}
 		.btn {
 			padding: 0.7rem 1.5rem;
-			background: linear-gradient(90deg, #ffe066, #fab005);
-			color: #2a5298;
+			background: linear-gradient(135deg, #B57386, #6A2C3D);
+			color: #fff;
 			font-weight: bold;
 			border: none;
-			border-radius: 6px;
+			border-radius: 12px;
 			cursor: pointer;
 			transition: background 0.3s, transform 0.2s;
-			box-shadow: 0 2px 12px rgba(255,224,102,0.13);
+			box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
 		}
 		.btn:hover {
-			background: linear-gradient(90deg, #fab005, #ffe066);
-			transform: scale(1.04);
+			background: linear-gradient(135deg, #8A4255, #6A2C3D);
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(106, 44, 61, 0.4);
 		}
 		.form-control {
 			padding: 0.6rem;
 			margin-bottom: 1rem;
-			border: none;
-			border-radius: 6px;
+			border: 2px solid #B57386;
+			border-radius: 12px;
 			font-size: 1rem;
-			background: rgba(255,255,255,0.18);
-			color: #2a5298;
-			box-shadow: 0 1px 4px rgba(30,60,114,0.08);
-			transition: box-shadow 0.2s;
+			background: rgba(255,255,255,0.9);
+			color: #4a3840;
+			box-shadow: 0 2px 8px rgba(106, 44, 61, 0.1);
+			transition: all 0.3s;
 			width: 100%;
 		}
 		.form-control:focus {
 			outline: none;
-			box-shadow: 0 0 0 2px #ffe066;
+			border-color: #6A2C3D;
+			box-shadow: 0 0 0 3px rgba(106, 44, 61, 0.1);
 		}
 	</style>
 	{% block styles %}{% endblock %}
@@ -59,8 +61,8 @@
 	   <style>
 	   /* Temas visuales */
 	   body.theme-default {
-		   background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%) !important;
-		   color: #222;
+		   background: linear-gradient(135deg, #1a0a1f 0%, #3d1f3d 50%, #2c1a2e 100%) !important;
+		   color: #4a3840;
 	   }
 	   body.theme-dark {
 		   background: linear-gradient(120deg, #232526 0%, #414345 100%) !important;
@@ -86,41 +88,41 @@
 		   width: 100vw;
 		   position: fixed;
 		   top: 0; left: 0;
-		   background: rgba(0,255,241,0.13);
-		   color: #fff;
+		   background: rgba(255, 255, 255, 0.95);
+		   color: #4a3840;
 		   display: flex;
 		   align-items: center;
 		   z-index: 100;
-		   box-shadow: 0 2px 18px 0 #00fff1cc;
+		   box-shadow: 0 2px 20px rgba(106, 44, 61, 0.15);
 		   justify-content: space-between;
 		   padding: 0.7rem 2.5rem;
 		   backdrop-filter: blur(14px);
 		   -webkit-backdrop-filter: blur(14px);
-		   border-bottom: 2.5px solid #00fff1;
+		   border-bottom: 3px solid #B57386;
 	   }
 	   .navbar-tecnonauta .logo {
 		   display: flex; align-items: center; gap: 0.7rem;
 	   }
 	   .navbar-tecnonauta .logo img {
 		   height: 40px; width: 40px; border-radius: 50%; background: #fff;
-		   border: 2.5px solid #ffe066; box-shadow: 0 1px 8px #00fff1aa;
+		   border: 2.5px solid #B57386; box-shadow: 0 2px 10px rgba(106, 44, 61, 0.2);
 	   }
 	   .navbar-tecnonauta .logo span {
-		   font-size: 1.35rem; font-weight: bold; color: #00fff1; letter-spacing: 2px; text-shadow: 0 0 8px #00fff1;
+		   font-size: 1.35rem; font-weight: bold; color: #6A2C3D; letter-spacing: 2px;
 	   }
 	   .navbar-tecnonauta .nav-links {
 		   display: flex; gap: 1.7rem; margin-left: 2.5rem; align-items: center;
 	   }
 	   .navbar-tecnonauta .nav-links a {
-		   color: #ffe066; text-decoration: none; font-weight: 600; font-size: 1.08rem;
-		   transition: color 0.2s, text-shadow 0.2s;
-		   text-shadow: 0 0 6px #00fff1cc;
-		   padding: 0.2rem 0.7rem;
-		   border-radius: 6px;
+		   color: #6A2C3D; text-decoration: none; font-weight: 600; font-size: 1.08rem;
+		   transition: all 0.3s;
+		   padding: 0.5rem 1rem;
+		   border-radius: 10px;
 	   }
 	   .navbar-tecnonauta .nav-links a:hover,
 	   .navbar-tecnonauta .nav-links a.active {
-			   color: #181a2b; background: #00fff1; text-shadow: 0 0 10px #ffe066;
+			   color: #fff; background: linear-gradient(135deg, #B57386, #6A2C3D);
+			   box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
 		   }
 	   .navbar-tecnonauta .user-info {
 		   margin-left: 2.5rem;
@@ -130,13 +132,14 @@
 		   gap: 0.5rem;
 	   }
 	   .navbar-tecnonauta .user-info img {
-		   border-radius: 50%; border: 2.5px solid #ffe066; background: #fff; width: 34px; height: 34px;
+		   border-radius: 50%; border: 2.5px solid #B57386; background: #fff; width: 34px; height: 34px;
+		   padding: 2px;
 	   }
 	   .navbar-tecnonauta .user-info span {
-		   color: #ffe066; font-weight: bold; font-size: 1.05rem;
+		   color: #6A2C3D; font-weight: bold; font-size: 1.05rem;
 	   }
 	   .navbar-tecnonauta .user-info .theme {
-		   margin-left: 0.7rem; font-size: 0.97rem; color: #00fff1;
+		   margin-left: 0.7rem; font-size: 0.97rem; color: #8A4255;
 	   }
 	   @media (max-width: 700px) {
 		   .navbar-tecnonauta { flex-direction: column; padding: 0.7rem 1rem; }
@@ -146,15 +149,15 @@
 		   width: 100vw;
 		   position: fixed;
 		   bottom: 0; left: 0;
-		   background: rgba(0,255,241,0.13);
-		   color: #ffe066;
+		   background: rgba(255, 255, 255, 0.95);
+		   color: #6A2C3D;
 		   text-align: center;
 		   padding: 0.8rem 0;
 		   font-size: 1.05rem;
 		   letter-spacing: 0.7px;
 		   z-index: 100;
-		   box-shadow: 0 -2px 18px 0 #00fff1cc;
-		   border-top: 2.5px solid #00fff1;
+		   box-shadow: 0 -2px 20px rgba(106, 44, 61, 0.15);
+		   border-top: 3px solid #B57386;
 		   backdrop-filter: blur(14px);
 		   -webkit-backdrop-filter: blur(14px);
 	   }
@@ -233,7 +236,7 @@
 
 	<!-- Footer global -->
 	   <footer class="footer-tecnonauta">
-		   &copy; 2025 <span style="color:#00fff1; font-weight:bold;">MenTora</span> | Aprende jugando. Todos los derechos reservados.
+		   &copy; 2025 <span style="color:#B57386; font-weight:bold;">MenTora</span> | Aprende jugando. Todos los derechos reservados.
 	   </footer> 
 	   <!-- tester -->
 </body>

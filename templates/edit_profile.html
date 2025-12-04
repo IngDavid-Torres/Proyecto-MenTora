@@ -1,156 +1,339 @@
-{% extends 'base.html' %}
+
 {% block content %}
 <style>
 body {
-    background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%) !important;
+    background: linear-gradient(135deg, #1a0a1f 0%, #3d1f3d 50%, #2c1a2e 100%) !important;
+    font-family: 'Poppins', Arial, sans-serif;
+    min-height: 100vh;
 }
-.tecnonauta-glass {
-    max-width: 500px;
-    margin: 2.5rem auto;
-    background: rgba(0,255,241,0.10);
-    border-radius: 28px;
-    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 2.5px solid #00fff1;
-    padding: 2.7rem 2.2rem 2.2rem 2.2rem;
-    color: #fff;
-    font-family: 'Orbitron','Poppins',Arial,sans-serif;
+
+.edit-profile-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.edit-profile-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(106, 44, 61, 0.3);
+    padding: 2.5rem;
+    color: #4a3840;
     position: relative;
     overflow: hidden;
 }
-.tecnonauta-glass:before {
+
+.edit-profile-card::before {
     content: '';
     position: absolute;
-    top: -60px; left: -60px;
-    width: 180px; height: 180px;
-    background: radial-gradient(circle, #ffe066 0%, #00fff1 80%, transparent 100%);
-    opacity: 0.18;
-    z-index: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #B57386, #6A2C3D, #8A4255);
 }
-.tecnonauta-glass h2 {
-    color: #ffe066;
-    font-family: 'Orbitron','Poppins',Arial,sans-serif;
-    font-size: 2.2rem;
+
+.edit-profile-card h2 {
+    color: #6A2C3D;
+    font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
+    font-size: 2rem;
     font-weight: bold;
-    letter-spacing: 2px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     text-align: center;
-    text-shadow: 0 0 18px #00fff1, 0 0 2px #fff;
-    z-index: 1;
-    position: relative;
-}
-.tecnonauta-glass label {
-    color: #00fff1;
-    font-weight: bold;
-    margin-bottom: 0.3rem;
-    display: block;
-    font-size: 1.09rem;
-    z-index: 1;
-    position: relative;
-}
-.tecnonauta-glass input, .tecnonauta-glass select {
-    width: 100%;
-    padding: 0.8rem;
-    border-radius: 10px;
-    border: 1.5px solid #00fff1;
-    margin-bottom: 1.2rem;
-    font-size: 1.09rem;
-    background: rgba(255,255,255,0.13);
-    color: #fff;
-    font-family: 'Poppins', Arial, sans-serif;
-    z-index: 1;
-    position: relative;
-}
-.tecnonauta-glass .avatar-list {
     display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.2rem;
-    z-index: 1;
-    position: relative;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
-.tecnonauta-glass .avatar-list label {
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    color: #6A2C3D;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: 12px;
+    border: 2px solid #B57386;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: #4a3840;
+    font-family: 'Poppins', Arial, sans-serif;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #6A2C3D;
+    box-shadow: 0 0 0 3px rgba(106, 44, 61, 0.1);
+}
+
+.avatar-section {
+    margin-bottom: 1.5rem;
+}
+
+.avatar-section label {
+    color: #6A2C3D;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: block;
+    font-size: 1rem;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.avatar-option {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    margin-bottom: 0;
 }
-.tecnonauta-glass .avatar-list img {
-    border-radius: 50%;
-    border: 2.5px solid #00fff1;
-    width: 60px;
-    height: 60px;
-    margin-bottom: 0.2rem;
-    transition: box-shadow 0.2s, border 0.2s;
-    background: #fff;
-}
-.tecnonauta-glass .avatar-list input[type="radio"]:checked + img,
-.tecnonauta-glass .avatar-list img[style*="box-shadow"] {
-    box-shadow: 0 0 0 5px #ffe066;
-    border: 2.5px solid #ffe066;
-}
-.tecnonauta-glass .btn-tecnonauta {
-    background: linear-gradient(90deg,#ffe066,#00fff1);
-    color: #181a2b;
-    border: none;
-    border-radius: 10px;
-    padding: 0.9rem 2.5rem;
-    font-weight: bold;
-    font-size: 1.18rem;
-    cursor: pointer;
-    box-shadow: 0 2px 12px #00fff133;
-    margin-top: 0.7rem;
-    transition: background 0.2s, color 0.2s, transform 0.15s;
-    z-index: 1;
-    position: relative;
-}
-.tecnonauta-glass .btn-tecnonauta:hover {
-    background: #00fff1;
-    color: #2a5298;
-    transform: scale(1.05);
-}
-.tecnonauta-glass #alert-edit-success {
+
+.avatar-option input[type="radio"] {
     display: none;
-    margin-top: 1.2rem;
-    background: linear-gradient(90deg,#ffe066,#00fff1);
-    color: #2a5298;
-    font-weight: bold;
-    border-radius: 10px;
-    padding: 0.8rem 1.3rem;
+}
+
+.avatar-option img {
+    border-radius: 50%;
+    border: 3px solid #B57386;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 0.3rem;
+    transition: all 0.3s ease;
+    background: #fff;
+    padding: 5px;
+}
+
+.avatar-option input[type="radio"]:checked + img {
+    box-shadow: 0 0 0 4px #6A2C3D;
+    border: 3px solid #6A2C3D;
+    transform: scale(1.1);
+}
+
+.avatar-option:hover img {
+    transform: scale(1.05);
+    border-color: #8A4255;
+}
+
+.avatar-option span {
+    font-size: 0.85rem;
+    color: #6A2C3D;
+    font-weight: 500;
     text-align: center;
-    font-size: 1.13rem;
-    z-index: 2;
-    position: relative;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #B57386, #6A2C3D);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #8A4255, #6A2C3D);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(106, 44, 61, 0.4);
+}
+
+.btn-save:active {
+    transform: translateY(0);
+}
+
+#alert-edit-success {
+    display: none;
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, #B57386, #6A2C3D);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #B57386;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #6A2C3D;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .edit-profile-container {
+        padding: 0.5rem;
+        margin: 1rem auto;
+    }
+
+    .edit-profile-card {
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+
+    .edit-profile-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 0.8rem;
+    }
+
+    .avatar-option img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .btn-save {
+        padding: 0.9rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .edit-profile-card {
+        padding: 1.2rem;
+    }
+
+    .edit-profile-card h2 {
+        font-size: 1.3rem;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 0.6rem;
+    }
+
+    .avatar-option img {
+        width: 55px;
+        height: 55px;
+    }
+
+    .avatar-option span {
+        font-size: 0.75rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-save {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
 }
 </style>
-<div class="tecnonauta-glass">
-    <h2>Editar Perfil</h2>
-    <form id="editProfileForm" method="POST" action="/update_profile" autocomplete="off">
-        <label>Email:</label>
-        <input type="email" name="email" value="{{ user.email }}" required>
-        <label>Área:</label>
-        <input type="text" name="area" value="{{ user.area }}" required>
-        <label>Avatar:</label>
-        <div class="avatar-list">
-            {% for seed in avatar_seeds %}
-            <label>
-                <input type="radio" name="avatar_seed" value="{{ seed }}" {% if user.avatar_url and (seed in user.avatar_url) %}checked{% endif %} style="display:none;">
-                <img src="https://api.dicebear.com/7.x/identicon/svg?seed={{ seed }}" alt="avatar" {% if user.avatar_url and (seed in user.avatar_url) %}style="box-shadow:0 0 0 5px #ffe066; border:2.5px solid #ffe066;"{% endif %}>
-                <span style="font-size:0.93rem;color:#ffe066;">{{ seed|capitalize }}</span>
-            </label>
-            {% endfor %}
-        </div>
-        <label>Tema:</label>
-        <select name="theme">
-            {% for t in themes %}
-            <option value="{{ t }}" {% if user.theme == t %}selected{% endif %}>{{ t|capitalize }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" class="btn-tecnonauta">Guardar Cambios</button>
-        <div id="alert-edit-success">¡Perfil actualizado!</div>
-    </form>
+
+
+
+    <a href="/dashboard" class="back-button" title="Volver al Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+    </a>
+
+<div class="edit-profile-container">
+    
+
+    <div class="edit-profile-card">
+        <h2>
+            <img src="https://api.iconify.design/mdi/account-edit.svg?color=%236A2C3D" alt="editar perfil" style="width: 32px; height: 32px;">
+            Editar Perfil
+        </h2>
+
+        <form id="editProfileForm" method="POST" action="/update_profile" autocomplete="off">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" value="{{ user.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Área:</label>
+                <input type="text" name="area" value="{{ user.area }}" required>
+            </div>
+
+            <div class="avatar-section">
+                <label>Selecciona tu Avatar:</label>
+                <div class="avatar-grid">
+                    {% for seed in avatar_seeds %}
+                    <div class="avatar-option">
+                        <input type="radio" name="avatar_seed" value="{{ seed }}" id="avatar_{{ loop.index }}" {% if user.avatar_url and (seed in user.avatar_url) %}checked{% endif %}>
+                        <label for="avatar_{{ loop.index }}">
+                            <img src="https://api.dicebear.com/7.x/notionists/svg?seed={{ seed }}" alt="avatar {{ seed }}">
+                            <span>{{ seed|capitalize }}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tema:</label>
+                <select name="theme">
+                    {% for t in themes %}
+                    <option value="{{ t }}" {% if user.theme == t %}selected{% endif %}>{{ t|capitalize }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn-save">
+                <span>💾</span> Guardar Cambios
+            </button>
+
+            <div id="alert-edit-success">
+                ✓ ¡Perfil actualizado exitosamente!
+            </div>
+        </form>
+    </div>
 </div>
 <script>
 const editProfileForm = document.getElementById('editProfileForm');

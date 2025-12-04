@@ -19,10 +19,6 @@
             <a href="/dashboard" class="navbar-logo">
                 <img src="{{ url_for('static', filename='img/mentora1.png') }}" alt="Logo MenTora">
             </a>
-            <button id="navToggle" class="menu-button" aria-label="Abrir menú">
-                <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
-            </button>
-
             <div class="navbar-user">
                 <img src="{{ avatar_url }}" alt="avatar" class="navbar-avatar">
                 <span class="navbar-username">{{ username }}</span>
@@ -46,6 +42,10 @@
         <div class="filters-section">
             <div class="filters-wrapper">
                 <div class="filters">
+                     <a href="/dashboard" class="filter-btn active">
+                        <img src="https://api.iconify.design/mdi/view-dashboard.svg?color=%236A2C3D" alt="dashboard" style="width: 20px; height: 20px;">
+                        DASHBOARD
+                    </a>
                     <a href="/games" class="filter-btn">
                         <img src="https://api.iconify.design/mdi/gamepad-variant.svg?color=%236A2C3D" alt="juegos" style="width: 20px; height: 20px;">
                         JUEGOS
@@ -61,10 +61,6 @@
                     <a href="/juegos-interactivos" class="filter-btn">
                         <img src="https://api.iconify.design/mdi/puzzle.svg?color=%236A2C3D" alt="zona interactiva" style="width: 20px; height: 20px;">
                         ZONA INTERACTIVA
-                    </a>
-                    <a href="/dashboard" class="filter-btn active">
-                        <img src="https://api.iconify.design/mdi/view-dashboard.svg?color=%236A2C3D" alt="dashboard" style="width: 20px; height: 20px;">
-                        DASHBOARD
                     </a>
                 </div>
             </div>
