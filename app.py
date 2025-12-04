@@ -341,11 +341,18 @@ def login():
                     if user.is_admin:
                         redirect_url = '/admin'
                         app.logger.debug(f"Redirigiendo a admin panel")
-                    elif hasattr(user, 'teacher_profile') and user.teacher_profile is not None:
-                        redirect_url = '/teacher/dashboard'
-                        app.logger.debug(f"Usuario tiene perfil de profesor, redirigiendo a teacher dashboard")
                     else:
-                        app.logger.debug(f"Redirigiendo a dashboard normal")
+                        # Verificar si es profesor sin cargar toda la relación
+                        try:
+                            teacher = Teacher.query.filter_by(user_id=user.id).first()
+                            if teacher is not None:
+                                redirect_url = '/teacher/dashboard'
+                                app.logger.debug(f"Usuario tiene perfil de profesor, redirigiendo a teacher dashboard")
+                            else:
+                                app.logger.debug(f"Redirigiendo a dashboard normal")
+                        except Exception as teacher_check_error:
+                            app.logger.warning(f"No se pudo verificar perfil de profesor: {teacher_check_error}")
+                            app.logger.debug(f"Redirigiendo a dashboard normal (fallback)")
 
                     return jsonify(success=True, redirect=redirect_url)
 
