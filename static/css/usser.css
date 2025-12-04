@@ -689,7 +689,7 @@ h2 {
 }
 
 .news-header h1 {
-    font-size: 2.4rem;
+    font-size: 2.2rem;
     font-family: 'Exo 2', sans-serif;
     color: var(--primary-color);
     margin-bottom: var(--spacing-sm);
@@ -817,7 +817,7 @@ h2 {
 }
 
 .news-title {
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--primary-color);
     margin-bottom: 0.8rem;

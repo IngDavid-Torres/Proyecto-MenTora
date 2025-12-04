@@ -1951,6 +1951,10 @@ main {
         width: 26px;
         height: 26px;
     }
+
+    .mentora-sub {
+        font-size: 0.95rem;
+    }
 }
 
 @media (max-width: 520px) {
@@ -2063,6 +2067,10 @@ main {
     .back-button svg {
         width: 24px;
         height: 24px;
+    }
+
+    .mentora-sub {
+        font-size: 0.9rem;
     }
 }
 
@@ -2218,6 +2226,14 @@ main {
         height: 22px;
         stroke-width: 2.2;
     }
+
+    .mentora-sub {
+        font-size: 0.85rem;
+    }
+
+    .mentora-title {
+        font-size: 1.8rem;
+    }
 }
 
 
@@ -2276,6 +2292,14 @@ main {
         width: 20px;
         height: 20px;
         stroke-width: 2;
+    }
+
+    .mentora-sub {
+        font-size: 0.8rem;
+    }
+
+    .mentora-title {
+        font-size: 1.6rem;
     }
 }
 
