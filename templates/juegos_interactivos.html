@@ -4,336 +4,419 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MenTora - Juegos Interactivos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- TECNONAUTA/RETROFUTURISTA BASE --- */
+        :root {
+            --primary-color: #6A2C3D;
+            --secondary-color: #8A4255;
+            --accent-color: #B57386;
+            --light-blue: #E3C8CF;
+            --dark-teal: #4A1E2A;
+            --white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-gray: #4a3840;
+            --gradient-start: #E3C8CF;
+            --gradient-end: #6A2C3D;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body, html {
-            font-family: 'Orbitron', 'Inter', Arial, sans-serif;
-            background: linear-gradient(120deg, #181a2b 0%, #23272f 60%, #2a5298 100%);
-            color: #e0e7ef;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--primary-color);
+            color: var(--white);
             min-height: 100vh;
-            letter-spacing: 0.5px;
             overflow-x: hidden;
+            letter-spacing: 0.5px;
         }
 
-        /* Fondo animado de circuitos */
-        .circuit-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-            opacity: 0.15;
-            filter: blur(1.5px) brightness(1.2) drop-shadow(0 0 12px #00fff1);
+        /* Navigation Section (estilo filters-section) */
+        .filters-section {
+            margin-bottom: 2rem;
+            padding-top: 1rem;
         }
 
-        /* Navbar */
-        .main-navbar {
-            background: linear-gradient(90deg, #181a2b 60%, #23272f 100%);
-            border-bottom: 2.5px solid #00fff1;
-            box-shadow: 0 4px 32px #00fff1a0;
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .navbar-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        .filters-wrapper {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            gap: 1.5rem;
         }
 
-        .navbar-logo {
+        .filters {
             display: flex;
-            align-items: center;
             gap: 1rem;
-            color: #00fff1;
-            text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-shadow: 0 0 8px #00fff1;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border: 1.5px solid transparent;
-            border-radius: 8px;
-            transition: all 0.3s;
+        .filter-btn {
+            background: var(--white);
+            color: var(--primary-color);
+            border: 0px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 0.7rem 1.5rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins';
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .nav-links a:hover {
-            color: #00fff1;
-            border: 1.5px solid #00fff1;
-            box-shadow: 0 0 12px #00fff1a0;
-            background: rgba(0,255,241,0.08);
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(106, 44, 61, 0.4);
         }
 
-        /* Container principal */
+        .filter-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Container */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
+            padding: 2.5rem 1.2rem;
+            position: relative;
+            z-index: 10;
             margin: 0 auto;
-            padding: 2rem;
         }
 
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            padding-top: 0.3rem;
         }
 
         .header h1 {
-            font-size: 3rem;
-            color: #00fff1;
-            text-shadow: 0 0 12px #00fff1;
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-family: 'Exo 2', sans-serif;
+            color: var(--white);
             margin-bottom: 1rem;
-            animation: glow 2s infinite alternate;
+            letter-spacing: 2px;
         }
 
         .header p {
-            font-size: 1.2rem;
-            color: #e0e7ef;
-            max-width: 600px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            color: var(--light-blue);
+            opacity: 0.9;
+            max-width: 700px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
-        /* Glass cards */
+        /* Glass Card */
         .glass-card {
-            background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
-            border: 2.5px solid #00fff1;
-            box-shadow: 0 8px 32px #00fff1a0, 0 0 24px #00fff1;
-            border-radius: 22px;
+            background: var(--white);
+            border-radius: 18px;
             padding: 2rem;
-            margin: 2rem 0;
-            backdrop-filter: blur(8px);
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
 
-        /* Games grid */
+        .glass-card h2 {
+            color: var(--primary-color);
+            font-family: 'Exo 2', sans-serif;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+        }
+
+        /* Game Stats */
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-blue);
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'Exo 2', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        /* Games Grid */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+            gap: 2rem;
             margin-bottom: 3rem;
         }
 
+        /* Game Card */
         .game-card {
-            background: linear-gradient(120deg, #23243a 60%, #1a1a2e 100%);
-            border: 2.5px solid #00fff1;
-            box-shadow: 0 8px 32px #00fff1a0, 0 0 24px #00fff1;
-            border-radius: 22px;
+            background: var(--white);
+            border-radius: 18px;
             overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px #00fff1cc, 0 0 30px #00fff1;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(106, 44, 61, 0.25);
         }
 
         .game-header {
-            background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
-            color: #181a2b;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: var(--white);
             padding: 1.5rem;
+            font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+            font-weight: 700;
             text-align: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
+            font-family: 'Exo 2', sans-serif;
         }
 
         .game-content {
             padding: 2rem;
-            min-height: 500px;
         }
 
-        /* Botones */
-        .btn {
-            background: linear-gradient(90deg, #00fff1 60%, #00c3ff 100%);
-            color: #181a2b;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 12px;
-            font-weight: bold;
-            font-family: 'Orbitron', Arial, sans-serif;
+        .game-content h3 {
+            color: var(--primary-color);
+            font-family: 'Exo 2', sans-serif;
+            margin-bottom: 1rem;
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+        }
+
+        .game-content h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+        }
+
+        /* Challenge List */
+        .challenge-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .challenge-list li {
+            padding: 0.8rem 1rem;
+            background: var(--light-blue);
+            border: 2px solid transparent;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 2px 12px #00fff1a0;
-            margin: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
         }
 
-        .btn:hover {
-            background: linear-gradient(90deg, #00c3ff 60%, #00fff1 100%);
-            color: #fff;
-            transform: scale(1.05);
-            box-shadow: 0 4px 18px #00fff1cc;
+        .challenge-list li:hover {
+            background: var(--accent-color);
+            color: var(--white);
+            transform: translateX(5px);
         }
 
-        .btn-secondary {
-            background: #23243a;
-            color: #00fff1;
-            border: 2px solid #00fff1;
+        .challenge-list li.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--accent-color);
         }
 
-        .btn-secondary:hover {
-            background: #00fff1;
-            color: #23243a;
-        }
-
-        /* Juego de Programación */
+        /* Code Editor */
         .code-editor {
-            background: #1a1a2e;
-            border: 2px solid #00fff1;
+            border: 2px solid var(--accent-color);
             border-radius: 12px;
-            padding: 1rem;
-            margin: 1rem 0;
-            font-family: 'Courier New', monospace;
-            min-height: 200px;
+            overflow: hidden;
+            background: var(--white);
         }
 
         .code-editor textarea {
             width: 100%;
-            height: 180px;
-            background: transparent;
-            border: none;
-            color: #00fff1;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            resize: none;
-            outline: none;
-        }
-
-        .output-panel {
-            background: #0a0a0a;
-            border: 2px solid #00fff1;
-            border-radius: 12px;
+            min-height: 200px;
             padding: 1rem;
-            margin: 1rem 0;
-            min-height: 120px;
-            color: #00ff00;
             font-family: 'Courier New', monospace;
-            overflow-y: auto;
+            font-size: 0.9rem;
+            border: none;
+            outline: none;
+            resize: vertical;
+            background: var(--white);
+            color: var(--text-dark);
         }
 
-        .challenge-list {
-            list-style: none;
-            margin: 1rem 0;
+        /* Output Panel */
+        .output-panel {
+            background: var(--light-blue);
+            padding: 1rem;
+            border-radius: 12px;
+            min-height: 120px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            white-space: pre-wrap;
+            border: 2px solid var(--accent-color);
         }
 
-        .challenge-list li {
-            background: rgba(0,255,241,0.08);
-            border: 1px solid #00fff1;
-            border-radius: 8px;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
+        /* Buttons */
+        .btn {
+            background: var(--dark-teal);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            font-family: 'Poppins';
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            text-decoration: none;
         }
 
-        .challenge-list li:hover {
-            background: rgba(0,255,241,0.15);
+        .btn svg,
+        .btn i {
+            width: 18px;
+            height: 18px;
         }
 
-        .challenge-list li.active {
-            background: rgba(0,255,241,0.25);
-            border: 2px solid #00fff1;
+        .btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(106, 44, 61, 0.4);
         }
 
-        /* Simulador VR */
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: var(--white);
+        }
+
+        /* VR Viewport */
         .vr-viewport {
-            background: #000;
-            border: 3px solid #00fff1;
-            border-radius: 15px;
+            width: 100%;
             height: 400px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 12px;
+            border: 2px solid var(--accent-color);
+            margin-bottom: 1.5rem;
             position: relative;
             overflow: hidden;
-            margin: 1rem 0;
-            box-shadow: 0 0 30px #00fff1;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
         .vr-scene {
             width: 100%;
             height: 100%;
             position: relative;
-            background: linear-gradient(180deg, #001122 0%, #003366 50%, #006699 100%);
-            perspective: 1000px;
         }
 
         .vr-object {
             position: absolute;
-            transition: all 0.5s;
-            transform-style: preserve-3d;
-        }
-
-        .cube {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #00fff1, #00c3ff);
-            border: 2px solid #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 20px #00fff1;
-            animation: float 3s infinite ease-in-out;
-        }
-
-        .sphere {
             width: 80px;
             height: 80px;
-            background: radial-gradient(circle, #ff6b6b, #ee5a24);
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 25px #ff6b6b;
-            animation: orbit 5s infinite linear;
+            transition: all 0.3s;
         }
 
-        .pyramid {
+        .vr-object.cube {
+            background: linear-gradient(45deg, var(--accent-color), var(--white));
+            animation: rotate3d 3s infinite linear;
+        }
+
+        .vr-object.sphere {
+            background: radial-gradient(circle, var(--light-blue), var(--primary-color));
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        .vr-object.pyramid {
             width: 0;
             height: 0;
             border-left: 40px solid transparent;
             border-right: 40px solid transparent;
-            border-bottom: 70px solid #00ff00;
-            filter: drop-shadow(0 0 15px #00ff00);
-            animation: spin 4s infinite linear;
+            border-bottom: 80px solid var(--accent-color);
+            animation: rotate3d 3s infinite linear reverse;
         }
 
+        @keyframes rotate3d {
+            from { transform: rotateY(0deg) rotateX(0deg); }
+            to { transform: rotateY(360deg) rotateX(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* VR Controls */
         .vr-controls {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin: 1rem 0;
+            margin-bottom: 1.5rem;
         }
 
         .control-panel {
-            background: rgba(0,255,241,0.08);
-            border: 2px solid #00fff1;
-            border-radius: 12px;
+            background: var(--light-blue);
             padding: 1rem;
-            text-align: center;
+            border-radius: 12px;
+            border: 2px solid var(--accent-color);
+        }
+
+        .control-panel h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .control-panel label {
+            display: block;
+            margin: 0.5rem 0;
+            color: var(--text-dark);
+            font-size: 0.9rem;
         }
 
         .slider {
             width: 100%;
-            margin: 0.5rem 0;
-            -webkit-appearance: none;
             height: 8px;
             border-radius: 5px;
-            background: #23243a;
+            background: var(--white);
             outline: none;
-            border: 1px solid #00fff1;
+            -webkit-appearance: none;
+            margin: 0.5rem 0;
         }
 
         .slider::-webkit-slider-thumb {
@@ -342,136 +425,259 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #00fff1;
+            background: var(--primary-color);
             cursor: pointer;
-            box-shadow: 0 0 10px #00fff1;
         }
 
-        /* Animaciones */
-        @keyframes glow {
-            from { text-shadow: 0 0 12px #00fff1, 0 0 2px #fff; }
-            to { text-shadow: 0 0 32px #00fff1, 0 0 8px #fff; }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotateX(0deg); }
-            50% { transform: translateY(-20px) rotateX(180deg); }
+        /* Achievement Badge */
+        .achievement-badge {
+            padding: 1rem;
+            background: rgba(106, 44, 61, 0.1);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            text-align: center;
+            min-width: 150px;
         }
 
-        @keyframes orbit {
-            0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
-            100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+        .achievement-badge > div:first-child {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
         }
 
-        @keyframes spin {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(360deg); }
+        .achievement-badge > div:first-child svg,
+        .achievement-badge > div:first-child i {
+            width: 2rem;
+            height: 2rem;
+            color: var(--primary-color);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        .achievement-badge > div:nth-child(2) {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .achievement-badge > div:last-child {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--dark-teal);
+            color: var(--white);
+            font-family: 'Exo 2';
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .game-card {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+
+        /* Responsive Design */
+        @media (max-width: 1440px) {
+            .container {
+                max-width: 1100px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 960px;
+            }
+            .games-grid {
+                grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
             .games-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .container {
-                padding: 1rem;
-            }
-            
             .vr-controls {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* Estadísticas del juego */
-        .game-stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(0,255,241,0.08);
-            border-radius: 12px;
-            border: 1px solid #00fff1;
+        @media (max-width: 768px) {
+            .filters-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filters {
+                justify-content: center;
+                gap: 0.75rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+            }
+
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            .header {
+                padding-top: 1rem;
+            }
+
+            .games-grid {
+                gap: 1.5rem;
+            }
+
+            .game-content {
+                padding: 1.5rem;
+            }
+
+            .vr-viewport {
+                height: 300px;
+            }
+
+            .game-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
         }
 
-        .stat-item {
-            text-align: center;
+        @media (max-width: 480px) {
+            .filter-btn {
+                padding: 0.5rem 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding-top: 0.5rem;
+            }
+
+            .game-content {
+                padding: 1.2rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            .vr-viewport {
+                height: 250px;
+            }
+
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .game-stats {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .vr-object {
+                width: 60px;
+                height: 60px;
+            }
+
+            .vr-object.pyramid {
+                border-left: 30px solid transparent;
+                border-right: 30px solid transparent;
+                border-bottom: 60px solid var(--accent-color);
+            }
         }
 
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #00fff1;
-            text-shadow: 0 0 8px #00fff1;
-        }
+        @media (max-width: 360px) {
+            .container {
+                padding: 0.75rem 0.5rem;
+            }
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: #e0e7ef;
-            margin-top: 0.5rem;
+            .game-content {
+                padding: 1rem;
+            }
+
+            .glass-card {
+                padding: 1.2rem;
+            }
+
+            .vr-viewport {
+                height: 220px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Fondo animado de circuitos -->
-    <svg class="circuit-bg" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="#00fff1" stroke-width="2" opacity="0.6">
-            <polyline points="100,100 300,100 300,300 500,300">
-                <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="3s" repeatCount="indefinite"/>
-            </polyline>
-            <polyline points="400,200 600,200 600,400 800,400">
-                <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="3.5s" repeatCount="indefinite"/>
-            </polyline>
-            <polyline points="700,500 900,500 900,700 1100,700">
-                <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="4s" repeatCount="indefinite"/>
-            </polyline>
-            <polyline points="1200,150 1400,150 1400,350 1600,350">
-                <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="2.8s" repeatCount="indefinite"/>
-            </polyline>
-            <circle cx="300" cy="100" r="8" fill="#00fff1">
-                <animate attributeName="r" values="8;16;8" dur="2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="600" cy="200" r="8" fill="#00fff1">
-                <animate attributeName="r" values="8;16;8" dur="2.2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.5;1;0.5" dur="2.2s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="900" cy="500" r="8" fill="#00fff1">
-                <animate attributeName="r" values="8;16;8" dur="2.4s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite"/>
-            </circle>
-        </g>
-    </svg>
-
-    <!-- Navbar -->
-    <nav class="main-navbar">
-        <div class="navbar-content">
-            <a href="#" class="navbar-logo">
-                🎮 MenTora Games
-            </a>
-            <ul class="nav-links">
-                <li><a href="#programming-game">Programación</a></li>
-                <li><a href="#vr-simulator">VR Simulator</a></li>
-                <li><a href="#stats">Estadísticas</a></li>
-                <li><a href="/dashboard" class="{% if request.path.startswith('/dashboard') %}active{% endif %}">Dashboard</a></li>
-            </ul>
-        </div>
-    </nav>
 
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🚀 Juegos Interactivos MenTora</h1>
+            <h1><i data-lucide="rocket" style="display: inline; width: 1.2em; height: 1.2em; vertical-align: -0.2em;"></i> Juegos Interactivos MenTora</h1>
             <p>Explora el mundo de la programación y la realidad virtual con nuestros juegos educativos de última generación.</p>
+        </div>
+
+        <!-- Navigation Section (estilo filters-section) -->
+        <div class="filters-section">
+            <div class="filters-wrapper">
+                <div class="filters">
+                    <a href="#programming-game" class="filter-btn active">
+                        <i data-lucide="code-2"></i>
+                        Programación
+                    </a>
+                    <a href="#vr-simulator" class="filter-btn">
+                        <i data-lucide="glasses"></i>
+                        VR Simulator
+                    </a>
+                    <a href="#stats" class="filter-btn">
+                        <i data-lucide="bar-chart-3"></i>
+                        Estadísticas
+                    </a>
+                    <a href="/dashboard" class="filter-btn {% if request.path.startswith('/dashboard') %}active{% endif %}">
+                        <i data-lucide="layout-dashboard"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- Estadísticas generales -->
         <div class="glass-card" id="stats">
-            <h2 style="color: #00fff1; text-align: center; margin-bottom: 1.5rem;">📊 Estadísticas de Juego</h2>
+            <h2><i data-lucide="bar-chart-2" style="display: inline; width: 1em; height: 1em; vertical-align: -0.15em;"></i> Estadísticas de Juego</h2>
             <div class="game-stats">
                 <div class="stat-item">
                     <div class="stat-value" id="total-challenges">0</div>
@@ -497,25 +703,25 @@
             <!-- Juego de Programación -->
             <div class="game-card" id="programming-game">
                 <div class="game-header">
-                    💻 CodeMaster Challenge
+                    <i data-lucide="monitor" style="display: inline; width: 1em; height: 1em; vertical-align: -0.15em;"></i> CodeMaster Challenge
                 </div>
                 <div class="game-content">
-                    <h3 style="color: #00fff1; margin-bottom: 1rem;">Desafíos de Programación</h3>
-                    
+                    <h3>Desafíos de Programación</h3>
+
                     <!-- Lista de desafíos -->
                     <div style="margin-bottom: 1.5rem;">
-                        <h4 style="color: #e0e7ef; margin-bottom: 0.5rem;">Selecciona un desafío:</h4>
+                        <h4>Selecciona un desafío:</h4>
                         <ul class="challenge-list" id="challenge-list">
-                            <li data-challenge="0" class="active">🟢 Básico: Función suma</li>
-                            <li data-challenge="1">🟡 Intermedio: Fibonacci</li>
-                            <li data-challenge="2">🟠 Avanzado: Ordenamiento</li>
-                            <li data-challenge="3">🔴 Experto: Algoritmo recursivo</li>
+                            <li data-challenge="0" class="active"><i data-lucide="circle-dot" style="width: 1em; height: 1em; vertical-align: -0.15em; color: #4ade80;"></i> Básico: Función suma</li>
+                            <li data-challenge="1"><i data-lucide="circle-dot" style="width: 1em; height: 1em; vertical-align: -0.15em; color: #fbbf24;"></i> Intermedio: Fibonacci</li>
+                            <li data-challenge="2"><i data-lucide="circle-dot" style="width: 1em; height: 1em; vertical-align: -0.15em; color: #fb923c;"></i> Avanzado: Ordenamiento</li>
+                            <li data-challenge="3"><i data-lucide="circle-dot" style="width: 1em; height: 1em; vertical-align: -0.15em; color: #ef4444;"></i> Experto: Algoritmo recursivo</li>
                         </ul>
                     </div>
 
                     <!-- Editor de código -->
                     <div style="margin-bottom: 1rem;">
-                        <h4 style="color: #e0e7ef; margin-bottom: 0.5rem;">Editor de Código:</h4>
+                        <h4>Editor de Código:</h4>
                         <div class="code-editor">
                             <textarea id="code-input" placeholder="// Escribe tu código aquí...
 function suma(a, b) {
@@ -527,7 +733,7 @@ function suma(a, b) {
 
                     <!-- Panel de salida -->
                     <div style="margin-bottom: 1rem;">
-                        <h4 style="color: #e0e7ef; margin-bottom: 0.5rem;">Resultado:</h4>
+                        <h4>Resultado:</h4>
                         <div class="output-panel" id="code-output">
                             Presiona "Ejecutar Código" para ver el resultado...
                         </div>
@@ -535,9 +741,9 @@ function suma(a, b) {
 
                     <!-- Controles -->
                     <div style="text-align: center;">
-                        <button class="btn" onclick="runCode()">🚀 Ejecutar Código</button>
-                        <button class="btn btn-secondary" onclick="resetCode()">🔄 Reiniciar</button>
-                        <button class="btn btn-secondary" onclick="getHint()">💡 Pista</button>
+                        <button class="btn" onclick="runCode()"><i data-lucide="play"></i> Ejecutar Código</button>
+                        <button class="btn btn-secondary" onclick="resetCode()"><i data-lucide="rotate-ccw"></i> Reiniciar</button>
+                        <button class="btn btn-secondary" onclick="getHint()"><i data-lucide="lightbulb"></i> Pista</button>
                     </div>
 
                     <!-- Progreso del desafío -->
@@ -561,10 +767,10 @@ function suma(a, b) {
             <!-- Simulador VR -->
             <div class="game-card" id="vr-simulator">
                 <div class="game-header">
-                    🥽 VR Universe Explorer
+                    <i data-lucide="glasses" style="display: inline; width: 1em; height: 1em; vertical-align: -0.15em;"></i> VR Universe Explorer
                 </div>
                 <div class="game-content">
-                    <h3 style="color: #00fff1; margin-bottom: 1rem;">Simulador de Realidad Virtual</h3>
+                    <h3>Simulador de Realidad Virtual</h3>
                     
                     <!-- Viewport VR -->
                     <div class="vr-viewport">
@@ -583,26 +789,26 @@ function suma(a, b) {
                     <!-- Controles VR -->
                     <div class="vr-controls">
                         <div class="control-panel">
-                            <h4 style="color: #00fff1; margin-bottom: 0.5rem;">🌍 Ambiente</h4>
-                            <label style="display: block; margin: 0.5rem 0; color: #e0e7ef;">Gravedad:</label>
+                            <h4><i data-lucide="globe" style="width: 1em; height: 1em; vertical-align: -0.15em;"></i> Ambiente</h4>
+                            <label>Gravedad:</label>
                             <input type="range" class="slider" id="gravity" min="0" max="100" value="50">
-                            <label style="display: block; margin: 0.5rem 0; color: #e0e7ef;">Velocidad:</label>
+                            <label>Velocidad:</label>
                             <input type="range" class="slider" id="speed" min="1" max="10" value="5">
                         </div>
-                        
+
                         <div class="control-panel">
-                            <h4 style="color: #00fff1; margin-bottom: 0.5rem;">🎨 Visual</h4>
-                            <label style="display: block; margin: 0.5rem 0; color: #e0e7ef;">Brillo:</label>
+                            <h4><i data-lucide="palette" style="width: 1em; height: 1em; vertical-align: -0.15em;"></i> Visual</h4>
+                            <label>Brillo:</label>
                             <input type="range" class="slider" id="brightness" min="50" max="150" value="100">
-                            <label style="display: block; margin: 0.5rem 0; color: #e0e7ef;">Zoom:</label>
+                            <label>Zoom:</label>
                             <input type="range" class="slider" id="zoom" min="50" max="200" value="100">
                         </div>
-                        
+
                         <div class="control-panel">
-                            <h4 style="color: #00fff1; margin-bottom: 0.5rem;">🎮 Interacción</h4>
-                            <button class="btn" onclick="addObject()" style="width: 100%; margin: 0.2rem 0;">➕ Añadir Objeto</button>
-                            <button class="btn btn-secondary" onclick="resetVR()" style="width: 100%; margin: 0.2rem 0;">🔄 Reiniciar</button>
-                            <button class="btn btn-secondary" onclick="takeScreenshot()" style="width: 100%; margin: 0.2rem 0;">📸 Captura</button>
+                            <h4><i data-lucide="gamepad-2" style="width: 1em; height: 1em; vertical-align: -0.15em;"></i> Interacción</h4>
+                            <button class="btn" onclick="addObject()" style="width: 100%; margin: 0.2rem 0;"><i data-lucide="plus"></i> Añadir Objeto</button>
+                            <button class="btn btn-secondary" onclick="resetVR()" style="width: 100%; margin: 0.2rem 0;"><i data-lucide="rotate-ccw"></i> Reiniciar</button>
+                            <button class="btn btn-secondary" onclick="takeScreenshot()" style="width: 100%; margin: 0.2rem 0;"><i data-lucide="camera"></i> Captura</button>
                         </div>
                     </div>
 
@@ -627,16 +833,21 @@ function suma(a, b) {
 
         <!-- Logros y Badges -->
         <div class="glass-card">
-            <h2 style="color: #00fff1; text-align: center; margin-bottom: 1.5rem;">🏆 Logros Desbloqueados</h2>
+            <h2><i data-lucide="trophy" style="display: inline; width: 1em; height: 1em; vertical-align: -0.15em;"></i> Logros Desbloqueados</h2>
             <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;" id="achievements">
-                <div class="achievement-badge" style="padding: 1rem; background: rgba(0,255,241,0.08); border: 2px solid #00fff1; border-radius: 12px; text-align: center; min-width: 150px;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
-                    <div style="color: #00fff1; font-weight: bold;">Primer Paso</div>
-                    <div style="color: #e0e7ef; font-size: 0.9rem;">Completa tu primer desafío</div>
+                <div class="achievement-badge">
+                    <div><i data-lucide="target"></i></div>
+                    <div>Primer Paso</div>
+                    <div>Completa tu primer desafío</div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2024 MenTora Games - Educación Interactiva de Última Generación</p>
+    </footer>
 
     <script>
         // ====== JUEGO DE PROGRAMACIÓN ======
@@ -910,32 +1121,35 @@ function suma(a, b) {
 
         function addAchievement(id, title, description) {
             if (unlockedAchievements.has(id)) return;
-            
+
             unlockedAchievements.add(id);
             const achievementsContainer = document.getElementById('achievements');
-            
+
             const badge = document.createElement('div');
             badge.className = 'achievement-badge';
-            badge.style.cssText = 'padding: 1rem; background: rgba(0,255,241,0.08); border: 2px solid #00fff1; border-radius: 12px; text-align: center; min-width: 150px; animation: fadeInUp 0.8s;';
-            
+            badge.style.animation = 'fadeInUp 0.8s';
+
             const icons = {
-                'first-challenge': '🎯',
-                'level-up': '📈',
-                'challenger': '🔥',
-                'object-master': '🏗️',
-                'photographer': '📷'
+                'first-challenge': 'target',
+                'level-up': 'trending-up',
+                'challenger': 'flame',
+                'object-master': 'hammer',
+                'photographer': 'camera'
             };
-            
+
             badge.innerHTML = `
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">${icons[id] || '🏆'}</div>
-                <div style="color: #00fff1; font-weight: bold;">${title}</div>
-                <div style="color: #e0e7ef; font-size: 0.9rem;">${description}</div>
+                <div><i data-lucide="${icons[id] || 'trophy'}"></i></div>
+                <div>${title}</div>
+                <div>${description}</div>
             `;
-            
+
             achievementsContainer.appendChild(badge);
-            
+
+            // Inicializar íconos de Lucide para el nuevo badge
+            lucide.createIcons();
+
             // Notificación
-            showNotification(`🏆 Logro desbloqueado: ${title}`);
+            showNotification(`Logro desbloqueado: ${title}`);
         }
 
         // Mostrar notificación
@@ -945,18 +1159,18 @@ function suma(a, b) {
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: linear-gradient(90deg, #00fff1, #00c3ff);
-                color: #181a2b;
+                background: linear-gradient(90deg, var(--light-blue), var(--accent-color));
+                color: var(--primary-color);
                 padding: 1rem 1.5rem;
                 border-radius: 12px;
                 font-weight: bold;
                 z-index: 1000;
-                box-shadow: 0 4px 20px rgba(0,255,241,0.5);
+                box-shadow: 0 4px 20px rgba(106, 44, 61, 0.5);
                 animation: slideIn 0.5s, fadeOut 0.5s 2.5s;
             `;
             notification.textContent = message;
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.remove();
             }, 3000);
@@ -976,34 +1190,19 @@ function suma(a, b) {
             document.getElementById('play-time').textContent = `${playTime}m`;
         }
 
-        // Añadir estilos de animación
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes fadeOut {
-                from { opacity: 1; }
-                to { opacity: 0; }
-            }
-            @keyframes fadeInUp {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-        `;
-        document.head.appendChild(style);
-
         // ====== INICIALIZACIÓN ======
         
         document.addEventListener('DOMContentLoaded', function() {
             initProgrammingGame();
             initVR();
-            
+
             // Auto-save stats cada 30 segundos
             setInterval(updateStats, 30000);
-            
-            console.log('🚀 MenTora Games iniciado correctamente!');
+
+            // Inicializar íconos de Lucide
+            lucide.createIcons();
+
+            console.log('MenTora Games iniciado correctamente!');
         });
 
         // Limpiar intervalos al salir
