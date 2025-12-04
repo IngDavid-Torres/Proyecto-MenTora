@@ -125,6 +125,17 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/health')
+def health():
+    """Endpoint para verificar que la app está funcionando"""
+    try:
+        # Intentar una consulta simple a la BD
+        user_count = User.query.count()
+        return jsonify(status='ok', users=user_count)
+    except Exception as e:
+        return jsonify(status='error', message=str(e)), 500
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -194,69 +205,47 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
-
 def login():
-
-    app.logger.debug("[LOGIN] Ejecutando función login()")
     if request.method == 'POST':
-        app.logger.debug("[LOGIN] POST recibido, intentando obtener datos del formulario...")
         try:
             username = request.form.get('username', '').strip()
             password = request.form.get('password', '')
-            # No registrar datos sensibles ni controlados por el usuario
-            app.logger.debug("[LOGIN] Datos de formulario recibidos.")
-        except Exception as e:
-            app.logger.error(f"[LOGIN ERROR] Exception al obtener datos del formulario: {e}")
-            return jsonify(success=False, error="Error al obtener datos del formulario"), 400
 
-        if not username or not password:
-            app.logger.error("[LOGIN ERROR] Campos requeridos faltantes.")
-            return jsonify(success=False, error="Campos requeridos faltantes"), 400
+            if not username or not password:
+                return jsonify(success=False, message="Campos requeridos faltantes"), 400
 
-        app.logger.debug("[LOGIN] Buscando usuario en la base de datos...")
-        try:
             user = User.query.filter_by(username=username).first()
-        except Exception as e:
-            app.logger.error(f"[LOGIN ERROR] Exception al buscar usuario: {e}")
-            return jsonify(success=False, error="Error al buscar usuario"), 500
-
-        # Definir IP solo para registro de acceso, no para logs
-        ip = request.remote_addr if request.remote_addr else None
-        app.logger.debug(f"[LOGIN] Usuario encontrado: {user is not None}")
-        try:
+            ip = request.remote_addr if request.remote_addr else None
+            
             success = user is not None and check_password_hash(user.password, password)
-        except Exception as e:
-            app.logger.error(f"[LOGIN ERROR] Exception al verificar contraseña: {e}")
-            return jsonify(success=False, error="Error al verificar contraseña"), 500
-        app.logger.debug(f"[LOGIN] Password match: {success}")
 
-        try:
-            log = AccessLog(username=username, ip=ip, success=success)
-            db.session.add(log)
-            db.session.commit()
-        except Exception as e:
-            app.logger.error(f"[LOGIN ERROR] Exception al guardar log de acceso: {e}")
+            try:
+                log = AccessLog(username=username, ip=ip, success=success)
+                db.session.add(log)
+                db.session.commit()
+            except Exception as e:
+                pass  # No detener el login si falla el log
 
-        if success:
-            app.logger.info(f"[LOGIN] Login exitoso para usuario: {username}")
-            session['user_id'] = user.id
-            session['username'] = user.username
-            session['is_admin'] = user.is_admin
-            session['avatar_url'] = user.avatar_url if user.avatar_url else ''
-            session['theme'] = user.theme if user.theme else 'default'
-            # Redirección según tipo de usuario
-            if user.is_admin:
-                return jsonify(success=True, redirect=url_for('admin_panel'))
-            elif hasattr(user, 'teacher_profile') and user.teacher_profile is not None:
-                return jsonify(success=True, redirect=url_for('teacher_dashboard'))
+            if success:
+                session['user_id'] = user.id
+                session['username'] = user.username
+                session['is_admin'] = user.is_admin
+                session['avatar_url'] = user.avatar_url if user.avatar_url else ''
+                session['theme'] = user.theme if user.theme else 'default'
+                
+                if user.is_admin:
+                    return jsonify(success=True, redirect=url_for('admin_panel'))
+                elif hasattr(user, 'teacher_profile') and user.teacher_profile is not None:
+                    return jsonify(success=True, redirect=url_for('teacher_dashboard'))
+                else:
+                    return jsonify(success=True, redirect=url_for('dashboard'))
             else:
-                return jsonify(success=True, redirect=url_for('dashboard'))
-        else:
-            # No registrar datos controlados por el usuario
-            app.logger.error("[LOGIN ERROR] Usuario o contraseña incorrectos.")
-            return jsonify(success=False, error="Usuario o contraseña incorrectos"), 401
+                return jsonify(success=False, message="Usuario o contraseña incorrectos"), 401
+                
+        except Exception as e:
+            app.logger.error(f"Error en login: {str(e)}")
+            return jsonify(success=False, message="Error al procesar login"), 500
 
-    
     return render_template('login.html')
 
 
