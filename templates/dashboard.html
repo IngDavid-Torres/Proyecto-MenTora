@@ -23,13 +23,6 @@
                 <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
             </button>
 
-            <ul class="navbar-links" id="navLinks">
-                <li><a href="/games" class="{% if request.path.startswith('/games') %}active{% endif %}">JUEGOS</a></li>
-                <li><a href="/biblioteca" class="{% if request.path.startswith('/biblioteca') %}active{% endif %}">BIBLIOTECA</a></li>
-                <li><a href="/noticias" class="{% if request.path.startswith('/noticias') %}active{% endif %}">NOTICIAS</a></li>
-                <li><a href="/juegos-interactivos" class="{% if request.path.startswith('/juegos-interactivos') %}active{% endif %}">ZONA INTECRACTIVA</a></li>
-                <li><a href="/dashboard" class="{% if request.path.startswith('/dashboard') %}active{% endif %}">DASHBOARD</a></li>
-            </ul>
             <div class="navbar-user">
                 <img src="{{ avatar_url }}" alt="avatar" class="navbar-avatar">
                 <span class="navbar-username">{{ username }}</span>
@@ -72,29 +65,6 @@
                     <a href="/dashboard" class="filter-btn active">
                         <img src="https://api.iconify.design/mdi/view-dashboard.svg?color=%236A2C3D" alt="dashboard" style="width: 20px; height: 20px;">
                         DASHBOARD
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="filters-section">
-            <div class="filters-wrapper">
-                <div class="filters">
-                    <a href="/edit_profile" class="filter-btn">
-                        <img src="https://api.iconify.design/mdi/account.svg?color=%236A2C3D" alt="perfil" style="width: 20px; height: 20px;">
-                        PERFIL
-                    </a>
-                    <a href="#logros" class="filter-btn" onclick="scrollToSection('logros'); return false;">
-                        <img src="https://api.iconify.design/mdi/trophy.svg?color=%236A2C3D" alt="logros" style="width: 20px; height: 20px;">
-                        TUS LOGROS
-                    </a>
-                    <a href="#notificaciones" class="filter-btn" onclick="scrollToSection('notificaciones'); return false;">
-                        <img src="https://api.iconify.design/mdi/bell.svg?color=%236A2C3D" alt="notificaciones" style="width: 20px; height: 20px;">
-                        NOTIFICACIONES
-                    </a>
-                    <a href="#reto-especial" class="filter-btn" onclick="scrollToSection('reto-especial'); return false;">
-                        <img src="https://api.iconify.design/mdi/lightning-bolt.svg?color=%236A2C3D" alt="desafío" style="width: 20px; height: 20px;">
-                        DESAFÍO DIARIO
                     </a>
                 </div>
             </div>
