@@ -148,27 +148,20 @@ def register():
 
             if not username or not email or not password or not user_type:
                 msg = 'Todos los campos son obligatorios.'
-                if request.headers.get('Accept') == 'application/json':
-                    return jsonify(success=False, message=msg), 400
-                flash(msg, 'error')
-                return redirect(url_for('register'))
+                return jsonify(success=False, message=msg), 400
 
+            # Verificar si el usuario ya existe
             existing_user = User.query.filter_by(username=username).first()
             if existing_user:
                 msg = 'El nombre de usuario ya está en uso.'
-                if request.headers.get('Accept') == 'application/json':
-                    return jsonify(success=False, message=msg), 400
-                flash(msg, 'error')
-                return redirect(url_for('register'))
+                return jsonify(success=False, message=msg), 400
             
             existing_email = User.query.filter_by(email=email).first()
             if existing_email:
                 msg = 'El correo electrónico ya está registrado.'
-                if request.headers.get('Accept') == 'application/json':
-                    return jsonify(success=False, message=msg), 400
-                flash(msg, 'error')
-                return redirect(url_for('register'))
+                return jsonify(success=False, message=msg), 400
 
+            # Crear el nuevo usuario
             hashed_password = generate_password_hash(password)
             new_user = User(
                 username=username,
@@ -182,25 +175,19 @@ def register():
             db.session.add(new_user)
             db.session.flush()
             
+            # Si es profesor, crear el perfil de profesor
             if user_type == 'teacher':
                 teacher = Teacher(user_id=new_user.id, area=area)
                 db.session.add(teacher)
             
             db.session.commit()
             msg = 'Registro exitoso. Ahora puedes iniciar sesión.'
-            if request.headers.get('Accept') == 'application/json':
-                return jsonify(success=True, message=msg)
-            flash(msg, 'success')
-            return redirect(url_for('login'))
+            return jsonify(success=True, message=msg)
             
         except Exception as e:
             db.session.rollback()
-            err_msg = f'Error al registrar: {str(e)}'
-            app.logger.error(err_msg)
-            if request.headers.get('Accept') == 'application/json':
-                return jsonify(success=False, message='Error al registrar usuario.'), 500
-            flash('Error al registrar usuario.', 'error')
-            return redirect(url_for('register'))
+            app.logger.error(f"Error en registro: {str(e)}")
+            return jsonify(success=False, message='Error al registrar usuario.'), 500
 
     return render_template('register.html')
 
@@ -212,19 +199,20 @@ def login():
             password = request.form.get('password', '')
 
             if not username or not password:
-                return jsonify(success=False, message="Campos requeridos faltantes"), 400
+                return jsonify(success=False, message="Usuario o contraseña incorrectos"), 400
 
             user = User.query.filter_by(username=username).first()
-            ip = request.remote_addr if request.remote_addr else None
-            
             success = user is not None and check_password_hash(user.password, password)
 
+            # Intentar guardar el log de acceso, pero no detener si falla
             try:
+                ip = request.remote_addr if request.remote_addr else 'unknown'
                 log = AccessLog(username=username, ip=ip, success=success)
                 db.session.add(log)
                 db.session.commit()
-            except Exception as e:
-                pass  # No detener el login si falla el log
+            except Exception as log_error:
+                db.session.rollback()
+                app.logger.warning(f"No se pudo guardar log de acceso: {log_error}")
 
             if success:
                 session['user_id'] = user.id
