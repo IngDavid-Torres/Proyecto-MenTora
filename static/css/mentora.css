@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
 
@@ -15,15 +16,15 @@
     --nav-height: 70px;
     --section-padding: 5rem 2rem;
     --card-padding: 2rem;
-    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    --reveal-duration: 450ms;
+    --transition-fast: 0.1s ease-out;
+    --transition-normal: 0.15s ease-out;
+    --transition-slow: 0.2s ease-out;
+    --reveal-duration: 300ms;
     --reveal-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --reveal-distance: 18px;
     --reveal-scale: 0.98;
-    --reveal-blur: 4px;
-    --reveal-stagger-gap: 50ms;
+    --reveal-blur: 0px;
+    --reveal-stagger-gap: 30ms;
 }
 
 * {
@@ -38,9 +39,11 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     min-height: 100vh;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     display: flex;
     flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 nav {
@@ -50,18 +53,17 @@ nav {
     padding: 0 2rem;
     background: #6A2C3D;
     border-bottom: 1px solid #6A2C3D;
-    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     font-family: 'Exo 2', sans-serif;
     letter-spacing: 2px;
     position: sticky;
     top: 0;
     height: var(--nav-height);
     z-index: 90;
-    transition: box-shadow var(--transition-normal);
 }
 
 nav:hover {
-    box-shadow: 0 6px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .logo-container {
@@ -441,11 +443,8 @@ section {
 .reveal {
     opacity: 0;
     transform: translateY(var(--reveal-distance)) scale(var(--reveal-scale));
-    filter: blur(var(--reveal-blur));
     transition: opacity var(--reveal-duration) var(--reveal-ease),
-                transform var(--reveal-duration) var(--reveal-ease),
-                filter calc(var(--reveal-duration) / 1.15) var(--reveal-ease);
-    will-change: opacity, transform;
+                transform var(--reveal-duration) var(--reveal-ease);
     backface-visibility: hidden;
     transform-origin: 50% 50%;
 }
@@ -453,7 +452,6 @@ section {
 .reveal.is-revealed {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: blur(0);
 }
 
 .reveal[data-direction="up"] {
@@ -475,8 +473,7 @@ section {
 .reveal[data-stagger] > * {
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 350ms var(--reveal-ease), transform 350ms var(--reveal-ease);
-    will-change: opacity, transform;
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
 }
 
 .reveal.is-revealed[data-stagger] > * {
@@ -584,28 +581,74 @@ section {
     overflow: hidden;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(74, 30, 42, 0.3);
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e8e8e8 100%);
+    aspect-ratio: 16 / 9;
+    contain: layout style paint;
+    min-height: 500px;
+    height: 500px;
 }
 
 .preview-track {
     display: flex;
-    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.15s ease-out;
+    height: 100%;
+    will-change: transform;
 }
 
 .preview-slide {
-    min-width: 100%;
-    flex-shrink: 0;
+    min-width: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-shrink: 0 !important;
     position: relative;
     background: #ffffff;
+    height: 100% !important;
+    min-height: 500px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .preview-slide img {
-    width: 100%;
-    height: auto;
-    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    display: block !important;
     border-radius: 20px;
-    min-height: 400px;
-    object-fit: cover;
+    object-fit: cover !important;
+    object-position: center !important;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    image-rendering: -webkit-optimize-contrast;
+    opacity: 1 !important;
+    transition: opacity 0.2s ease-in-out;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    flex-shrink: 0 !important;
+    flex-grow: 1 !important;
+}
+
+/* Force carousel size - no exceptions */
+.preview-carousel,
+.preview-carousel * {
+    box-sizing: border-box;
+}
+
+.preview-track,
+.preview-slide {
+    height: 500px !important;
+    min-height: 500px !important;
+    max-height: 500px !important;
+}
+
+.preview-slide img {
+    height: 500px !important;
+    min-height: 500px !important;
 }
 
 .preview-caption {
@@ -650,20 +693,19 @@ section {
 
 .preview-btn {
     pointer-events: all;
-    background: rgba(74, 30, 42, 0.7);
+    background: rgba(74, 30, 42, 0.8);
     border: 2px solid rgba(255, 255, 255, 0.3);
     color: #ffffff;
     width: 50px;
     height: 50px;
     cursor: pointer;
     font-size: 1.6rem;
-    transition: all var(--transition-normal);
+    transition: background 0.1s ease-out, transform 0.1s ease-out;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem;
     border-radius: 50%;
-    backdrop-filter: blur(10px);
 }
 
 .preview-btn:hover {
@@ -710,7 +752,6 @@ section {
 .profesores-inicio {
     padding: var(--section-padding);
     background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(8px);
     border-radius: 20px;
     margin-top: 1rem;
 }
@@ -740,9 +781,8 @@ section {
     padding: 2rem;
     border-radius: 20px;
     text-align: center;
-    transition: all var(--transition-normal);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(6px);
 }
 
 .prof-card:hover,
@@ -1357,13 +1397,12 @@ main {
 .mentora-modal {
     position: fixed;
     inset: 0;
-    background: #6A2C3D;
-    backdrop-filter: blur(6px);
+    background: rgba(106, 44, 61, 0.95);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 999;
-    animation: fadeIn 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: fadeIn 0.2s ease-out forwards;
 }
 
 .mentora-box {
@@ -1414,12 +1453,23 @@ main {
 }
 
 .mentora-img {
-    width: 340px;
-    height: 270px;
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    min-height: 270px;
     object-fit: contain;
     display: block;
     margin: 0 auto 1rem;
     animation: floatSoft 2s ease-in-out infinite;
+}
+
+.mentora-logo-wrapper {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mentora-error {
@@ -1732,6 +1782,13 @@ main {
 }
 
 @media (max-width: 768px) {
+    :root {
+        --transition-fast: 0.05s ease-out;
+        --transition-normal: 0.1s ease-out;
+        --transition-slow: 0.15s ease-out;
+        --reveal-duration: 200ms;
+    }
+
     nav {
         padding: 0.6rem 1rem;
         height: 64px;
@@ -1754,7 +1811,7 @@ main {
         flex-direction: column;
         padding: 4rem 1.2rem 2rem;
         gap: 1.5rem;
-        transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition: transform 0.2s ease-out;
         border-radius: 0 0 0 12px;
         box-shadow: -8px 8px 28px rgba(0, 0, 0, 0.3);
         z-index: 100;
@@ -1828,11 +1885,19 @@ main {
     }
 
     .preview-slide img {
-        min-height: 300px;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        min-height: 350px !important;
     }
 
-    .platform-preview {
-        padding: 3rem 1rem;
+    .preview-carousel {
+        min-height: 350px;
+        height: 350px;
+    }
+
+    .preview-slide {
+        min-height: 350px !important;
     }
 
     .preview-subtitle {
@@ -1955,6 +2020,30 @@ main {
     .mentora-sub {
         font-size: 0.95rem;
     }
+
+    .mentora-img {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+        min-height: 220px;
+    }
+
+    .mentora-logo-wrapper {
+        max-width: 300px;
+    }
+
+    .mentora-box {
+        max-width: 360px;
+        padding: 2rem 2rem;
+    }
+
+    .reveal, .reveal[data-stagger] > * {
+        transition: opacity 150ms ease-out, transform 150ms ease-out;
+    }
+
+    .hero, .cta-buttonss a, .mentora-modal, .chatbot-box {
+        animation-duration: 0.15s !important;
+    }
 }
 
 @media (max-width: 520px) {
@@ -1978,7 +2067,9 @@ main {
     }
 
     .preview-slide img {
-        min-height: 250px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .preview-controls {
@@ -2015,6 +2106,28 @@ main {
     .login-container button {
         padding: 0.85rem 1.5rem;
         font-size: 0.95rem;
+    }
+
+    .mentora-img {
+        width: 100%;
+        max-width: 240px;
+        height: auto;
+        min-height: 190px;
+    }
+
+    .mentora-box {
+        max-width: 320px;
+        padding: 1.5rem 1.5rem;
+    }
+
+    .mentora-loader {
+        width: 28px;
+        height: 28px;
+        border: 2px solid #E3C8CF;
+    }
+
+    .mentora-loading-text {
+        font-size: 0.9rem;
     }
 
     .chatbot-box {

@@ -4,19 +4,23 @@
             window.location.reload();
         }
 
-        // User menu toggle
+        // User menu toggle - debounced
         const userMenuBtn = document.getElementById('userMenuBtn');
         const userMenu = document.getElementById('userMenu');
+        let menuTimeout;
 
         if (userMenuBtn && userMenu) {
             userMenuBtn.onclick = function(e) {
                 e.stopPropagation();
+                clearTimeout(menuTimeout);
                 userMenu.style.display = userMenu.style.display === 'flex' ? 'none' : 'flex';
             };
 
             document.body.addEventListener('click', function() {
-                userMenu.style.display = 'none';
-            });
+                menuTimeout = setTimeout(() => {
+                    userMenu.style.display = 'none';
+                }, 50);
+            }, { passive: true });
 
             userMenu.onclick = function(e) {
                 e.stopPropagation();
@@ -27,11 +31,12 @@
         function scrollToSection(id) {
             const el = document.getElementById(id);
             if (el) {
-                const navHeight = document.querySelector('.main-navbar') ? document.querySelector('.main-navbar').offsetHeight : 0;
+                const navbar = document.querySelector('.main-navbar');
+                const navHeight = navbar ? navbar.offsetHeight : 0;
                 const targetPosition = el.offsetTop - navHeight - 20;
                 window.scrollTo({
                     top: targetPosition,
-                    behavior: 'smooth'
+                    behavior: 'auto'
                 });
                 // Close mobile menu if open
                 const navLinks = document.getElementById('navLinks');
@@ -39,7 +44,6 @@
                     navLinks.classList.remove('active');
                 }
                 // Close user menu if open
-                const userMenu = document.getElementById('userMenu');
                 if (userMenu) {
                     userMenu.style.display = 'none';
                 }
@@ -71,13 +75,13 @@
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') hideModal();
-        });
+        }, { passive: true });
 
         const logoutModal = document.getElementById('logoutModal');
         if (logoutModal) {
             logoutModal.addEventListener('click', function(e) {
                 if (e.target === this) hideModal();
-            });
+            }, { passive: true });
         }
 
 
@@ -144,7 +148,7 @@
         let socket;
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof io !== 'undefined') {
-                socket = io();
+                socket = io({ reconnectionDelay: 1000, reconnection: true });
                 socket.on('receive_message', function(data) {
                     const usernameInput = document.getElementById('livechat-username');
                     const messages = document.getElementById('livechat-messages');
@@ -187,7 +191,7 @@
                     
                     socket.emit('send_message', { message: msg, username: username });
                     input.value = '';
-                });
+                }, { passive: false });
             }
 
             // Mobile menu toggle
@@ -197,18 +201,19 @@
             if (navToggle && navLinks) {
                 navToggle.addEventListener('click', function() {
                     navLinks.classList.toggle('active');
-                });
+                }, { passive: true });
             }
 
-            // Smooth scroll function
+            // Smooth scroll function - using auto instead of smooth
             window.scrollToSection = function(sectionId) {
                 const section = document.getElementById(sectionId);
                 if (section) {
-                    const navHeight = document.querySelector('.main-navbar').offsetHeight;
+                    const navbar = document.querySelector('.main-navbar');
+                    const navHeight = navbar ? navbar.offsetHeight : 0;
                     const targetPosition = section.offsetTop - navHeight - 20;
                     window.scrollTo({
                         top: targetPosition,
-                        behavior: 'smooth'
+                        behavior: 'auto'
                     });
                     // Close mobile menu if open
                     if (navLinks && navLinks.classList.contains('active')) {
@@ -222,4 +227,4 @@
                 }
                 return false;
             };
-        });
+        }, { passive: true });

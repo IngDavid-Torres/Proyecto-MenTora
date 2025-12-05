@@ -1,34 +1,1062 @@
-{% extends 'base.html' %}
-{% block title %}Juegos | MenTora{% endblock %}
-{% block content %}
-<div class="container" style="max-width:900px; margin:2rem auto; background:#fff; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.07); padding:2rem;">
-    <h2 style="color:#2a5298; text-align:center;">Juegos y Quizzes Disponibles</h2>
-    <div style="display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; margin-top:2rem;">
-        {% set hay_juegos = games and games|length > 0 %}
-        {% set hay_quizzes = quizzes and quizzes|length > 0 %}
-        {% if hay_juegos %}
-            {% for game in games %}
-            <div style="flex:1 1 260px; min-width:260px; background:#e3f0ff; border-radius:10px; box-shadow:0 2px 8px rgba(42,82,152,0.07); padding:1.2rem; display:flex; flex-direction:column; align-items:center;">
-                <h3 style="color:#2a5298;">🎮 {{ game.name }}</h3>
-                <p style="color:#34495e; font-size:1rem;">{{ game.description }}</p>
-                <span style="background:#ffe066; color:#2a5298; border-radius:6px; padding:0.2rem 0.7rem; font-size:0.95rem; margin-bottom:0.7rem;">Tipo: {{ game.type|capitalize }}</span>
-                <a href="/games/{{ game.id }}" class="btn" style="margin-top:auto; background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:700;border-radius:10px;padding:0.5rem 1.2rem;">Jugar</a>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Educativos | MenTora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #6A2C3D;
+            --secondary-color: #8A4255;
+            --accent-color: #B57386;
+            --light-blue: #E3C8CF;
+            --dark-teal: #4A1E2A;
+            --white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-gray: #4a3840;
+            --gradient-start: #E3C8CF;
+            --gradient-end: #6A2C3D;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: clamp(2rem, 5vw, 3rem);
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, rgba(227, 200, 207, 0.15), rgba(106, 44, 61, 0.1));
+            border: 2px solid rgba(106, 44, 61, 0.2);
+            border-radius: 15px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+            border-radius: 15px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 24px rgba(106, 44, 61, 0.15);
+            background: linear-gradient(135deg, rgba(227, 200, 207, 0.25), rgba(106, 44, 61, 0.15));
+        }
+
+        .game-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            stroke-width: 1.5;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-card h3 {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-card p {
+            color: #e0f0ff;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            margin-bottom: 1.2rem;
+            opacity: 1;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-game {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1.2rem, 3vw, 1.8rem);
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .btn-game:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .quiz-container {
+            background: var(--white);
+            border: 2px solid rgba(106, 44, 61, 0.2);
+            border-radius: 15px;
+            padding: clamp(1.5rem, 5vw, 2.5rem);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-header h2 {
+            color: var(--primary-color);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-header p {
+            color: var(--text-gray);
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-weight: 500;
+        }
+
+        .quiz-question {
+            background: var(--white);
+            padding: clamp(1.5rem, 4vw, 2rem);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .quiz-question h3 {
+            color: var(--primary-color);
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-option {
+            background: var(--white);
+            border: 2px solid rgba(106, 44, 61, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(106, 44, 61, 0.05);
+        }
+
+        .quiz-option.correct {
+            background: #dcfce7;
+            border-color: #065f46;
+            color: #065f46;
+        }
+
+        .quiz-option.incorrect {
+            background: #fee2e2;
+            border-color: #991b1b;
+            color: #991b1b;
+        }
+
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .memory-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            width: 100%;
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: 700;
+        }
+
+        .memory-card:hover:not(.flipped):not(.matched) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(106, 44, 61, 0.3);
+        }
+
+        .memory-card.flipped {
+            background: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .memory-card.matched {
+            background: #dcfce7;
+            color: #065f46;
+            border: 2px solid #065f46;
+            opacity: 0.7;
+        }
+
+        .vr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: clamp(2rem, 5vw, 3rem);
+        }
+
+        .vr-card {
+            background: linear-gradient(135deg, rgba(227, 200, 207, 0.15), rgba(106, 44, 61, 0.1));
+            border: 2px solid rgba(106, 44, 61, 0.2);
+            border-radius: 15px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vr-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+            border-radius: 15px;
+        }
+
+        .vr-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 24px rgba(106, 44, 61, 0.15);
+        }
+
+        .vr-card h3 {
+            color: #ffffff;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .vr-card p {
+            color: #e0f0ff;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            margin-bottom: 1.2rem;
+            opacity: 1;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-vr {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1.2rem, 3vw, 1.8rem);
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .btn-vr:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            background: var(--white);
+            border: 2px solid rgba(106, 44, 61, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            line-height: 1.5;
+        }
+
+        .message-bubble.user {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border-bottom-right-radius: 2px;
+        }
+
+        .message-bubble.bot {
+            background: rgba(227, 200, 207, 0.3);
+            color: var(--primary-color);
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(106, 44, 61, 0.2);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(106, 44, 61, 0.1);
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: 2px solid rgba(106, 44, 61, 0.2);
+            border-radius: 50px;
+            padding: 0.75rem 1rem;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--white);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(106, 44, 61, 0.3);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: -100px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 1.2rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 8px 24px rgba(106, 44, 61, 0.3);
+            z-index: 1000;
+            animation: slideUp 0.3s ease forwards;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            max-width: 80vw;
+        }
+
+        @keyframes slideUp {
+            from {
+                bottom: -100px;
+                opacity: 0;
+            }
+            to {
+                bottom: 20px;
+                opacity: 1;
+            }
+        }
+
+        .notification.show {
+            animation: slideOut 0.3s ease forwards 3s;
+        }
+
+        @keyframes slideOut {
+            from {
+                bottom: 20px;
+                opacity: 1;
+            }
+            to {
+                bottom: -100px;
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .games-grid,
+            .vr-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .memory-board {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-container {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .games-grid,
+            .vr-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .memory-board {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+
+            .chat-container {
+                height: 450px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'background_usser.html' %}  
+
+    <a href="/dashboard" class="back-button" title="Volver al Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+    </a>
+
+    <div class="container">
+        <div class="news-header">
+            <h1><i data-lucide="gamepad2" style="display: inline; width: 1.2em; height: 1.2em; vertical-align: -0.2em;"></i> Centro de Aprendizaje Interactivo</h1>
+            <p>Mejora tus habilidades de programación con juegos educativos divertidos y desafiantes. Completa desafíos, gana XP y domina los conceptos de codificación.</p>
+        </div>
+
+        <div class="filters-section">
+            <div class="filters-wrapper">
+                <div class="filters">
+                    <button class="filter-btn active" onclick="showTab('games-tab')">
+                        <i data-lucide="joystick"></i>
+                        Juegos
+                    </button>
+                    <button class="filter-btn" onclick="showTab('vr-tab')">
+                        <i data-lucide="headphones"></i>
+                        Laboratorio VR
+                    </button>
+                    <button class="filter-btn" onclick="showTab('chat-tab')">
+                        <i data-lucide="message-circle"></i>
+                        Chat
+                    </button>
+                </div>
             </div>
-            {% endfor %}
-        {% endif %}
-        {% if hay_quizzes %}
-            {% for quiz in quizzes %}
-            <div style="flex:1 1 260px; min-width:260px; background:#f9f6e7; border-radius:10px; box-shadow:0 2px 8px rgba(42,82,152,0.07); padding:1.2rem; display:flex; flex-direction:column; align-items:center;">
-                <h3 style="color:#2a5298;">📝 {{ quiz.title }}</h3>
-                <p style="color:#34495e; font-size:1rem;">{{ quiz.description }}</p>
-                <span style="background:#ffe066; color:#2a5298; border-radius:6px; padding:0.2rem 0.7rem; font-size:0.95rem; margin-bottom:0.7rem;">Área: {{ quiz.area }}</span>
-                <a href="/quiz/{{ quiz.id }}" class="btn" style="margin-top:auto; background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:700;border-radius:10px;padding:0.5rem 1.2rem;">Intentar Quiz</a>
+        </div>
+
+        <main>
+            <!-- Games Tab -->
+            <div id="games-tab" class="tab-content active">
+                <div id="games-menu">
+                    <div class="games-grid">
+                        <div class="game-card">
+                            <svg class="game-icon" data-lucide="code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                            <h3>Quiz Programación</h3>
+                            <p>10 preguntas • +30 XP</p>
+                            <button class="btn-game" onclick="startQuiz()">
+                                Jugar
+                            </button>
+                        </div>
+
+                        <div class="game-card">
+                            <svg class="game-icon" data-lucide="repeat2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                            <h3>Memorama de Código</h3>
+                            <p>16 cartas • +20 XP</p>
+                            <button class="btn-game" onclick="startMemoryGame()">
+                                Jugar
+                            </button>
+                        </div>
+
+                        <div class="game-card">
+                            <svg class="game-icon" data-lucide="zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                            <h3>Desafío Rápido</h3>
+                            <p>Preguntas aleatorias • +15 XP</p>
+                            <button class="btn-game" onclick="startQuickChallenge()">
+                                Jugar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Game -->
+                <div id="quiz-game" class="quiz-container hidden">
+                    <div class="quiz-header">
+                        <h2>Quiz Programación</h2>
+                        <p>Pregunta <span id="question-number">1</span> de 10 | Puntos: <span id="quiz-score">0</span></p>
+                    </div>
+
+                    <div id="quiz-question-area">
+                        <div class="quiz-question">
+                            <h3 id="quiz-question-text">¿Cuál es la salida del siguiente código?</h3>
+                        </div>
+                        
+                        <div class="quiz-options" id="quiz-options-container">
+                            <!-- Options populated by JS -->
+                        </div>
+
+                        <button class="btn-game" onclick="backToGames()">Volver a Juegos</button>
+                    </div>
+
+                    <div id="quiz-completed" class="hidden" style="text-align: center; padding: 2rem; background: var(--white); border-radius: 10px;">
+                        <h2 style="color: var(--primary-color); font-size: clamp(1.5rem, 4vw, 2rem);">¡Quiz Completado!</h2>
+                        <p style="margin: 1rem 0; color: var(--text-gray); font-size: clamp(0.9rem, 2vw, 1rem);">Puntuación final: <span id="final-quiz-score">0</span>/100</p>
+                        <p style="margin: 1rem 0; color: #059669; font-size: clamp(0.9rem, 2vw, 1rem);">+<span id="quiz-xp">30</span> XP ganados</p>
+                        <button class="btn-game" onclick="backToGames()">Volver a Juegos</button>
+                    </div>
+                </div>
+
+                <!-- Memory Game -->
+                <div id="memory-game-container" class="quiz-container hidden">
+                    <div class="quiz-header">
+                        <h2>Memorama de Código</h2>
+                        <p>Pares encontrados: <span id="pairs-found">0</span>/8 | Intentos: <span id="attempts">0</span></p>
+                    </div>
+
+                    <div class="memory-board" id="memory-board">
+                        <!-- Memory cards populated by JS -->
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button class="btn-game" onclick="backToGames()">Volver a Juegos</button>
+                    </div>
+
+                    <div id="memory-completed" class="hidden" style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--white); border-radius: 10px;">
+                        <h2 style="color: var(--primary-color); font-size: clamp(1.5rem, 4vw, 2rem);">¡Memorama Completado!</h2>
+                        <p style="margin: 1rem 0; color: var(--text-gray);">Completado en <span id="memory-attempts">0</span> intentos</p>
+                        <p style="margin: 1rem 0; color: #059669;">+20 XP ganados</p>
+                    </div>
+                </div>
             </div>
-            {% endfor %}
-        {% endif %}
-        {% if not hay_juegos and not hay_quizzes %}
-            <p style="color:#7f8c8d;">No hay juegos ni quizzes disponibles aún.</p>
-        {% endif %}
+
+            <!-- VR Lab Tab -->
+            <div id="vr-tab" class="tab-content">
+                    <div style="margin-bottom: 2rem;">
+                    <h2 style="color: var(--primary-color); font-size: clamp(1.8rem, 5vw, 2.2rem); margin-bottom: 0.5rem;">Laboratorio de Realidad Virtual</h2>
+                    <p style="color: var(--text-gray); font-size: clamp(0.9rem, 2vw, 1rem); opacity: 0.85;">Explora conceptos de programación en experiencias inmersivas</p>
+                </div>
+                
+                <div class="vr-grid">
+                    <div class="vr-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <svg class="game-icon" data-lucide="link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                            <span style="background: linear-gradient(135deg, rgba(106, 44, 61, 0.2), rgba(138, 66, 85, 0.2)); color: var(--primary-color); padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600;">Estructuras</span>
+                        </div>
+                        <h3>Estructuras de Datos</h3>
+                        <p>Visualiza listas enlazadas, árboles y grafos en 3D</p>
+                        <button class="btn-vr" onclick="startVRExperience('structures')">
+                            Iniciar Experiencia
+                        </button>
+                    </div>
+
+                    <div class="vr-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <svg class="game-icon" data-lucide="repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                            <span style="background: linear-gradient(135deg, rgba(106, 44, 61, 0.2), rgba(138, 66, 85, 0.2)); color: var(--primary-color); padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600;">Algoritmos</span>
+                        </div>
+                        <h3>Algoritmos de Ordenamiento</h3>
+                        <p>Observa cómo funcionan los algoritmos de forma visual</p>
+                        <button class="btn-vr" onclick="startVRExperience('algorithms')">
+                            Iniciar Experiencia
+                        </button>
+                    </div>
+
+                    <div class="vr-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <svg class="game-icon" data-lucide="palette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                            <span style="background: linear-gradient(135deg, rgba(106, 44, 61, 0.2), rgba(138, 66, 85, 0.2)); color: var(--primary-color); padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600;">Programación</span>
+                        </div>
+                        <h3>Paradigmas de Programación</h3>
+                        <p>Explora programación orientada a objetos y funcional</p>
+                        <button class="btn-vr" onclick="startVRExperience('paradigms')">
+                            Iniciar Experiencia
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VR Experience View -->
+                <div id="vr-experience" class="quiz-container hidden">
+                    <div style="text-align: center; padding: clamp(1.5rem, 5vw, 2.5rem);">
+                        <svg style="width: 80px; height: 80px; color: var(--primary-color); margin: 0 auto 1rem; display: block;" data-lucide="headphones" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                        <h2 id="vr-title" style="color: var(--primary-color); font-size: clamp(1.5rem, 4vw, 2rem);">Cargando Experiencia VR...</h2>
+                        <p id="vr-description" style="margin: 1rem 0; color: var(--text-gray); font-size: clamp(0.85rem, 2vw, 0.95rem);"></p>
+                        <div style="margin: 2rem 0;">
+                            <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid rgba(106, 44, 61, 0.2); border-top: 4px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        </div>
+                        <button class="btn-game" onclick="exitVR()">Salir de VR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div id="chat-tab" class="tab-content">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <svg style="width: 40px; height: 40px; background: var(--white); padding: 0.5rem; border-radius: 50%; margin-right: 0.75rem; color: var(--primary-color);" data-lucide="bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                        <div>
+                            <h3 style="font-size: clamp(1rem, 2vw, 1.1rem); margin-bottom: 0.2rem;">Asistente MENTORA</h3>
+                            <p style="font-size: clamp(0.75rem, 2vw, 0.85rem); opacity: 0.85;">Siempre listo para ayudarte con programación</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message bot">
+                            <div class="message-bubble bot">
+                                ¡Hola! Soy tu asistente de aprendizaje en programación. ¿En qué puedo ayudarte hoy?
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter') sendMessage()">
+                        <button class="send-button" onclick="sendMessage()">
+                            <svg style="width: 20px; height: 20px;" data-lucide="send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-</div>
-{% endblock %}
+
+    <footer class="main-footer">
+        <p>&copy; 2025 MenTora - Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            updateDashboard();
+        });
+
+        let gameState = {
+            level: 12,
+            xp: 2450,
+            streak: 7,
+            points: 1250,
+            currentQuiz: 0,
+            quizScore: 0,
+            memoryPairs: 0,
+            memoryAttempts: 0,
+            memoryCards: [],
+            flippedCards: []
+        };
+
+        const quizQuestions = [
+            {
+                question: "¿Cuál es la salida de: console.log(typeof 'Programación')?",
+                options: ["number", "string", "object", "undefined"],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es el operador para exponenciación en JavaScript?",
+                options: ["/", "*", "**", "^"],
+                correct: 2
+            },
+            {
+                question: "¿Qué es una variable en programación?",
+                options: ["Un navegador", "Un contenedor de datos", "Un error", "Una función"],
+                correct: 1
+            },
+            {
+                question: "¿Cuántos tipos de datos primitivos hay en JavaScript?",
+                options: ["3", "5", "7", "9"],
+                correct: 2
+            },
+            {
+                question: "¿Cuál es la estructura para iterar en Python?",
+                options: ["while", "for", "foreach", "loop"],
+                correct: 1
+            },
+            {
+                question: "¿Qué es un algoritmo?",
+                options: ["Un tipo de dato", "Un conjunto de pasos para resolver un problema", "Una librería", "Una base de datos"],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es el índice inicial de un array en JavaScript?",
+                options: ["1", "0", "-1", "variable"],
+                correct: 1
+            },
+            {
+                question: "¿Qué significa HTML?",
+                options: ["High Tech Markup Language", "HyperText Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es la sentencia para crear una función en JavaScript?",
+                options: ["Function", "func", "def", "function"],
+                correct: 3
+            },
+            {
+                question: "¿Qué es un bucle infinito?",
+                options: ["Un error", "Un bucle que nunca termina", "Un tipo de array", "Una función especial"],
+                correct: 1
+            }
+        ];
+
+        const memoryCardSymbols = ["💻", "🔑", "🔗", "📊", "⚙️", "🎯", "📱", "🌐"];
+
+        const chatResponses = [
+            "¡Excelente pregunta sobre programación! ¿Quieres practicar con algunos ejercicios?",
+            "Puedes encontrar más información sobre este tema en la sección de cursos de código.",
+            "¡Sigue practicando! La programación es un proceso de aprendizaje continuo.",
+            "¿Has probado los juegos educativos? Son muy divertidos para aprender.",
+            "Recuerda usar la lógica y descomponer los problemas en pasos pequeños.",
+            "¡Tu progreso en programación es increíble! Sigue así.",
+            "¿En qué lenguaje de programación te gustaría enfocar tu estudio hoy?",
+            "Los experimentos de VR pueden ayudarte a visualizar conceptos complejos de programación."
+        ];
+
+        function updateDashboard() {
+            const levelDisplay = document.getElementById('level-display');
+            if (levelDisplay) levelDisplay.textContent = gameState.level;
+            const xpDisplay = document.getElementById('xp-display');
+            if (xpDisplay) xpDisplay.textContent = gameState.xp;
+            const streakDisplay = document.getElementById('streak-display');
+            if (streakDisplay) streakDisplay.textContent = gameState.streak + ' días';
+            const pointsDisplay = document.getElementById('points-display');
+            if (pointsDisplay) pointsDisplay.textContent = gameState.points;
+        }
+
+        function addXP(amount) {
+            gameState.xp += amount;
+            gameState.points += amount / 2;
+            const xpNeeded = gameState.level * 250;
+            if (gameState.xp >= xpNeeded) {
+                gameState.level++;
+                gameState.xp = gameState.xp - xpNeeded;
+                showNotification(`¡Nivel ${gameState.level} alcanzado!`);
+            }
+            updateDashboard();
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function startQuiz() {
+            document.getElementById('games-menu').classList.add('hidden');
+            document.getElementById('quiz-game').classList.remove('hidden');
+            gameState.currentQuiz = 0;
+            gameState.quizScore = 0;
+            showQuizQuestion();
+        }
+
+        function showQuizQuestion() {
+            const question = quizQuestions[gameState.currentQuiz];
+            document.getElementById('question-number').textContent = gameState.currentQuiz + 1;
+            document.getElementById('quiz-score').textContent = gameState.quizScore;
+            document.getElementById('quiz-question-text').textContent = question.question;
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('div');
+                button.className = 'quiz-option';
+                button.textContent = option;
+                button.onclick = () => selectQuizAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectQuizAnswer(selectedIndex) {
+            const question = quizQuestions[gameState.currentQuiz];
+            const options = document.querySelectorAll('#quiz-options-container .quiz-option');
+            options.forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    option.classList.add('incorrect');
+                }
+                option.onclick = null;
+            });
+            if (selectedIndex === question.correct) {
+                gameState.quizScore += 10;
+            }
+            setTimeout(() => {
+                gameState.currentQuiz++;
+                if (gameState.currentQuiz < quizQuestions.length) {
+                    showQuizQuestion();
+                } else {
+                    finishQuiz();
+                }
+            }, 1500);
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-question-area').classList.add('hidden');
+            document.getElementById('quiz-completed').classList.remove('hidden');
+            document.getElementById('final-quiz-score').textContent = gameState.quizScore;
+            document.getElementById('quiz-xp').textContent = Math.floor(gameState.quizScore / 3);
+            addXP(Math.floor(gameState.quizScore / 3));
+        }
+
+        function startMemoryGame() {
+            document.getElementById('games-menu').classList.add('hidden');
+            document.getElementById('memory-game-container').classList.remove('hidden');
+            gameState.memoryPairs = 0;
+            gameState.memoryAttempts = 0;
+            gameState.flippedCards = [];
+            setupMemoryBoard();
+        }
+
+        function setupMemoryBoard() {
+            const board = document.getElementById('memory-board');
+            board.innerHTML = '';
+            const cardPairs = [...memoryCardSymbols, ...memoryCardSymbols];
+            gameState.memoryCards = cardPairs.sort(() => Math.random() - 0.5);
+            gameState.memoryCards.forEach((symbol, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.textContent = '?';
+                card.dataset.index = index;
+                card.dataset.symbol = symbol;
+                card.onclick = () => flipMemoryCard(card, index);
+                board.appendChild(card);
+            });
+            updateMemoryStats();
+        }
+
+        function flipMemoryCard(card, index) {
+            if (card.classList.contains('flipped') || gameState.flippedCards.length >= 2) {
+                return;
+            }
+            card.classList.add('flipped');
+            card.textContent = card.dataset.symbol;
+            gameState.flippedCards.push({card, index});
+            if (gameState.flippedCards.length === 2) {
+                gameState.memoryAttempts++;
+                setTimeout(checkMemoryMatch, 1000);
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [first, second] = gameState.flippedCards;
+            if (first.card.dataset.symbol === second.card.dataset.symbol) {
+                first.card.classList.add('matched');
+                second.card.classList.add('matched');
+                gameState.memoryPairs++;
+                if (gameState.memoryPairs === 8) {
+                    finishMemoryGame();
+                }
+            } else {
+                first.card.classList.remove('flipped');
+                second.card.classList.remove('flipped');
+                first.card.textContent = '?';
+                second.card.textContent = '?';
+            }
+            gameState.flippedCards = [];
+            updateMemoryStats();
+        }
+
+        function updateMemoryStats() {
+            document.getElementById('pairs-found').textContent = gameState.memoryPairs;
+            document.getElementById('attempts').textContent = gameState.memoryAttempts;
+        }
+
+        function finishMemoryGame() {
+            document.getElementById('memory-completed').classList.remove('hidden');
+            document.getElementById('memory-attempts').textContent = gameState.memoryAttempts;
+            addXP(20);
+            showNotification('¡Memorama completado! +20 XP');
+        }
+
+        function startQuickChallenge() {
+            const challenges = [
+                "¿Cuál es la diferencia entre let y var en JavaScript?",
+                "¿Qué es un callback?",
+                "¿Cuál es la complejidad temporal del ordenamiento burbuja?",
+                "¿Qué es un bucle for?"
+            ];
+            const randomChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+            const userAnswer = prompt(`Desafío Rápido: ${randomChallenge}`);
+            if (userAnswer && userAnswer.length > 0) {
+                addXP(15);
+                showNotification('¡Desafío completado! +15 XP');
+            }
+        }
+
+        function startVRExperience(type) {
+            document.querySelector('.vr-grid').classList.add('hidden');
+            document.getElementById('vr-experience').classList.remove('hidden');
+            const experiences = {
+                'structures': {
+                    title: 'Explorando Estructuras de Datos',
+                    description: 'Visualizando listas enlazadas, árboles y grafos...'
+                },
+                'algorithms': {
+                    title: 'Laboratorio Virtual de Algoritmos',
+                    description: 'Ordenando elementos con diferentes técnicas...'
+                },
+                'paradigms': {
+                    title: 'Viaje a Paradigmas de Programación',
+                    description: 'Cargando conceptos de OOP y Programación Funcional...'
+                }
+            };
+            const exp = experiences[type];
+            document.getElementById('vr-title').textContent = exp.title;
+            document.getElementById('vr-description').textContent = exp.description;
+            setTimeout(() => {
+                addXP(25);
+                showNotification(`¡Experiencia VR completada! +25 XP`);
+                exitVR();
+            }, 5000);
+        }
+
+        function exitVR() {
+            document.getElementById('vr-experience').classList.add('hidden');
+            document.querySelector('.vr-grid').classList.remove('hidden');
+        }
+
+        function backToGames() {
+            document.getElementById('quiz-game').classList.add('hidden');
+            document.getElementById('memory-game-container').classList.add('hidden');
+            document.getElementById('quiz-completed').classList.add('hidden');
+            document.getElementById('quiz-question-area').classList.remove('hidden');
+            document.getElementById('memory-completed').classList.add('hidden');
+            document.getElementById('games-menu').classList.remove('hidden');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (message) {
+                addChatMessage(message, 'user');
+                input.value = '';
+                setTimeout(() => {
+                    const response = chatResponses[Math.floor(Math.random() * chatResponses.length)];
+                    addChatMessage(response, 'bot');
+                }, 1000);
+            }
+        }
+
+        function addChatMessage(message, sender) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble ${sender}`;
+            bubble.textContent = message;
+            messageDiv.appendChild(bubble);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

@@ -1,129 +1,127 @@
-<style>
-.bg-container{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    z-index:-1;
-    background: linear-gradient(135deg, #0a0406ff 0%, #0c0507ff 50%, #11070aff 100%);
-    background-size: 200% 200%;
-    animation: gradientShift 20s ease infinite;
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
 
-@keyframes gradientShift{
-    0%, 100%{ background-position: 0% 50%; }
-    50%{ background-position: 100% 50%; }
-}
-
-.bin{
-    position:absolute;
-    font-size:18px;
-    font-family:monospace;
-    color:#B57386;
-    opacity:.4;
-    animation:fall linear infinite;
-    text-shadow: 0 0 10px rgba(181, 115, 134, 0.6);
-}
-
-@keyframes fall{
-    0%{ transform:translateY(-120px); opacity:.1; }
-    50%{ opacity:.5; }
-    100%{ transform:translateY(110vh); opacity:.1; }
-}
-
-.shape{
-    position:absolute;
-    width:30px;
-    height:30px;
-    opacity:.7;
-    animation: spin 12s linear infinite, float 8s ease-in-out infinite, colorPulse 6s ease-in-out infinite;
-    filter: drop-shadow(0 0 8px currentColor);
-}
-
-.shape::before{
-    content: "★";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 30px;
-    color: inherit;
-}
-
-@keyframes spin{
-    0%{ transform:rotate(0deg); }
-    100%{ transform:rotate(360deg); }
-}
-
-@keyframes float{
-    0%, 100%{ transform:translateY(0px); }
-    50%{ transform:translateY(-40px); }
-}
-
-@keyframes colorPulse{
-    0%, 100%{ color: #B57386; }
-    25%{ color: #E3C8CF; }
-    50%{ color: #8A4255; }
-    75%{ color: #B57386; }
-}
-</style>
-
-<div class="bg-container" id="bgFx"></div>
-
-<script>
-const bg=document.getElementById("bgFx");
-
-let saved = localStorage.getItem("bg_positions_clean");
-let data;
-
-if(saved){
-    data = JSON.parse(saved);
-}else{
-    data = {
-        bins: [],
-        shapes: []
-    };
-
-    for(let i=0;i<70;i++){
-        data.bins.push({
-            x: Math.random()*window.innerWidth,
-            duration: 3+Math.random()*5
-        });
+    .bg-container {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        z-index: -1;
+        background: linear-gradient(135deg, #0a0406ff 0%, #0c0507ff 50%, #11070aff 100%);
+        background-size: 200% 200%;
+        animation: gradientShift 20s ease infinite;
     }
 
-    for(let i=0;i<55;i++){
-        data.shapes.push({
-            x: Math.random()*window.innerWidth,
-            y: Math.random()*window.innerHeight,
-            circle: Math.random()>0.5,
-            duration: 6+Math.random()*6
-        });
+
+    @keyframes gradientShift {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
     }
 
-    localStorage.setItem("bg_positions_clean", JSON.stringify(data));
-}
 
-data.bins.forEach(p=>{
-    const b=document.createElement("div");
-    b.className="bin";
-    b.textContent=Math.random()>0.5?"0":"1";
-    b.style.left=p.x+"px";
-    b.style.animationDuration=p.duration+"s";
-    bg.appendChild(b);
-});
-
-data.shapes.forEach(p=>{
-    const s=document.createElement("div");
-    s.className="shape";
-    s.style.left=p.x+"px";
-    s.style.top=p.y+"px";
-    if(p.circle){ s.style.borderRadius="50%"; }
-    s.style.animationDuration=p.duration+"s";
-    bg.appendChild(s);
-});
-</script>
+    .bin {
+        position: absolute;
+        font-size: 18px;
+        font-family: monospace;
+        color: #B57386;
+        opacity: 0.4;
+        animation: fall linear infinite;
+        text-shadow: 0 0 10px rgba(181, 115, 134, 0.6);
+    }
 
 
-<div id="modal-overlay" class="modal-overlay"></div>
+    @keyframes fall {
+        0% {
+            transform: translateY(-120px);
+            opacity: 0.1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            transform: translateY(110vh);
+            opacity: 0.1;
+        }
+    }
+
+
+    .shape {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        opacity: 0.7;
+        animation: spin 12s linear infinite, float 8s ease-in-out infinite, colorPulse 6s ease-in-out infinite;
+        filter: drop-shadow(0 0 8px currentColor);
+    }
+
+
+    /* ---- Pseudo-elemento para Estrellas ---- */
+    .shape::before {
+        content: "★";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 30px;
+        color: inherit;
+    }
+
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-40px);
+        }
+    }
+
+
+    @keyframes colorPulse {
+        0%, 100% {
+            color: #B57386;
+        }
+
+        25% {
+            color: #E3C8CF;
+        }
+
+        50% {
+            color: #8A4255;
+        }
+
+        75% {
+            color: #B57386;
+        }
+    }
+
+    </style>
+</head>
+<body>
+    <div class="bg-container" id="bgFx"></div>
+    <div id="modal-overlay" class="modal-overlay"></div>
     <div id="modal-box" class="modal">
     <div class="modal-content">
         <span id="close-modal" class="close-modal">&times;</span>
@@ -132,15 +130,13 @@ data.shapes.forEach(p=>{
     </div>
     </div>
 
-    <div id="modal-overlay" class="modal-overlay"></div>
-
     <div class="modal" id="modal-nosotros">
     <div class="modal-content">
         <span class="close-modal" data-close="modal-nosotros">&times;</span>
         <h2>Sobre Nosotros</h2>
     </div>
-    </div>
 
+    </div>
     <div class="modal" id="modal-privacidad">
     <div class="modal-content">
         <span class="close-modal" data-close="modal-privacidad">&times;</span>
@@ -168,23 +164,86 @@ data.shapes.forEach(p=>{
         <h2>Nuestro Equipo</h2>
 
         <div class="team">
+
             <div class="team-member">
-                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="Ivone">
                 <h3>Ivone</h3>
                 <p>Fundadora y Diseñadora UX/UI</p>
             </div>
 
             <div class="team-member">
-                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="Marco">
                 <h3>Marco</h3>
                 <p>Desarrollador Full Stack</p>
             </div>
 
             <div class="team-member">
-                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="">
+                <img src="https://api.iconify.design/mdi/account-circle.svg?color=%23114c5f" alt="Sofía">
                 <h3>Sofía</h3>
                 <p>Directora de Contenido Educativo</p>
             </div>
+
         </div>
     </div>
-</div>
+    </div>
+   <script>
+
+    const bg = document.getElementById("bgFx");
+
+
+    let saved = localStorage.getItem("bg_positions_clean");
+    let data;
+
+    if (saved) {
+        data = JSON.parse(saved);
+    } else {
+        data = {
+            bins: [],
+            shapes: []
+        };
+
+        for (let i = 0; i < 70; i++) {
+            data.bins.push({
+                x: Math.random() * window.innerWidth,
+                duration: 3 + Math.random() * 5
+            });
+        }
+
+        for (let i = 0; i < 55; i++) {
+            data.shapes.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                circle: Math.random() > 0.5,
+                duration: 6 + Math.random() * 6
+            });
+        }
+
+        localStorage.setItem("bg_positions_clean", JSON.stringify(data));
+    }
+
+
+    data.bins.forEach(p => {
+        const b = document.createElement("div");
+        b.className = "bin";
+        b.textContent = Math.random() > 0.5 ? "0" : "1";
+        b.style.left = p.x + "px";
+        b.style.animationDuration = p.duration + "s";
+        bg.appendChild(b);
+    });
+
+
+    data.shapes.forEach(p => {
+        const s = document.createElement("div");
+        s.className = "shape";
+        s.style.left = p.x + "px";
+        s.style.top = p.y + "px";
+        if (p.circle) {
+            s.style.borderRadius = "50%";
+        }
+        s.style.animationDuration = p.duration + "s";
+        bg.appendChild(s);
+    });
+
+    </script>
+</body>
+</html>

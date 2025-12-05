@@ -14,8 +14,8 @@
     --shadow-sm: 0 2px 8px rgba(106, 44, 61, 0.1);
     --shadow-md: 0 4px 16px rgba(106, 44, 61, 0.15);
     --shadow-lg: 0 8px 32px rgba(106, 44, 61, 0.2);
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
+    --transition-fast: 0.1s ease-out;
+    --transition-normal: 0.15s ease-out;
 
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
@@ -163,7 +163,6 @@ body, html {
     min-width: 220px;
     overflow: hidden;
     z-index: 200;
-    backdrop-filter: blur(6px);
     flex-direction: column;
     padding: 0;
 }
@@ -272,7 +271,6 @@ body, html {
     color: var(--primary-color);
     font-family: 'Poppins', sans-serif;
     border-radius: var(--radius-lg);
-    backdrop-filter: blur(10px);
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
 }

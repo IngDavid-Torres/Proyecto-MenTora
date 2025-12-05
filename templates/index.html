@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mentora.css') }}">
+    <link rel="preload" as="image" href="/static/img/uno.png">
+    <link rel="preload" as="image" href="/static/img/dos.png">
+    <link rel="preload" as="image" href="/static/img/tres.png">
 </head> 
 <body>
     {% include 'background_mentora.html' %}     
@@ -50,31 +53,24 @@
     <div class="preview-carousel">
         <div class="preview-track" id="previewTrack">
             <div class="preview-slide">
-                <img src="/static/img/preview-dashboard.jpg" alt="Dashboard de MenTora - Panel de control personal">
+                <img src="/static/img/uno.png" alt="Dashboard de MenTora - Panel de control personal">
                 <div class="preview-caption">
                     <h3>Tu Panel de Control</h3>
                     <p>Visualiza tu progreso, estadísticas, niveles alcanzados y próximos desafíos en un solo lugar. Todo lo que necesitas para seguir avanzando.</p>
                 </div>
             </div>
             <div class="preview-slide">
-                <img src="/static/img/preview-challenges.jpg" alt="Retos de programación interactivos">
+                <img src="/static/img/dos.png" alt="Retos de programación interactivos">
                 <div class="preview-caption">
                     <h3>Retos Interactivos</h3>
                     <p>Resuelve desafíos de código en tiempo real con retroalimentación instantánea. Siempre hay un nuevo reto esperándote para mejorar tus habilidades.</p>
                 </div>
             </div>
             <div class="preview-slide">
-                <img src="/static/img/preview-achievements.jpg" alt="Sistema de logros y niveles">
+                <img src="/static/img/tres.png" alt="Sistema de logros y niveles">
                 <div class="preview-caption">
                     <h3>Sistema de Logros</h3>
                     <p>Desbloquea insignias, sube de nivel y compite en rankings globales. Cada logro es un paso más hacia convertirte en un maestro del código.</p>
-                </div>
-            </div>
-            <div class="preview-slide">
-                <img src="/static/img/preview-community.jpg" alt="Comunidad activa de MenTora">
-                <div class="preview-caption">
-                    <h3>Comunidad Activa</h3>
-                    <p>Colabora con otros estudiantes, comparte soluciones y aprende en equipo. El conocimiento crece cuando se comparte.</p>
                 </div>
             </div>
         </div>
@@ -456,6 +452,8 @@
         </form>
     </div>
     <script src="https://code.iconify.design/iconify-icon/2.0.0/iconify-icon.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/carousel-validator.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/carousel-preload.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/mentora.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/reveal.js') }}"></script>

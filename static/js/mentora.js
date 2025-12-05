@@ -580,14 +580,30 @@ const PreviewCarousel = {
     updatePosition() {
         const track = document.getElementById('previewTrack');
         const dots = document.querySelectorAll('#previewDots .preview-dot');
+        const carousel = document.querySelector('.preview-carousel');
         
         if (!track) return;
         
+        // Force carousel size
+        if (carousel) {
+            carousel.style.height = '500px';
+            carousel.style.minHeight = '500px';
+            carousel.style.maxHeight = '500px';
+        }
+        
+        // Force track size
+        track.style.height = '500px';
+        track.style.minHeight = '500px';
+        
         const offset = -this.index * 100;
+        track.style.transition = 'transform 0.15s ease-out';
         track.style.transform = `translateX(${offset}%)`;
         
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === this.index);
+        // Optimize rendering
+        requestAnimationFrame(() => {
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === this.index);
+            });
         });
     },
 
