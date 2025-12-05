@@ -79,43 +79,43 @@
                 </div>
 
                 <!-- Juegos y Quizzes Creados por Docentes -->
-                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid rgba(106, 44, 61, 0.1);">
-                    <h2 style="color: var(--white); text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 0.5rem;">Juegos y Quizzes de Docentes</h2>
-                    <p style="color: var(--white); text-align: center; margin-bottom: 2rem; font-size: clamp(0.9rem, 2vw, 1rem);">Contenido educativo creado por tus profesores</p>
+                <div class="teacher-content-section">
+                    <h2 class="teacher-content-title">Juegos y Quizzes de Docentes</h2>
+                    <p class="teacher-content-subtitle">Contenido educativo creado por tus profesores</p>
                     
-                    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;">
+                    <div class="games-grid">
                         {% set hay_juegos = games and games|length > 0 %}
                         {% set hay_quizzes = quizzes and quizzes|length > 0 %}
                         
                         {% if hay_juegos %}
                             {% for game in games %}
-                            <div style="flex: 1 1 260px; min-width: 260px; background: var(--white); border: 2px solid rgba(106, 44, 61, 0.2); border-radius: 15px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease;">
-                                <svg style="width: 60px; height: 60px; margin-bottom: 1rem; color: var(--primary-color);" data-lucide="gamepad-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-                                <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 0.5rem; text-align: center; font-weight: 700;">{{ game.name }}</h3>
-                                <p style="color: var(--text-gray); font-size: 0.95rem; text-align: center; margin-bottom: 0.8rem;">{{ game.description }}</p>
-                                <span style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.3), rgba(106, 44, 61, 0.2)); color: var(--primary-color); border-radius: 20px; padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-bottom: 1rem; font-weight: 600;">Tipo: {{ game.type|capitalize }}</span>
-                                <a href="/games/{{ game.id }}" style="margin-top: auto; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: var(--white); text-decoration: none; padding: 0.7rem 1.5rem; border-radius: 50px; font-weight: 600; font-size: 0.95rem; transition: all 0.3s ease; display: inline-block;">Jugar Ahora</a>
+                            <div class="game-card">
+                                <svg class="game-icon" data-lucide="gamepad-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                                <h3>{{ game.name }}</h3>
+                                <p>{{ game.description }}</p>
+                                <span class="game-badge">Tipo: {{ game.type|capitalize }}</span>
+                                <a href="/games/{{ game.id }}" class="btn-game">Jugar Ahora</a>
                             </div>
                             {% endfor %}
                         {% endif %}
                         
                         {% if hay_quizzes %}
                             {% for quiz in quizzes %}
-                            <div style="flex: 1 1 260px; min-width: 260px; background: var(--white); border: 2px solid rgba(106, 44, 61, 0.2); border-radius: 15px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease;">
-                                <svg style="width: 60px; height: 60px; margin-bottom: 1rem; color: var(--primary-color);" data-lucide="clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-                                <h3 style="color: var(--primary-color); font-size: 1.2rem; margin-bottom: 0.5rem; text-align: center; font-weight: 700;">{{ quiz.title }}</h3>
-                                <p style="color: var(--text-gray); font-size: 0.95rem; text-align: center; margin-bottom: 0.8rem;">{{ quiz.description }}</p>
-                                <span style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.3), rgba(106, 44, 61, 0.2)); color: var(--primary-color); border-radius: 20px; padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-bottom: 1rem; font-weight: 600;">Área: {{ quiz.area }}</span>
-                                <a href="/quiz/{{ quiz.id }}" style="margin-top: auto; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: var(--white); text-decoration: none; padding: 0.7rem 1.5rem; border-radius: 50px; font-weight: 600; font-size: 0.95rem; transition: all 0.3s ease; display: inline-block;">Intentar Quiz</a>
+                            <div class="game-card">
+                                <svg class="game-icon" data-lucide="clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                                <h3>{{ quiz.title }}</h3>
+                                <p>{{ quiz.description }}</p>
+                                <span class="game-badge">Área: {{ quiz.area }}</span>
+                                <a href="/quiz/{{ quiz.id }}" class="btn-game">Intentar Quiz</a>
                             </div>
                             {% endfor %}
                         {% endif %}
                         
                         {% if not hay_juegos and not hay_quizzes %}
-                            <div style="text-align: center; padding: 2rem; width: 100%;">
-                                <svg style="width: 80px; height: 80px; margin: 0 auto 1rem; color: var(--white); opacity: 0.5;" data-lucide="inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-                                <p style="color: var(--white); font-size: 1rem;">No hay juegos ni quizzes disponibles aún.</p>
-                                <p style="color: var(--white); font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem;">Los docentes pronto agregarán contenido educativo.</p>
+                            <div class="empty-state">
+                                <svg class="empty-icon" data-lucide="inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                                <p class="empty-text">No hay juegos ni quizzes disponibles aún.</p>
+                                <p class="empty-subtext">Los docentes pronto agregarán contenido educativo.</p>
                             </div>
                         {% endif %}
                     </div>

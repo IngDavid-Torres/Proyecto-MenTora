@@ -133,7 +133,7 @@
                     
                     // Add welcome message on first open
                     if (!chatbotInitialized && chatbotMessages) {
-                        chatbotMessages.innerHTML = `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#e0ffff;color:#4a6668;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>¡Hola! 👋 Soy MenToraBot, tu asistente de programación. Puedo ayudarte con temas como Python, JavaScript, HTML/CSS, estructuras de datos, POO, bases de datos, Git y más. ¿Qué te gustaría aprender hoy?</span></div>`;
+                        chatbotMessages.innerHTML = `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:linear-gradient(135deg, #f3e5e8, #fef8f9);color:#4a3840;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;border:1px solid #d4a5b0;box-shadow:0 2px 8px rgba(106,44,61,0.1);'>¡Hola! 👋 Soy MenToraBot, tu asistente de programación. Puedo ayudarte con temas como Python, JavaScript, HTML/CSS, estructuras de datos, POO, bases de datos, Git y más. ¿Qué te gustaría aprender hoy?</span></div>`;
                         chatbotInitialized = true;
                     }
                 } else {
@@ -154,7 +154,7 @@
             const userMsg = input.value.trim();
             if (!userMsg) return;
             
-            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:#5f7f81;color:#fff;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;'>${userMsg}</span></div>`;
+            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:linear-gradient(135deg, #6A2C3D, #8A4255);color:#fff;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;box-shadow:0 2px 8px rgba(106,44,61,0.3);'>${userMsg}</span></div>`;
             input.value = '';
             messages.scrollTop = messages.scrollHeight;
             
@@ -166,10 +166,10 @@
                     body: JSON.stringify({ message: userMsg })
                 });
                 const data = await res.json();
-                messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#e0ffff;color:#4a6668;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>${data.response}</span></div>`;
+                messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:linear-gradient(135deg, #f3e5e8, #fef8f9);color:#4a3840;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;border:1px solid #d4a5b0;box-shadow:0 2px 8px rgba(106,44,61,0.1);'>${data.response}</span></div>`;
                 messages.scrollTop = messages.scrollHeight;
             } catch (err) {
-                messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#e0ffff;color:#4a6668;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>Error de conexión con el bot.</span></div>`;
+                messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#ffe5e5;color:#a03030;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;border:1px solid #ffb3b3;'>Error de conexión con el bot.</span></div>`;
             }
         }
 
@@ -188,7 +188,7 @@
                     const msgDiv = document.createElement('div');
                     msgDiv.style.marginBottom = '0.5rem';
                     msgDiv.style.textAlign = isUser ? 'right' : 'left';
-                    msgDiv.innerHTML = `<span style='font-size:0.9rem;color:#94a1ac;margin:0 0.5rem;'>${data.username}</span><span style='max-width:70%;padding:0.7rem 1.1rem;border-radius:16px;background:${isUser ? '#5f7f81' : '#e0ffff'};color:${isUser ? '#fff' : '#4a6668'};font-weight:500;font-size:1.05rem;box-shadow:0 1px 4px rgba(0,0,0,0.1);display:inline-block;'>${data.message}</span>`;
+                    msgDiv.innerHTML = `<span style='font-size:0.85rem;color:#8A4255;margin:0 0.5rem;font-weight:600;'>${data.username}</span><span style='max-width:70%;padding:0.7rem 1.1rem;border-radius:16px;background:${isUser ? 'linear-gradient(135deg, #6A2C3D, #8A4255)' : 'linear-gradient(135deg, #f3e5e8, #fef8f9)'};color:${isUser ? '#fff' : '#4a3840'};font-weight:500;font-size:1rem;box-shadow:0 2px 8px rgba(106,44,61,0.2);display:inline-block;border:${isUser ? 'none' : '1px solid #d4a5b0'};'>${data.message}</span>`;
                     messages.appendChild(msgDiv);
                     messages.scrollTop = messages.scrollHeight;
                     

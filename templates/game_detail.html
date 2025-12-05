@@ -2,90 +2,99 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ game.name }} | MenTora</title>
-            <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/games.css') }}">
 </head>
 <body>
-    <div class="container" style="position:relative;z-index:1;box-shadow:0 8px 32px rgba(44,62,80,0.18);">
-        <a href="/games" class="back-link">← Volver a Juegos</a>
-    <h1 style="letter-spacing:1px;text-shadow:0 2px 12px #2a5298;">{{ game.name }}</h1>
-    <div class="desc" style="font-size:1.15rem;line-height:1.5;">{{ game.description }}</div>
-    <div class="rules" style="background:linear-gradient(90deg,#ffe06622,#fab00522);color:#ffe066;box-shadow:0 2px 12px #2a529833;"><b>Reglas:</b> {{ game.rules }}</div>
-    <div class="play-section" style="margin-top:2.5rem;">
+    {% include 'background_usser.html' %}
+    
+    <a href="/games" class="back-button" title="Volver a Juegos">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+    </a>
+
+    <div class="container">
+        <div class="game-detail-header">
+            <h1>{{ game.name }}</h1>
+            <p class="game-description">{{ game.description }}</p>
+            <div class="game-rules">
+                <strong>Reglas:</strong> {{ game.rules }}
+            </div>
+        </div>
+        
+        <div class="play-section">
             {% if game.name|lower == 'hola mundo' %}
                 {% if show_animated_alert %}
-                <div id="success-animated-alert" style="display:flex;align-items:center;justify-content:center;gap:1rem;background:#ffe066;color:#2a5298;padding:1.1rem 1.5rem;border-radius:14px;font-weight:bold;margin-bottom:1.2rem;box-shadow:0 2px 16px rgba(44,62,80,0.13);font-size:1.2rem;animation:popIn 0.7s cubic-bezier(.4,2,.3,1);">
+                <div class="success-alert">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="19" cy="19" r="18" stroke="#2a5298" stroke-width="3" fill="#fffbe6"/>
-                        <path d="M11 20.5L17 26L27 14" stroke="#2a5298" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="19" cy="19" r="18" stroke="currentColor" stroke-width="3" fill="rgba(255, 255, 255, 0.9)"/>
+                        <path d="M11 20.5L17 26L27 14" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>¡Excelente, así se hace! <b>Subes de nivel</b> (+10% progreso)</span>
+                    <span>¡Excelente, así se hace! <strong>Subes de nivel</strong> (+10% progreso)</span>
                 </div>
-                <style>
-                @keyframes popIn {
-                    0% { transform: scale(0.7); opacity: 0; }
-                    70% { transform: scale(1.1); opacity: 1; }
-                    100% { transform: scale(1); opacity: 1; }
-                }
-                </style>
                 {% elif feedback %}
-                    <div style="background:#ffe066;color:#2a5298;padding:0.7rem 1rem;border-radius:8px;font-weight:bold;margin-bottom:1rem;">{{ feedback }}</div>
+                    <div class="feedback-message">{{ feedback }}</div>
                 {% endif %}
+                
                 {% if not cooldown and not success %}
-                <form method="POST" action="/games/{{ game.id }}/run" style="margin-bottom:1.5rem;">
-                    <label for="code" style="font-weight:bold;">Escribe tu código en Python:</label>
-                    <textarea id="code" name="code" rows="6" required placeholder="print('Hola mundo')"></textarea>
-                    <button type="submit">Ejecutar Código</button>
+                <form method="POST" action="/games/{{ game.id }}/run" class="code-form">
+                    <label for="code" class="form-label">Escribe tu código en Python:</label>
+                    <textarea id="code" name="code" rows="6" required placeholder="print('Hola mundo')" class="code-textarea"></textarea>
+                    <button type="submit" class="btn-game">Ejecutar Código</button>
                 </form>
                 {% endif %}
-                <div style="margin-bottom:0.7rem;">
-                    <span style="color:#ffe066;">Vidas restantes: </span>
-                    <span style="color:#fff; font-weight:bold;">{{ max_attempts - (attempts or 0) if not cooldown else 0 }}/{{ max_attempts }}</span>
+                
+                <div class="game-lives">
+                    <span>Vidas restantes: </span>
+                    <strong>{{ max_attempts - (attempts or 0) if not cooldown else 0 }}/{{ max_attempts }}</strong>
                 </div>
+                
                 {% if output is defined and output %}
-                <div class="output">
-                    <b>Salida:</b><br>
+                <div class="code-output">
+                    <strong>Salida:</strong><br>
                     {{ output }}
                 </div>
                 {% endif %}
+                
             {% elif game.name|lower == 'la suma de dos números' %}
                 {% if show_animated_alert %}
-                <div id="success-animated-alert" style="display:flex;align-items:center;justify-content:center;gap:1rem;background:#ffe066;color:#2a5298;padding:1.1rem 1.5rem;border-radius:14px;font-weight:bold;margin-bottom:1.2rem;box-shadow:0 2px 16px rgba(44,62,80,0.13);font-size:1.2rem;animation:popIn 0.7s cubic-bezier(.4,2,.3,1);">
+                <div class="success-alert">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="19" cy="19" r="18" stroke="#2a5298" stroke-width="3" fill="#fffbe6"/>
-                        <path d="M11 20.5L17 26L27 14" stroke="#2a5298" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="19" cy="19" r="18" stroke="currentColor" stroke-width="3" fill="rgba(255, 255, 255, 0.9)"/>
+                        <path d="M11 20.5L17 26L27 14" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>¡Excelente, así se hace! <b>Subes de nivel</b> (+10% progreso)</span>
+                    <span>¡Excelente, así se hace! <strong>Subes de nivel</strong> (+10% progreso)</span>
                 </div>
-                <style>
-                @keyframes popIn {
-                    0% { transform: scale(0.7); opacity: 0; }
-                    70% { transform: scale(1.1); opacity: 1; }
-                    100% { transform: scale(1); opacity: 1; }
-                }
-                </style>
                 {% elif feedback %}
-                    <div style="background:#ffe066;color:#2a5298;padding:0.7rem 1rem;border-radius:8px;font-weight:bold;margin-bottom:1rem;">{{ feedback }}</div>
+                    <div class="feedback-message">{{ feedback }}</div>
                 {% endif %}
+                
                 {% if not cooldown and not success %}
-                <form method="POST" action="/games/{{ game.id }}/run" style="margin-bottom:1.5rem;">
-                    <label for="code" style="font-weight:bold;">Escribe tu código en Python que sume dos números:</label>
-                    <textarea id="code" name="code" rows="6" required placeholder="a = 5\nb = 7\nprint(a + b)"></textarea>
-                    <button type="submit">Ejecutar Código</button>
+                <form method="POST" action="/games/{{ game.id }}/run" class="code-form">
+                    <label for="code" class="form-label">Escribe tu código en Python que sume dos números:</label>
+                    <textarea id="code" name="code" rows="6" required placeholder="a = 5&#10;b = 7&#10;print(a + b)" class="code-textarea"></textarea>
+                    <button type="submit" class="btn-game">Ejecutar Código</button>
                 </form>
                 {% endif %}
-                <div style="margin-bottom:0.7rem;">
-                    <span style="color:#ffe066;">Vidas restantes: </span>
-                    <span style="color:#fff; font-weight:bold;">{{ max_attempts - (attempts or 0) if not cooldown else 0 }}/{{ max_attempts }}</span>
+                
+                <div class="game-lives">
+                    <span>Vidas restantes: </span>
+                    <strong>{{ max_attempts - (attempts or 0) if not cooldown else 0 }}/{{ max_attempts }}</strong>
                 </div>
+                
                 {% if output is defined and output %}
-                <div class="output">
-                    <b>Salida:</b><br>
+                <div class="code-output">
+                    <strong>Salida:</strong><br>
                     {{ output }}
                 </div>
                 {% endif %}
+                
             {% else %}
-                <p>Próximamente podrás jugar/interactuar con este juego.</p>
+                <p class="coming-soon">Próximamente podrás jugar/interactuar con este juego.</p>
             {% endif %}
         </div>
     </div>
