@@ -86,30 +86,59 @@
 
 
         function toggleLiveChat() {
-            const box = document.getElementById('livechat-box');
-            const btn = document.getElementById('livechat-toggle');
-            if (box && btn) {
-                if (box.style.display === 'none' || box.style.display === '') {
-                    box.style.display = 'flex';
-                    btn.style.display = 'none';
+            const livechatBox = document.getElementById('livechat-box');
+            const livechatBtn = document.getElementById('livechat-toggle');
+            const chatbotBox = document.getElementById('chatbot-box');
+            const chatbotBtn = document.getElementById('chatbot-toggle');
+            
+            if (livechatBox && livechatBtn) {
+                // Close chatbot if it's open
+                if (chatbotBox && chatbotBox.style.display === 'flex') {
+                    chatbotBox.style.display = 'none';
+                    if (chatbotBtn) chatbotBtn.style.display = 'flex';
+                }
+                
+                // Toggle live chat
+                if (livechatBox.style.display === 'none' || livechatBox.style.display === '') {
+                    livechatBox.style.display = 'flex';
+                    livechatBtn.style.display = 'none';
                 } else {
-                    box.style.display = 'none';
-                    btn.style.display = 'flex';
+                    livechatBox.style.display = 'none';
+                    livechatBtn.style.display = 'flex';
                 }
             }
         }
 
  
+        let chatbotInitialized = false;
+
         function toggleChatbot() {
-            const box = document.getElementById('chatbot-box');
-            const btn = document.getElementById('chatbot-toggle');
-            if (box && btn) {
-                if (box.style.display === 'none' || box.style.display === '') {
-                    box.style.display = 'flex';
-                    btn.style.display = 'none';
+            const chatbotBox = document.getElementById('chatbot-box');
+            const chatbotBtn = document.getElementById('chatbot-toggle');
+            const livechatBox = document.getElementById('livechat-box');
+            const livechatBtn = document.getElementById('livechat-toggle');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            
+            if (chatbotBox && chatbotBtn) {
+                // Close live chat if it's open
+                if (livechatBox && livechatBox.style.display === 'flex') {
+                    livechatBox.style.display = 'none';
+                    if (livechatBtn) livechatBtn.style.display = 'flex';
+                }
+                
+                // Toggle chatbot
+                if (chatbotBox.style.display === 'none' || chatbotBox.style.display === '') {
+                    chatbotBox.style.display = 'flex';
+                    chatbotBtn.style.display = 'none';
+                    
+                    // Add welcome message on first open
+                    if (!chatbotInitialized && chatbotMessages) {
+                        chatbotMessages.innerHTML = `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#e0ffff;color:#4a6668;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;'>¡Hola! 👋 Soy MenToraBot, tu asistente de programación. Puedo ayudarte con temas como Python, JavaScript, HTML/CSS, estructuras de datos, POO, bases de datos, Git y más. ¿Qué te gustaría aprender hoy?</span></div>`;
+                        chatbotInitialized = true;
+                    }
                 } else {
-                    box.style.display = 'none';
-                    btn.style.display = 'flex';
+                    chatbotBox.style.display = 'none';
+                    chatbotBtn.style.display = 'flex';
                 }
             }
         }

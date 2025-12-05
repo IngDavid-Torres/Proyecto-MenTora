@@ -478,8 +478,11 @@ def dashboard():
     else:
         motivational_message = "¡Cada reto cuenta! Responde más para avanzar."
 
-    # Ranking: top 10 usuarios por puntos
-    leaderboard = User.query.filter_by(is_admin=False).order_by(User.points.desc(), User.level.desc()).limit(10).all()
+    # Ranking: top 10 usuarios por puntos (excluye admin y profesores)
+    leaderboard = User.query.filter(
+        User.is_admin == False,
+        ~User.teacher_profile.has()
+    ).order_by(User.points.desc(), User.level.desc()).limit(10).all()
 
 
     # Progreso de retos completados
@@ -1149,20 +1152,26 @@ def game_detail(game_id):
 
 @app.route('/chatbot', methods=['POST'])
 def chatbot():
+    """
+    Endpoint del chatbot con IA
+    Usa Google Gemini API si está configurada, sino respuestas predefinidas
+    """
+    from ai_service import ai_service
+    
     data = request.get_json()
     user_msg = data.get('message', '').strip()
-    # Lógica simple: eco o respuesta programada
+    
     if not user_msg:
-        return jsonify({'response': '¿Puedes escribir tu pregunta?'}), 200
-   
-    if 'hola' in user_msg.lower():
-        return jsonify({'response': '¡Hola! ¿En qué puedo ayudarte hoy?'}), 200
-    if 'nivel' in user_msg.lower():
-        return jsonify({'response': 'Puedes subir de nivel completando retos y juegos.'}), 200
-    if 'juego' in user_msg.lower():
-        return jsonify({'response': 'Para jugar, ve a la sección de Juegos y elige uno.'}), 200
-    # Eco por defecto
-    return jsonify({'response': f'Recibí: {user_msg}'}), 200
+        return jsonify({'response': 'Por favor, escribe tu pregunta sobre programación.'}), 200
+    
+    # Obtener respuesta del servicio de IA
+    try:
+        response_text = ai_service.get_response(user_msg)
+        return jsonify({'response': response_text}), 200
+    except Exception as e:
+        print(f"Error en chatbot: {e}")
+        return jsonify({'response': 'Lo siento, ocurrió un error. ¿Puedes reformular tu pregunta?'}), 500
+
 
 
 @app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])

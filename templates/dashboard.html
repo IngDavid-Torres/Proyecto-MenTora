@@ -98,14 +98,12 @@
                 </thead>
                 <tbody>
                     {% for u in leaderboard %}
-                        {% if not u.is_admin and (not u.teacher_profile) %}
                         <tr class="{% if u.username == username %}highlight{% endif %}">
                             <td style="text-align:center;">{{ loop.index }}</td>
                             <td>{{ u.username }}</td>
                             <td style="text-align:center;">{{ u.level }}</td>
                             <td style="text-align:center;">{{ u.points }}</td>
                         </tr>
-                        {% endif %}
                     {% else %}
                     <tr><td colspan="4" style="text-align:center; color:#4a3840;">No hay usuarios en el ranking aún.</td></tr>
                     {% endfor %}
