@@ -249,6 +249,70 @@
             <a href="/games" class="games-button" style="display:inline-block; text-decoration:none; padding:1rem 2.5rem; font-size:1.2rem;">
                 <span style="font-size:1.3rem;"></span> ¡COMIENZA A JUGAR! </a>
         </div>
+
+        <!-- Sección de Historial de Actividades -->
+        <div class="historial glass-card" id="historial">
+            <h2>
+                <img src="https://api.iconify.design/mdi/history.svg?color=%236A2C3D" alt="icono historial" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">
+                Historial de Actividades
+            </h2>
+            <div class="historial-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="stat-mini-card" style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.3), rgba(181, 115, 134, 0.2)); padding: 1rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">{{ total_quizzes_completed }}</div>
+                    <div style="font-size: 0.9rem; color: var(--text-dark);">Quizzes Completados</div>
+                </div>
+                <div class="stat-mini-card" style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.3), rgba(181, 115, 134, 0.2)); padding: 1rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">{{ total_games_completed }}</div>
+                    <div style="font-size: 0.9rem; color: var(--text-dark);">Juegos Completados</div>
+                </div>
+                <div class="stat-mini-card" style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.3), rgba(181, 115, 134, 0.2)); padding: 1rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">{{ total_points_from_quizzes }}</div>
+                    <div style="font-size: 0.9rem; color: var(--text-dark);">Puntos de Quizzes</div>
+                </div>
+                <div class="stat-mini-card" style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.3), rgba(181, 115, 134, 0.2)); padding: 1rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">{{ total_points_from_games }}</div>
+                    <div style="font-size: 0.9rem; color: var(--text-dark);">Puntos de Juegos</div>
+                </div>
+            </div>
+            
+            <div class="historial-timeline" style="max-height: 400px; overflow-y: auto;">
+                {% if recent_activities and recent_activities|length > 0 %}
+                    {% for activity in recent_activities %}
+                        <div class="activity-item" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; margin-bottom: 0.8rem; background: rgba(255, 255, 255, 0.5); border-radius: 10px; border-left: 4px solid var(--primary-color);">
+                            <div class="activity-icon" style="font-size: 2rem;">
+                                {% if activity.activity_type == 'quiz' %}
+                                    📝
+                                {% elif activity.activity_type == 'game' %}
+                                    🎮
+                                {% elif activity.activity_type == 'achievement' %}
+                                    🏆
+                                {% else %}
+                                    ✅
+                                {% endif %}
+                            </div>
+                            <div class="activity-details" style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 0.3rem;">
+                                    {{ activity.activity_name }}
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.2rem;">
+                                    {{ activity.description }}
+                                </div>
+                                <div style="font-size: 0.85rem; color: var(--text-gray);">
+                                    {{ activity.timestamp.strftime('%d/%m/%Y %H:%M') }}
+                                </div>
+                            </div>
+                            {% if activity.points_earned > 0 %}
+                                <div class="activity-points" style="background: linear-gradient(135deg, var(--light-blue), rgba(227, 200, 207, 0.6)); color: var(--primary-color); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700;">
+                                    +{{ activity.points_earned }} pts
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color:#4a3840; text-align: center; padding: 2rem;">No hay actividades registradas aún. ¡Comienza a completar quizzes y juegos!</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
     <footer class="main-footer">

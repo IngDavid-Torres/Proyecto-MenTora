@@ -135,3 +135,52 @@ class AccessLog(db.Model):
     ip = db.Column(db.String(45), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     success = db.Column(db.Boolean, nullable=False)
+
+
+# Modelo para rastrear el progreso en quizzes
+class QuizProgress(db.Model):
+    __tablename__ = 'quiz_progress'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    quiz_id = db.Column(db.Integer, db.ForeignKey('quizzes.id'), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+    score = db.Column(db.Integer, default=0)  # Respuestas correctas
+    total_questions = db.Column(db.Integer, default=0)
+    points_earned = db.Column(db.Integer, default=0)
+    attempts = db.Column(db.Integer, default=0)
+    last_attempt = db.Column(db.DateTime, default=datetime.utcnow)
+    completed_at = db.Column(db.DateTime, nullable=True)
+    
+    user = db.relationship('User', backref='quiz_progress', lazy=True)
+    quiz = db.relationship('Quiz', backref='progress_records', lazy=True)
+
+
+# Modelo para rastrear el progreso en juegos
+class GameProgress(db.Model):
+    __tablename__ = 'game_progress'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    game_id = db.Column(db.Integer, db.ForeignKey('games.id'), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+    points_earned = db.Column(db.Integer, default=0)
+    attempts = db.Column(db.Integer, default=0)
+    last_attempt = db.Column(db.DateTime, default=datetime.utcnow)
+    completed_at = db.Column(db.DateTime, nullable=True)
+    
+    user = db.relationship('User', backref='game_progress', lazy=True)
+    game = db.relationship('Game', backref='progress_records', lazy=True)
+
+
+# Modelo para actividades completadas (historial general)
+class ActivityLog(db.Model):
+    __tablename__ = 'activity_logs'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    activity_type = db.Column(db.String(50), nullable=False)  # 'quiz', 'game', 'achievement', etc.
+    activity_id = db.Column(db.Integer, nullable=True)  # ID del quiz/game/etc
+    activity_name = db.Column(db.String(200), nullable=False)
+    points_earned = db.Column(db.Integer, default=0)
+    description = db.Column(db.Text, nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='activity_logs', lazy=True)

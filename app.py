@@ -16,7 +16,7 @@ from markupsafe import Markup
 
 
 from config import SQLALCHEMY_DATABASE_URI, SECRET_KEY
-from models import db, User, Quiz, Question, UserAnswer, Achievement, Badge, Notification, AccessLog, Teacher
+from models import db, User, Quiz, Question, UserAnswer, Achievement, Badge, Notification, AccessLog, Teacher, QuizProgress, GameProgress, ActivityLog
 
 
 
@@ -498,6 +498,19 @@ def dashboard():
     notifications = Notification.query.filter(
         (Notification.to_user == None) | (Notification.to_user == user.id)
     ).order_by(Notification.date_sent.desc()).limit(5).all()
+    
+    # Obtener historial de actividades del usuario
+    recent_activities = ActivityLog.query.filter_by(user_id=user.id).order_by(ActivityLog.timestamp.desc()).limit(10).all()
+    
+    # Obtener progreso de quizzes y juegos
+    quiz_progress_data = QuizProgress.query.filter_by(user_id=user.id).all()
+    game_progress_data = GameProgress.query.filter_by(user_id=user.id).all()
+    
+    # Calcular estadísticas
+    total_quizzes_completed = sum(1 for qp in quiz_progress_data if qp.completed)
+    total_games_completed = sum(1 for gp in game_progress_data if gp.completed)
+    total_points_from_quizzes = sum(qp.points_earned for qp in quiz_progress_data)
+    total_points_from_games = sum(gp.points_earned for gp in game_progress_data)
 
     return render_template('dashboard.html',
                            username=user.username,
@@ -519,7 +532,12 @@ def dashboard():
                            avatar_url=user.avatar_url,
                            theme=session.get('theme', user.theme if user.theme else 'default'),
                            daily_quiz=daily_quiz,
-                           teacher=teacher)
+                           teacher=teacher,
+                           recent_activities=recent_activities,
+                           total_quizzes_completed=total_quizzes_completed,
+                           total_games_completed=total_games_completed,
+                           total_points_from_quizzes=total_points_from_quizzes,
+                           total_points_from_games=total_points_from_games)
 
 @app.route('/biblioteca')
 def biblioteca():
@@ -543,7 +561,7 @@ def biblioteca():
         return redirect(url_for('dashboard'))
     
     
-# Reto activo
+# Reto activo (legacy - ahora se usa quiz_attempt)
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
     if 'user_id' not in session:
@@ -585,15 +603,10 @@ def quiz():
             user.points += 10
             if user.points >= user.level * 100:
                 user.level += 1
-
-            # Otorgar logro por primer quiz correcto
-            from models import Achievement, Badge
-            primer_quiz_badge = Badge.query.filter_by(name='Primer Quiz').first()
-            if primer_quiz_badge:
-                ya_tiene = Achievement.query.filter_by(user_id=user.id, badge_id=primer_quiz_badge.id).first()
-                if not ya_tiene:
-                    nuevo_logro = Achievement(user_id=user.id, badge_id=primer_quiz_badge.id)
-                    db.session.add(nuevo_logro)
+            
+            # Verificar badges automáticos
+            check_and_award_badges(user)
+            
         db.session.commit()
 
         flash('Respuesta registrada. ' + ('¡Correcto!' if is_correct else 'Incorrecto.'))
@@ -1016,6 +1029,14 @@ def run_game_code(game_id):
     if not user_id:
         return redirect(url_for('login'))
     user = User.query.get(user_id)
+    
+    # Verificar o crear progreso del juego
+    game_progress = GameProgress.query.filter_by(user_id=user.id, game_id=game.id).first()
+    if not game_progress:
+        game_progress = GameProgress(user_id=user.id, game_id=game.id)
+        db.session.add(game_progress)
+        db.session.commit()
+    
     # Guardar intentos y cooldown en sesión por usuario y juego
     session_key = f'game_{game_id}_attempts'
     session_cooldown_key = f'game_{game_id}_cooldown'
@@ -1027,7 +1048,7 @@ def run_game_code(game_id):
     if cooldown_until and now < cooldown_until:
         mins_left = int((cooldown_until - now) / 60) + 1
         feedback = f'Sin vidas. Intenta de nuevo en {mins_left} minutos.'
-        return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=max_attempts, max_attempts=max_attempts, cooldown=True)
+        return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, progress=game_progress)
     # Si no está en cooldown, resetear si ya pasó
     if cooldown_until and now >= cooldown_until:
         attempts = 0
@@ -1037,7 +1058,12 @@ def run_game_code(game_id):
     if attempts >= max_attempts:
         session[session_cooldown_key] = now + cooldown_minutes * 60
         feedback = f'Sin vidas. Intenta de nuevo en {cooldown_minutes} minutos.'
-        return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=max_attempts, max_attempts=max_attempts, cooldown=True)
+        return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, progress=game_progress)
+    
+    # Actualizar intentos en el progreso
+    game_progress.attempts += 1
+    game_progress.last_attempt = datetime.datetime.utcnow()
+    
     # Evaluar código
     if game.name.lower() == 'hola mundo':
         buf = io.StringIO()
@@ -1052,34 +1078,46 @@ def run_game_code(game_id):
             output = f'Error: {exc}'
         # Validar si acertó (print exacto)
         if output.strip() == 'Hola mundo':
-            feedback = '¡Correcto! Ganaste +10 puntos.'
+            puntos_ganados = 10
             
-            progress_percent = session.get('progress_percent', None)
-            if progress_percent is None:
+            # Solo otorgar puntos si no había completado antes
+            if not game_progress.completed:
+                user.points += puntos_ganados
+                game_progress.points_earned = puntos_ganados
+                game_progress.completed = True
+                game_progress.completed_at = datetime.datetime.utcnow()
                 
-                points_this_level = user.points - ((user.level - 1) * 100)
-                points_needed = 100
-                progress_percent = int((points_this_level / points_needed) * 100) if user.level > 0 else 0
-            progress_percent += 10
-            user.points += 10
+                # Registrar en el log de actividades
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='game',
+                    activity_id=game.id,
+                    activity_name=game.name,
+                    points_earned=puntos_ganados,
+                    description=f'Completó el juego "{game.name}"'
+                )
+                db.session.add(activity)
+                
+                # Verificar logros automáticos
+                check_and_award_badges(user)
+                
+                feedback = f'¡Correcto! Ganaste +{puntos_ganados} puntos.'
+            else:
+                feedback = '¡Correcto! Ya habías completado este juego anteriormente.'
             
-            if progress_percent >= 100 or user.points >= user.level * 100:
-                progress_percent = 0
-                user.level += 1
-                feedback = '¡Excelente, así se hace! ¡Subes de nivel!'
-            session['progress_percent'] = progress_percent
             db.session.commit()
             # Resetear intentos tras éxito
             session[session_key] = 0
             session.pop(session_cooldown_key, None)
-            return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=0, max_attempts=max_attempts, success=True, show_animated_alert=True)
+            return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=0, max_attempts=max_attempts, success=True, show_animated_alert=True, progress=game_progress, puntos_ganados=puntos_ganados if not game_progress.completed else 0)
         else:
+            db.session.commit()
             attempts += 1
             session[session_key] = attempts
             if attempts >= max_attempts:
                 session[session_cooldown_key] = now + cooldown_minutes * 60
                 feedback = f'Incorrecto. Sin vidas. Intenta de nuevo en {cooldown_minutes} minutos.'
-                return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts, cooldown=True)
+                return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts, cooldown=True, progress=game_progress)
             else:
                 feedback = f'Incorrecto. Intentos restantes: {max_attempts - attempts}'
     elif game.name.lower() == 'la suma de dos números':
@@ -1104,39 +1142,63 @@ def run_game_code(game_id):
             a, b = int(nums[0]), int(nums[1])
             suma_esperada = a + b
             if salida == suma_esperada:
-                feedback = '¡Correcto! Ganaste +10 puntos.'
-                progress_percent = session.get('progress_percent', None)
-                if progress_percent is None:
-                    points_this_level = user.points - ((user.level - 1) * 100)
-                    points_needed = 100
-                    progress_percent = int((points_this_level / points_needed) * 100) if user.level > 0 else 0
-                progress_percent += 10
-                user.points += 10
-                if progress_percent >= 100 or user.points >= user.level * 100:
-                    progress_percent = 0
-                    user.level += 1
-                    feedback = '¡Excelente, así se hace! ¡Subes de nivel!'
-                session['progress_percent'] = progress_percent
+                puntos_ganados = 10
+                
+                # Solo otorgar puntos si no había completado antes
+                if not game_progress.completed:
+                    user.points += puntos_ganados
+                    game_progress.points_earned = puntos_ganados
+                    game_progress.completed = True
+                    game_progress.completed_at = datetime.datetime.utcnow()
+                    
+                    # Registrar en el log de actividades
+                    activity = ActivityLog(
+                        user_id=user.id,
+                        activity_type='game',
+                        activity_id=game.id,
+                        activity_name=game.name,
+                        points_earned=puntos_ganados,
+                        description=f'Completó el juego "{game.name}"'
+                    )
+                    db.session.add(activity)
+                    
+                    # Verificar logros automáticos
+                    check_and_award_badges(user)
+                    
+                    feedback = f'¡Correcto! Ganaste +{puntos_ganados} puntos.'
+                else:
+                    feedback = '¡Correcto! Ya habías completado este juego anteriormente.'
+                
                 db.session.commit()
                 session[session_key] = 0
                 session.pop(session_cooldown_key, None)
-                return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=0, max_attempts=max_attempts, success=True, show_animated_alert=True)
+                return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=0, max_attempts=max_attempts, success=True, show_animated_alert=True, progress=game_progress, puntos_ganados=puntos_ganados if not game_progress.completed else 0)
             else:
+                db.session.commit()
                 attempts += 1
                 session[session_key] = attempts
                 if attempts >= max_attempts:
                     session[session_cooldown_key] = now + cooldown_minutes * 60
                     feedback = f'Incorrecto. Sin vidas. Intenta de nuevo en {cooldown_minutes} minutos.'
-                    return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts, cooldown=True)
+                    return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts, cooldown=True, progress=game_progress)
                 else:
                     feedback = f'Incorrecto. Intentos restantes: {max_attempts - attempts}'
         else:
             feedback = 'Por favor, define dos números en tu código.'
-    return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts)
+    
+    db.session.commit()
+    return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts, progress=game_progress)
 @app.route('/games/<int:game_id>')
 def game_detail(game_id):
     from models import Game
     game = Game.query.get_or_404(game_id)
+    
+    # Obtener progreso del usuario si está autenticado
+    progress = None
+    if 'user_id' in session:
+        user_id = session['user_id']
+        progress = GameProgress.query.filter_by(user_id=user_id, game_id=game_id).first()
+    
     # Para mostrar vidas aunque sea GET
     max_attempts = 3
     session_key = f'game_{game_id}_attempts'
@@ -1148,7 +1210,7 @@ def game_detail(game_id):
     cooldown = False
     if cooldown_until and now < cooldown_until:
         cooldown = True
-    return render_template('game_detail.html', game=game, attempts=attempts, max_attempts=max_attempts, cooldown=cooldown)
+    return render_template('game_detail.html', game=game, attempts=attempts, max_attempts=max_attempts, cooldown=cooldown, progress=progress)
 
 @app.route('/chatbot', methods=['POST'])
 def chatbot():
@@ -1180,11 +1242,20 @@ def quiz_attempt(quiz_id):
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
     quiz = Quiz.query.get_or_404(quiz_id)
+    
+    # Verificar si el usuario ya completó este quiz
+    progress = QuizProgress.query.filter_by(user_id=user.id, quiz_id=quiz.id).first()
+    if not progress:
+        progress = QuizProgress(user_id=user.id, quiz_id=quiz.id)
+        db.session.add(progress)
+        db.session.commit()
+    
     # Obtener preguntas del quiz
     questions = Question.query.filter_by(quiz_id=quiz.id).all()
     if not questions:
         flash('Este quiz no tiene preguntas aún.')
         return redirect(url_for('dashboard'))
+    
     max_attempts = 3
     cooldown_minutes = 30
     session_key = f'quiz_{quiz_id}_attempts'
@@ -1193,21 +1264,26 @@ def quiz_attempt(quiz_id):
     cooldown_until = session.get(session_cooldown_key)
     import time
     now = int(time.time())
+    
     if cooldown_until and now < cooldown_until:
         mins_left = int((cooldown_until - now) / 60) + 1
-        return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left)
+        return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left, progress=progress)
+    
     if cooldown_until and now >= cooldown_until:
         attempts = 0
         session[session_key] = 0
         session.pop(session_cooldown_key, None)
+    
     if attempts >= max_attempts:
         session[session_cooldown_key] = now + cooldown_minutes * 60
         mins_left = cooldown_minutes
-        return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left)
+        return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left, progress=progress)
+    
     if request.method == 'POST':
         correctas = 0
         total = len(questions)
         user_answers = {}
+        
         for q in questions:
             selected = request.form.get(f'q_{q.id}')
             user_answers[q.id] = selected
@@ -1223,28 +1299,59 @@ def quiz_attempt(quiz_id):
             db.session.add(answer)
             if is_correct:
                 correctas += 1
-        db.session.commit()
+        
+        # Actualizar progreso
+        progress.attempts += 1
+        progress.score = correctas
+        progress.total_questions = total
+        progress.last_attempt = datetime.utcnow()
+        
         results = [(q, user_answers.get(q.id)) for q in questions]
+        
         if correctas == total:
-            # Respuestas correctas, sumar puntos y resetear intentos
+            # Respuestas correctas, sumar puntos y guardar progreso
             # Si el quiz es de profesor, 15 puntos por pregunta, si no, 10
             puntos = 15 * total if quiz.teacher_id else 10 * total
-            user.points += puntos
+            
+            # Solo dar puntos si no había completado antes este quiz
+            if not progress.completed:
+                user.points += puntos
+                progress.points_earned = puntos
+                progress.completed = True
+                progress.completed_at = datetime.utcnow()
+                
+                # Registrar en el log de actividades
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='quiz',
+                    activity_id=quiz.id,
+                    activity_name=quiz.title,
+                    points_earned=puntos,
+                    description=f'Completó el quiz "{quiz.title}" con {correctas}/{total} respuestas correctas'
+                )
+                db.session.add(activity)
+                
+                # Verificar logros automáticos
+                check_and_award_badges(user)
+            
             db.session.commit()
             session[session_key] = 0
             session.pop(session_cooldown_key, None)
+            
             show_15pts_modal = True
-            return render_template('quiz.html', quiz=quiz, questions=questions, show_answers=True, results=results, attempts=0, max_attempts=max_attempts, show_15pts_modal=show_15pts_modal)
+            return render_template('quiz.html', quiz=quiz, questions=questions, show_answers=True, results=results, attempts=0, max_attempts=max_attempts, show_15pts_modal=show_15pts_modal, progress=progress, puntos_ganados=puntos if not progress.completed else 0)
         else:
             # Respuestas incorrectas, aumentar intentos
+            db.session.commit()
             attempts += 1
             session[session_key] = attempts
             if attempts >= max_attempts:
-                session_cooldown_key = now + cooldown_minutes * 60
+                session[session_cooldown_key] = now + cooldown_minutes * 60
                 mins_left = cooldown_minutes
-                return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left)
-            return render_template('quiz.html', quiz=quiz, questions=questions, attempts=attempts, max_attempts=max_attempts, error=True)
-    return render_template('quiz.html', quiz=quiz, questions=questions, attempts=attempts, max_attempts=max_attempts)
+                return render_template('quiz.html', quiz=quiz, questions=questions, attempts=max_attempts, max_attempts=max_attempts, cooldown=True, mins_left=mins_left, progress=progress)
+            return render_template('quiz.html', quiz=quiz, questions=questions, attempts=attempts, max_attempts=max_attempts, error=True, progress=progress)
+    
+    return render_template('quiz.html', quiz=quiz, questions=questions, attempts=attempts, max_attempts=max_attempts, progress=progress)
 
 @app.route('/admin/add_question', methods=['POST'])
 def add_question():
@@ -2142,6 +2249,141 @@ def upload_cedula():
     else:
         flash('Formato de archivo no válido. Solo se permiten imágenes (PNG, JPG, JPEG, GIF, WEBP).')
         return redirect(url_for('teacher_dashboard'))
+
+
+# === FUNCIÓN AUXILIAR PARA VERIFICAR Y OTORGAR BADGES ===
+def check_and_award_badges(user):
+    """Verifica y otorga badges automáticamente según el progreso del usuario"""
+    
+    # Badge: Primer Quiz - Completar 1 quiz
+    completed_quizzes = QuizProgress.query.filter_by(user_id=user.id, completed=True).count()
+    if completed_quizzes >= 1:
+        badge = Badge.query.filter_by(name='Primer Quiz').first()
+        if badge:
+            existing = Achievement.query.filter_by(user_id=user.id, badge_id=badge.id).first()
+            if not existing:
+                achievement = Achievement(user_id=user.id, badge_id=badge.id)
+                db.session.add(achievement)
+                
+                # Log de actividad
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='achievement',
+                    activity_id=badge.id,
+                    activity_name=badge.name,
+                    points_earned=0,
+                    description=f'Desbloqueó el logro: {badge.name}'
+                )
+                db.session.add(activity)
+    
+    # Badge: Maestro de Quizzes - Completar 5 quizzes
+    if completed_quizzes >= 5:
+        badge = Badge.query.filter_by(name='Maestro de Quizzes').first()
+        if badge:
+            existing = Achievement.query.filter_by(user_id=user.id, badge_id=badge.id).first()
+            if not existing:
+                achievement = Achievement(user_id=user.id, badge_id=badge.id)
+                db.session.add(achievement)
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='achievement',
+                    activity_id=badge.id,
+                    activity_name=badge.name,
+                    points_earned=0,
+                    description=f'Desbloqueó el logro: {badge.name}'
+                )
+                db.session.add(activity)
+    
+    # Badge: Primer Juego - Completar 1 juego
+    completed_games = GameProgress.query.filter_by(user_id=user.id, completed=True).count()
+    if completed_games >= 1:
+        badge = Badge.query.filter_by(name='Primer Juego').first()
+        if badge:
+            existing = Achievement.query.filter_by(user_id=user.id, badge_id=badge.id).first()
+            if not existing:
+                achievement = Achievement(user_id=user.id, badge_id=badge.id)
+                db.session.add(achievement)
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='achievement',
+                    activity_id=badge.id,
+                    activity_name=badge.name,
+                    points_earned=0,
+                    description=f'Desbloqueó el logro: {badge.name}'
+                )
+                db.session.add(activity)
+    
+    # Badge: Jugador Experto - Completar 5 juegos
+    if completed_games >= 5:
+        badge = Badge.query.filter_by(name='Jugador Experto').first()
+        if badge:
+            existing = Achievement.query.filter_by(user_id=user.id, badge_id=badge.id).first()
+            if not existing:
+                achievement = Achievement(user_id=user.id, badge_id=badge.id)
+                db.session.add(achievement)
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='achievement',
+                    activity_id=badge.id,
+                    activity_name=badge.name,
+                    points_earned=0,
+                    description=f'Desbloqueó el logro: {badge.name}'
+                )
+                db.session.add(activity)
+    
+    # Badge: 100 Puntos
+    if user.points >= 100:
+        badge = Badge.query.filter_by(name='100 Puntos').first()
+        if badge:
+            existing = Achievement.query.filter_by(user_id=user.id, badge_id=badge.id).first()
+            if not existing:
+                achievement = Achievement(user_id=user.id, badge_id=badge.id)
+                db.session.add(achievement)
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='achievement',
+                    activity_id=badge.id,
+                    activity_name=badge.name,
+                    points_earned=0,
+                    description=f'Desbloqueó el logro: {badge.name}'
+                )
+                db.session.add(activity)
+    
+    # Badge: 500 Puntos
+    if user.points >= 500:
+        badge = Badge.query.filter_by(name='500 Puntos').first()
+        if badge:
+            existing = Achievement.query.filter_by(user_id=user.id, badge_id=badge.id).first()
+            if not existing:
+                achievement = Achievement(user_id=user.id, badge_id=badge.id)
+                db.session.add(achievement)
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='achievement',
+                    activity_id=badge.id,
+                    activity_name=badge.name,
+                    points_earned=0,
+                    description=f'Desbloqueó el logro: {badge.name}'
+                )
+                db.session.add(activity)
+    
+    # Badge: Nivel 5
+    if user.level >= 5:
+        badge = Badge.query.filter_by(name='Nivel 5').first()
+        if badge:
+            existing = Achievement.query.filter_by(user_id=user.id, badge_id=badge.id).first()
+            if not existing:
+                achievement = Achievement(user_id=user.id, badge_id=badge.id)
+                db.session.add(achievement)
+                activity = ActivityLog(
+                    user_id=user.id,
+                    activity_type='achievement',
+                    activity_id=badge.id,
+                    activity_name=badge.name,
+                    points_earned=0,
+                    description=f'Desbloqueó el logro: {badge.name}'
+                )
+                db.session.add(activity)
 
 
 if __name__ == '__main__':

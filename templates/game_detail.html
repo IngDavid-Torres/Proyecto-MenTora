@@ -34,10 +34,23 @@
                         <circle cx="19" cy="19" r="18" stroke="currentColor" stroke-width="3" fill="rgba(255, 255, 255, 0.9)"/>
                         <path d="M11 20.5L17 26L27 14" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>¡Excelente, así se hace! <strong>Subes de nivel</strong> (+10% progreso)</span>
+                    {% if puntos_ganados is defined and puntos_ganados > 0 %}
+                        <span>¡Excelente! <strong>+{{ puntos_ganados }} puntos</strong></span>
+                    {% else %}
+                        <span>¡Correcto! Ya habías completado este juego</span>
+                    {% endif %}
                 </div>
                 {% elif feedback %}
                     <div class="feedback-message">{{ feedback }}</div>
+                {% endif %}
+                
+                {% if progress and progress.completed %}
+                    <div style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.5), rgba(181, 115, 134, 0.3)); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; text-align: center;">
+                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 0.3rem;">✅ Juego Completado</div>
+                        <div style="font-size: 0.9rem; color: var(--text-dark);">
+                            Puntos ganados: {{ progress.points_earned }} | Intentos totales: {{ progress.attempts }}
+                        </div>
+                    </div>
                 {% endif %}
                 
                 {% if not cooldown and not success %}
@@ -67,10 +80,23 @@
                         <circle cx="19" cy="19" r="18" stroke="currentColor" stroke-width="3" fill="rgba(255, 255, 255, 0.9)"/>
                         <path d="M11 20.5L17 26L27 14" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>¡Excelente, así se hace! <strong>Subes de nivel</strong> (+10% progreso)</span>
+                    {% if puntos_ganados is defined and puntos_ganados > 0 %}
+                        <span>¡Excelente! <strong>+{{ puntos_ganados }} puntos</strong></span>
+                    {% else %}
+                        <span>¡Correcto! Ya habías completado este juego</span>
+                    {% endif %}
                 </div>
                 {% elif feedback %}
                     <div class="feedback-message">{{ feedback }}</div>
+                {% endif %}
+                
+                {% if progress and progress.completed %}
+                    <div style="background: linear-gradient(135deg, rgba(227, 200, 207, 0.5), rgba(181, 115, 134, 0.3)); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; text-align: center;">
+                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 0.3rem;">✅ Juego Completado</div>
+                        <div style="font-size: 0.9rem; color: var(--text-dark);">
+                            Puntos ganados: {{ progress.points_earned }} | Intentos totales: {{ progress.attempts }}
+                        </div>
+                    </div>
                 {% endif %}
                 
                 {% if not cooldown and not success %}

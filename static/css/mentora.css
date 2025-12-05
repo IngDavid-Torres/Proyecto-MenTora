@@ -38,10 +38,9 @@ body {
     background: #6A2C3D;
     color: #ffffff;
     overflow-x: hidden;
+    overflow-y: auto;
     min-height: 100vh;
     scroll-behavior: auto;
-    display: flex;
-    flex-direction: column;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -582,10 +581,8 @@ section {
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(74, 30, 42, 0.3);
     background: linear-gradient(135deg, #f8f9fa 0%, #e8e8e8 100%);
-    aspect-ratio: 16 / 9;
     contain: layout style paint;
-    min-height: 500px;
-    height: 500px;
+    width: 100%;
 }
 
 .preview-track {
@@ -596,24 +593,22 @@ section {
 }
 
 .preview-slide {
-    min-width: 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    flex-shrink: 0 !important;
+    min-width: 100%;
+    width: 100%;
+    flex-shrink: 0;
     position: relative;
     background: #ffffff;
-    height: 100% !important;
-    min-height: 500px !important;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    margin: 0 !important;
-    padding: 0 !important;
+    padding: 2rem 1rem;
 }
 
 .preview-slide img {
     width: 100%;
+    max-width: 100%;
     height: auto;
     max-height: 500px;
     display: block;
@@ -633,18 +628,9 @@ section {
     box-sizing: border-box;
 }
 
-.preview-track,
-.preview-slide {
-    min-height: 300px;
-    max-height: 500px;
+.preview-track {
     height: auto;
-}
-
-.preview-slide {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    min-height: 400px;
 }
 
 .preview-caption {
@@ -1882,19 +1868,22 @@ main {
 
     .preview-slide img {
         width: 100%;
+        max-width: 100%;
         height: auto;
-        max-height: 350px;
+        max-height: 300px;
         object-fit: contain;
     }
 
     .preview-carousel {
-        min-height: 250px;
-        height: auto;
+        width: 100%;
     }
 
     .preview-slide {
-        min-height: 250px;
-        height: auto;
+        padding: 1.5rem 1rem;
+    }
+
+    .preview-track {
+        min-height: 350px;
     }
 
     .preview-subtitle {
@@ -2065,9 +2054,18 @@ main {
 
     .preview-slide img {
         width: 100%;
+        max-width: 100%;
         height: auto;
-        max-height: 250px;
+        max-height: 220px;
         object-fit: contain;
+    }
+
+    .preview-track {
+        min-height: 300px;
+    }
+
+    .preview-slide {
+        padding: 1rem 0.5rem;
     }
 
     .preview-controls {

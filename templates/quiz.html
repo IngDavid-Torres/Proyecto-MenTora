@@ -97,7 +97,18 @@
         <div id="modal-15pts" style="display:flex;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;align-items:center;justify-content:center;background:rgba(44,62,80,0.45);backdrop-filter:blur(2px);">
             <div style="background:linear-gradient(120deg,#00fff1 0%,#16213e 100%);border-radius:22px;box-shadow:0 8px 32px #00fff1a0,0 0 24px #00fff1;padding:2.5rem 2.5rem 2rem 2.5rem;max-width:95vw;min-width:320px;text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;">
                 <div style="font-size:2.5rem;font-family:'Orbitron','Inter',Arial,sans-serif;font-weight:bold;color:#ffe066;letter-spacing:2px;text-shadow:0 0 12px #ffe066,0 0 2px #fff;animation:glow 1.2s infinite alternate; margin-bottom:1.1rem;">¡Excelente!</div>
-                <div style="font-size:1.7rem;color:#00fff1;font-family:'Poppins','Orbitron',Arial,sans-serif;margin-bottom:1.2rem;text-align:center;">+{{ 15 if quiz.teacher_id else 10 }} puntos</div>
+                {% if puntos_ganados is defined and puntos_ganados > 0 %}
+                    <div style="font-size:1.7rem;color:#00fff1;font-family:'Poppins','Orbitron',Arial,sans-serif;margin-bottom:1.2rem;text-align:center;">+{{ puntos_ganados }} puntos</div>
+                    <div style="font-size:1rem;color:#e3c8cf;font-family:'Poppins',Arial,sans-serif;margin-bottom:0.5rem;">¡Quiz completado correctamente!</div>
+                {% else %}
+                    <div style="font-size:1.2rem;color:#e3c8cf;font-family:'Poppins',Arial,sans-serif;margin-bottom:1.2rem;">¡Ya habías completado este quiz anteriormente!</div>
+                    <div style="font-size:0.95rem;color:#b5e7e3;font-family:'Poppins',Arial,sans-serif;margin-bottom:0.5rem;">Tu progreso está guardado</div>
+                {% endif %}
+                {% if progress and progress.completed %}
+                    <div style="font-size:0.9rem;color:#b5e7e3;font-family:'Poppins',Arial,sans-serif;margin-top:0.5rem;">
+                        📊 Intentos totales: {{ progress.attempts }} | Puntuación: {{ progress.score }}/{{ progress.total_questions }}
+                    </div>
+                {% endif %}
                 <button onclick="document.getElementById('modal-15pts').style.display='none'" style="margin-top:1.2rem;padding:0.7rem 2.2rem;background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:bold;border:none;border-radius:8px;font-size:1.08rem;cursor:pointer;box-shadow:0 2px 8px #fab00522;">Aceptar</button>
             </div>
         </div>

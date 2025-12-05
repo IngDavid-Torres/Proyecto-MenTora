@@ -32,6 +32,10 @@
                         <i data-lucide="joystick"></i>
                         Juegos
                     </button>
+                    <button class="filter-btn" onclick="showTab('teacher-tab')">
+                        <i data-lucide="graduation-cap"></i>
+                        Actividades Docente
+                    </button>
                     <button class="filter-btn" onclick="showTab('vr-tab')">
                         <i data-lucide="headphones"></i>
                         Laboratorio VR
@@ -75,49 +79,6 @@
                                 Jugar
                             </button>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Juegos y Quizzes Creados por Docentes -->
-                <div class="teacher-content-section">
-                    <h2 class="teacher-content-title">Juegos y Quizzes de Docentes</h2>
-                    <p class="teacher-content-subtitle">Contenido educativo creado por tus profesores</p>
-                    
-                    <div class="games-grid">
-                        {% set hay_juegos = games and games|length > 0 %}
-                        {% set hay_quizzes = quizzes and quizzes|length > 0 %}
-                        
-                        {% if hay_juegos %}
-                            {% for game in games %}
-                            <div class="game-card">
-                                <svg class="game-icon" data-lucide="gamepad-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-                                <h3>{{ game.name }}</h3>
-                                <p>{{ game.description }}</p>
-                                <span class="game-badge">Tipo: {{ game.type|capitalize }}</span>
-                                <a href="/games/{{ game.id }}" class="btn-game">Jugar Ahora</a>
-                            </div>
-                            {% endfor %}
-                        {% endif %}
-                        
-                        {% if hay_quizzes %}
-                            {% for quiz in quizzes %}
-                            <div class="game-card">
-                                <svg class="game-icon" data-lucide="clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-                                <h3>{{ quiz.title }}</h3>
-                                <p>{{ quiz.description }}</p>
-                                <span class="game-badge">Área: {{ quiz.area }}</span>
-                                <a href="/quiz/{{ quiz.id }}" class="btn-game">Intentar Quiz</a>
-                            </div>
-                            {% endfor %}
-                        {% endif %}
-                        
-                        {% if not hay_juegos and not hay_quizzes %}
-                            <div class="empty-state">
-                                <svg class="empty-icon" data-lucide="inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-                                <p class="empty-text">No hay juegos ni quizzes disponibles aún.</p>
-                                <p class="empty-subtext">Los docentes pronto agregarán contenido educativo.</p>
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
 
@@ -226,6 +187,51 @@
                             <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid rgba(106, 44, 61, 0.2); border-top: 4px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite;"></div>
                         </div>
                         <button class="btn-game" onclick="exitVR()">Salir de VR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Activities Tab -->
+            <div id="teacher-tab" class="tab-content">
+                <div class="teacher-content-section">
+                    <h2 class="teacher-content-title">Juegos y Quizzes de Docentes</h2>
+                    <p class="teacher-content-subtitle">Contenido educativo creado por tus profesores</p>
+                    
+                    <div class="games-grid">
+                        {% set hay_juegos = games and games|length > 0 %}
+                        {% set hay_quizzes = quizzes and quizzes|length > 0 %}
+                        
+                        {% if hay_juegos %}
+                            {% for game in games %}
+                            <div class="game-card">
+                                <svg class="game-icon" data-lucide="gamepad-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                                <h3>{{ game.name }}</h3>
+                                <p>{{ game.description }}</p>
+                                <span class="game-badge">Tipo: {{ game.type|capitalize }}</span>
+                                <a href="/games/{{ game.id }}" class="btn-game">Jugar Ahora</a>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        {% if hay_quizzes %}
+                            {% for quiz in quizzes %}
+                            <div class="game-card">
+                                <svg class="game-icon" data-lucide="clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                                <h3>{{ quiz.title }}</h3>
+                                <p>{{ quiz.description }}</p>
+                                <span class="game-badge">Área: {{ quiz.area }}</span>
+                                <a href="/quiz/{{ quiz.id }}" class="btn-game">Intentar Quiz</a>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        {% if not hay_juegos and not hay_quizzes %}
+                            <div class="empty-state">
+                                <svg class="empty-icon" data-lucide="inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                                <p class="empty-text">No hay juegos ni quizzes disponibles aún.</p>
+                                <p class="empty-subtext">Los docentes pronto agregarán contenido educativo.</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -458,6 +464,9 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
+            
+            // Reinitialize lucide icons for the new tab
+            setTimeout(() => lucide.createIcons(), 100);
         }
 
         function startQuiz() {
@@ -701,6 +710,11 @@
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
+        // Inicializar iconos de Lucide
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
