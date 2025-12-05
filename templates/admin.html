@@ -2,910 +2,740 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Admin | MenTora</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f6f8;
-            color: #2c3e50;
-        }
-
-        header {
-            background-color: #2a5298;
-            color: #fff;
-            padding: 1.5rem;
-            text-align: center;
-            position: relative;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2rem;
-        }
-
-        .logout-btn {
-            background-color: #ffe066;
-            color: #2a5298;
-            border: none;
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
-            width: 85%;
-            margin: 0 auto 2rem auto;
-            box-shadow: 0 2px 8px rgba(44,62,80,0.10);
-        }
-
-        .logout-btn:hover {
-            background: linear-gradient(90deg, #ffe066 60%, #ffd43b 100%);
-            color: #1e3c72;
-            box-shadow: 0 4px 16px rgba(44,62,80,0.18);
-        }
-        .sidebar-logo {
-            height: 64px;
-            width: 64px;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.13);
-            background: #fff;
-            object-fit: cover;
-            margin-bottom: 0.7rem;
-            border: 2px solid #ffe066;
-            transition: transform 0.2s;
-        }
-        .sidebar-logo:hover {
-            transform: scale(1.08) rotate(-6deg);
-        }
-        .nav-link {
-            display: block;
-            color: #fff;
-            text-decoration: none;
-            padding: 1rem 2rem;
-            font-weight: 500;
-            border-left: 4px solid transparent;
-            transition: background 0.2s, color 0.2s, border-left 0.2s;
-            border-radius: 0 20px 20px 0;
-            margin-bottom: 0.2rem;
-        }
-        .nav-link:hover, .nav-link.active {
-            background: linear-gradient(90deg, #3b5998 60%, #2a5298 100%);
-            color: #ffe066;
-            border-left: 4px solid #ffe066;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 1rem;
-            animation: fadeIn 0.8s cubic-bezier(.4,0,.2,1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: none; }
-        }
-
-        .section {
-            background-color: #ffffff;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-            transition: box-shadow 0.3s, transform 0.3s;
-            animation: fadeInUp 0.7s cubic-bezier(.4,0,.2,1);
-        }
-
-        .section:hover {
-            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
-            transform: translateY(-4px) scale(1.01);
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: none; }
-        }
-        .stat-card {
-            background-color: #ecf0f1;
-            padding: 1rem;
-            border-radius: 8px;
-            flex: 1;
-            min-width: 200px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(44,62,80,0.07);
-            transition: box-shadow 0.3s, transform 0.3s;
-            animation: fadeIn 0.8s cubic-bezier(.4,0,.2,1);
-        }
-
-        .stat-card:hover {
-            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
-            transform: translateY(-4px) scale(1.04);
-        }
-
-        button {
-            padding: 0.7rem 1.5rem;
-            background-color: #2a5298;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 8px rgba(44,62,80,0.07);
-        }
-
-        button:hover {
-            background-color: #1e3c72;
-            background: linear-gradient(90deg, #2a5298 60%, #1e3c72 100%);
-            color: #ffe066;
-            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
-        }
-
-        table {
-            width:100%; 
-            border-collapse:collapse; 
-            margin-top:1.5rem;
-            animation: fadeIn 0.8s cubic-bezier(.4,0,.2,1);
-        }
-        tr {
-            transition: background 0.2s, color 0.2s;
-        }
-        tr:hover {
-            background: #f7f9fa !important;
-            color: #2a5298 !important;
-        }
-        td, th {
-            transition: background 0.2s, color 0.2s;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Exo+2:wght@600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
 <body>
-    <!-- Fondo animado de hackers -->
-    <div id="hacker-bg"></div>
-    <style>
-    #hacker-bg {
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-        background: linear-gradient(120deg, #232526 0%, #2a5298 100%);
-        opacity: 0.13;
-        animation: bgmove 18s linear infinite alternate;
-    }
-    @keyframes bgmove {
-        0% { background-position: 0 0; }
-        100% { background-position: 100vw 100vh; }
-    }
-    .hacker-icon {
-        position: absolute;
-        width: 54px;
-        height: 54px;
-        opacity: 0.7;
-        animation: floatHacker 12s linear infinite;
-    }
-    .hacker-icon:nth-child(2) { left: 20vw; top: 10vh; animation-delay: 2s; }
-    .hacker-icon:nth-child(3) { left: 60vw; top: 30vh; animation-delay: 4s; }
-    .hacker-icon:nth-child(4) { left: 80vw; top: 60vh; animation-delay: 6s; }
-    .hacker-icon:nth-child(5) { left: 40vw; top: 80vh; animation-delay: 8s; }
-    .hacker-icon:nth-child(6) { left: 10vw; top: 60vh; animation-delay: 10s; }
-    @keyframes floatHacker {
-        0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.7; }
-        50% { transform: translateY(-40px) scale(1.1) rotate(8deg); opacity: 1; }
-        100% { transform: translateY(0) scale(1) rotate(-8deg); opacity: 0.7; }
-    }
-    </style>
-
-    <script>
-    // Inserta iconos SVG de hackers animados en el fondo
-    globalThis.addEventListener('DOMContentLoaded', function() {
-        const bg = document.getElementById('hacker-bg');
-        if (bg) {
-            for (let i = 1; i <= 6; i++) {
-                const div = document.createElement('div');
-                div.className = 'hacker-icon';
-                div.style.left = (10 + Math.random()*80) + 'vw';
-                div.style.top = (5 + Math.random()*85) + 'vh';
-                div.innerHTML = `
-                <svg viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="27" cy="27" r="27" fill="#232526"/>
-                  <ellipse cx="27" cy="38" rx="13" ry="6" fill="#2a5298"/>
-                  <rect x="13" y="18" width="28" height="14" rx="7" fill="#fff" stroke="#2a5298" stroke-width="2"/>
-                  <ellipse cx="20" cy="25" rx="3" ry="4" fill="#232526"/>
-                  <ellipse cx="34" cy="25" rx="3" ry="4" fill="#232526"/>
-                  <rect x="22" y="30" width="10" height="2" rx="1" fill="#2a5298"/>
-                  <rect x="18" y="13" width="18" height="6" rx="3" fill="#2a5298"/>
-                  <rect x="21" y="15" width="12" height="2" rx="1" fill="#fff"/>
-                </svg>
-                `;
-                bg.appendChild(div);
-            }
-        }
-    });
-    </script>
-
-    <div style="display:flex; min-height:100vh; position:relative; z-index:1;">
-        <!-- Sidebar -->
-        <nav style="width:230px; background:#2a5298; color:#fff; display:flex; flex-direction:column; align-items:center; padding:2rem 0; box-shadow:2px 0 10px rgba(44,62,80,0.07); position:sticky; top:0; height:100vh;">
-            <div style="width:100%; display:flex; flex-direction:column; flex:1;">
-                <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:2.5rem;">
-                    <img src="/static/img/mentora.png" alt="Logo MenTora" class="sidebar-logo" onerror="this.onerror=null;this.src='/static/img/mantora.png';">
-                    <div style="font-size:1.3rem; font-weight:bold; letter-spacing:1px;">MenTora Admin</div>
-                </div>
-                <div style="width:100%; display:flex; flex-direction:column;">
-                    <a href="#seccion-estadisticas" class="nav-link">Estadísticas</a>
-                    <a href="#seccion-usuarios" class="nav-link">Usuarios</a>
-                    <a href="#seccion-quizzes" class="nav-link">Quizzes</a>
-                    <a href="#seccion-preguntas" class="nav-link">Preguntas</a>
-                    <a href="#seccion-logros" class="nav-link">Logros</a>
-                    <a href="#seccion-reportes" class="nav-link">Reportes</a>
-                    <a href="#seccion-mensajes" class="nav-link">Mensajes</a>
-                    <a href="#seccion-seguridad" class="nav-link">Seguridad</a>
-                </div>
-            </div>
-            <div style="width:100%; display:flex; flex-direction:column;">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <img src="/static/img/mentora1.png" alt="MenTora Logo" onerror="this.src='/static/img/mentora.png'">
+            <span>MENTORA ADMIN</span>
+        </a>
+        <button id="navToggle" class="menu-button" aria-label="Abrir menú">
+            <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#seccion-estadisticas"><i class="fa-solid fa-chart-bar"></i> ESTADÍSTICAS</a></li>
+            <li><a href="#seccion-usuarios"><i class="fa-solid fa-users"></i> USUARIOS</a></li>
+            <li><a href="#seccion-quizzes"><i class="fa-solid fa-clipboard-question"></i> QUIZZES</a></li>
+            <li><a href="#seccion-preguntas"><i class="fa-solid fa-circle-question"></i> PREGUNTAS</a></li>
+            <li><a href="#seccion-logros"><i class="fa-solid fa-trophy"></i> LOGROS</a></li>
+            <li><a href="#seccion-reportes"><i class="fa-solid fa-chart-line"></i> REPORTES</a></li>
+            <li><a href="#seccion-mensajes"><i class="fa-solid fa-envelope"></i> MENSAJES</a></li>
+            <li><a href="#seccion-seguridad"><i class="fa-solid fa-lock"></i> SEGURIDAD</a></li>
+            <li>
                 <form id="logoutForm" method="POST" action="/logout" style="margin:0;">
-                    <button id="logoutBtn" class="logout-btn" type="button">Cerrar sesión</button>
+                    <button id="logoutBtn" class="logout-btn-nav" type="button">CERRAR SESIÓN</button>
                 </form>
-            </div>
-</main>
+            </li>
+        </ul>
+    </nav>
 
-    <!-- Overlay desenfoque tecnonauta -->
-    <div id="blurOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10001;background:rgba(44,62,80,0.18);backdrop-filter:blur(7px) brightness(0.98);opacity:0;pointer-events:none;transition:opacity 0.3s;"></div>
-    <!-- Modal tecnonauta de cierre de sesión -->
-    <div id="logoutModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(44,62,80,0.38);z-index:10002;justify-content:center;align-items:center;">
-        <div style="background:rgba(34,40,49,0.97);color:#ffe066;padding:2.5rem 2.5rem 2rem 2.5rem;border-radius:28px;box-shadow:0 0 64px #ffe066cc,0 0 32px #2a5298cc;min-width:370px;text-align:center;position:relative;border:3px solid #ffe066;font-family:'Orbitron',Arial,sans-serif;letter-spacing:2px;animation:modalPop 0.7s cubic-bezier(.4,0,.2,1);backdrop-filter:blur(8px) saturate(1.3);z-index:10003;">
-            <div style="font-size:1.5rem;font-weight:900;margin-bottom:1.5rem;text-shadow:0 0 12px #ffe066,0 0 2px #2a5298;letter-spacing:2px;">¿Seguro que quieres cerrar sesión?</div>
-            <button id="confirmLogout" style="margin:0 0.7rem;padding:0.8rem 2.2rem;border-radius:12px;font-family:'Orbitron',Arial,sans-serif;font-weight:bold;font-size:1.15rem;border:none;box-shadow:0 2px 16px #ffe06655;background:linear-gradient(90deg,#e74c3c 60%,#ffe066 100%);color:#fffbe6;border:2px solid #e74c3c;text-shadow:0 0 8px #e74c3c99;transition:background 0.3s,color 0.3s,box-shadow 0.3s;">Sí, cerrar sesión</button>
-            <button id="cancelLogout" style="margin:0 0.7rem;padding:0.8rem 2.2rem;border-radius:12px;font-family:'Orbitron',Arial,sans-serif;font-weight:bold;font-size:1.15rem;border:none;box-shadow:0 2px 16px #ffe06655;background:linear-gradient(90deg,#2a5298 60%,#ffe066 100%);color:#ffe066;border:2px solid #2a5298;transition:background 0.3s,color 0.3s,box-shadow 0.3s;">Cancelar</button>
+    <!-- Modal de confirmación de logout -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fa-solid fa-sign-out-alt"></i> ¿Seguro que quieres cerrar sesión?</h3>
+            <p>Tu sesión se cerrará y deberás volver a iniciar sesión para acceder de nuevo.</p>
+            <div style="display:flex; gap:var(--spacing-md); justify-content:center; flex-wrap:wrap;">
+                <button id="confirmLogout" class="btn" style="background:#e74c3c;"><i class="fa-solid fa-check"></i> Sí, cerrar sesión</button>
+                <button id="cancelLogout" class="btn" style="background:var(--text-gray);"><i class="fa-solid fa-times"></i> Cancelar</button>
+            </div>
         </div>
     </div>
-    <style>
-    @keyframes modalPop {
-        0% { transform: scale(0.7) translateY(60px); opacity: 0; }
-        100% { transform: scale(1) translateY(0); opacity: 1; }
-    }
-    </style>
-    <script>
-    // Modal tecnonauta con overlay y glassmorphism
-    const logoutBtn = document.getElementById('logoutBtn');
-    const logoutModal = document.getElementById('logoutModal');
-    const confirmLogout = document.getElementById('confirmLogout');
-    const cancelLogout = document.getElementById('cancelLogout');
-    const blurOverlay = document.getElementById('blurOverlay');
-    function showLogoutModal() {
-        blurOverlay.style.opacity = '1';
-        blurOverlay.style.pointerEvents = 'auto';
-        logoutModal.style.display = 'flex';
-    }
-    function hideLogoutModal() {
-        blurOverlay.style.opacity = '0';
-        blurOverlay.style.pointerEvents = 'none';
-        logoutModal.style.display = 'none';
-    }
-    if (logoutBtn) {
-        logoutBtn.onclick = showLogoutModal;
-    }
-    if (cancelLogout) {
-        cancelLogout.onclick = hideLogoutModal;
-    }
-    if (confirmLogout) {
-        confirmLogout.onclick = function() {
-            document.getElementById('logoutForm').submit();
-        };
-    }
-    // Prevenir volver atrás después de logout (historial y caché)
-    globalThis.addEventListener('pageshow', function(event) {
-        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-            window.location.href = '/login';
-        }
-    });
-    // Forzar no-caché en todas las páginas admin
-    if (globalThis.location.pathname.startsWith('/admin')) {
-        globalThis.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('meta[http-equiv="Cache-Control"]') || document.head.insertAdjacentHTML('beforeend', '<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">');
-            document.querySelector('meta[http-equiv="Pragma"]') || document.head.insertAdjacentHTML('beforeend', '<meta http-equiv="Pragma" content="no-cache">');
-            document.querySelector('meta[http-equiv="Expires"]') || document.head.insertAdjacentHTML('beforeend', '<meta http-equiv="Expires" content="0">');
-        });
-    }
-    </script>
-        </nav>
-        <!-- Contenido principal -->
-        <main style="flex:1; padding:2.5rem 2rem; max-width:1100px; margin:0 auto;">
-            <!-- Estadísticas -->
-            <section id="seccion-estadisticas">
-                <div class="section">
-                    <h2>📊 Estadísticas Generales</h2>
-                    <div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center; justify-content:center;">
-                        <div style="flex:1; min-width:260px;">
-                            <canvas id="statsBarChart" height="180"></canvas>
-                        </div>
-                        <div style="flex:1; min-width:260px;">
-                            <canvas id="statsPieChart" height="180"></canvas>
-                        </div>
+
+    <div class="container">
+        <h1><i class="fa-solid fa-user-shield"></i> PANEL DE ADMINISTRACIÓN</h1>
+
+        <!-- Estadísticas -->
+        <section id="seccion-estadisticas">
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <i class="fa-solid fa-users"></i>
+                    <div class="count">{{ total_users|default(0) }}</div>
+                    <div class="label">Usuarios</div>
+                </div>
+                <div class="dashboard-card">
+                    <i class="fa-solid fa-clipboard-question"></i>
+                    <div class="count">{{ total_quizzes|default(0) }}</div>
+                    <div class="label">Quizzes</div>
+                </div>
+                <div class="dashboard-card">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <div class="count">{{ total_questions|default(0) }}</div>
+                    <div class="label">Preguntas</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fa-solid fa-chart-pie"></i> Estadísticas Generales</h2>
+                <div style="display:flex; flex-wrap:wrap; gap:var(--spacing-lg); align-items:center; justify-content:center;">
+                    <div style="flex:1; min-width:260px;">
+                        <canvas id="statsBarChart" height="180"></canvas>
+                    </div>
+                    <div style="flex:1; min-width:260px;">
+                        <canvas id="statsPieChart" height="180"></canvas>
                     </div>
                 </div>
-            </section>
-                        <!-- Datos desde Flask para JS -->
-                        <script id="flask-data" type="application/json">
-                        {
-                            "totalUsers": {{ total_users|default(0)|tojson|safe }},
-                            "totalQuizzes": {{ total_quizzes|default(0)|tojson|safe }},
-                            "totalQuestions": {{ total_questions|default(0)|tojson|safe }}
-                        }
-                        </script>
-                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                        <script>
-                        
-                        const flaskData = JSON.parse(document.getElementById('flask-data').textContent);
-                        const totalUsers = flaskData.totalUsers;
-                        const totalQuizzes = flaskData.totalQuizzes;
-                        const totalQuestions = flaskData.totalQuestions;
+            </div>
+        </section>
 
-            // Gráfica de barras
-            const ctxBar = document.getElementById('statsBarChart').getContext('2d');
-            new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['Usuarios', 'Quizzes', 'Preguntas'],
-                    datasets: [{
-                        label: 'Cantidad',
-                        data: [totalUsers, totalQuizzes, totalQuestions],
-                        backgroundColor: [
-                            '#2a5298',
-                            '#ffe066',
-                            '#1e3c72'
-                        ],
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: true, text: 'Totales del sistema', color: '#2a5298', font: { size: 18, weight: 'bold' } }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { color: '#2a5298', font: { weight: 'bold' } } },
-                        x: { ticks: { color: '#2a5298', font: { weight: 'bold' } } }
-                    }
-                }
-            });
-
-            // Gráfica de pastel
-            const ctxPie = document.getElementById('statsPieChart').getContext('2d');
-            new Chart(ctxPie, {
-                type: 'pie',
-                data: {
-                    labels: ['Usuarios', 'Quizzes', 'Preguntas'],
-                    datasets: [{
-                        data: [totalUsers, totalQuizzes, totalQuestions],
-                        backgroundColor: [
-                            '#2a5298',
-                            '#ffe066',
-                            '#1e3c72'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#2a5298', font: { weight: 'bold' } } },
-                        title: { display: true, text: 'Distribución', color: '#2a5298', font: { size: 18, weight: 'bold' } }
-                    }
-                }
-            });
-            </script>
-            <!-- Usuarios -->
-            <section id="seccion-usuarios">
-                <div class="section">
-                    <h2>👥 Gestión de Usuarios</h2>
-                    <!-- Formulario para agregar/editar usuario -->
-                    <form method="POST" action="/admin/create_or_update_user" style="margin-bottom:2rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                        <!-- CSRF token removed -->
-                        <input type="hidden" name="user_id" value="{{ user_to_edit.id if user_to_edit else '' }}">
-                        <div style="flex:1; min-width:180px;">
-                            <label for="username" style="font-weight:bold;">Usuario:</label>
-                            <input type="text" id="username" name="username" required value="{{ user_to_edit.username if user_to_edit else '' }}" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:1; min-width:180px;">
-                            <label for="email" style="font-weight:bold;">Email:</label>
-                            <input type="email" id="email" name="email" required value="{{ user_to_edit.email if user_to_edit else '' }}" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:1; min-width:180px;">
-                            <label for="area" style="font-weight:bold;">Área:</label>
-                            <input type="text" id="area" name="area" required value="{{ user_to_edit.area if user_to_edit else '' }}" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:1; min-width:120px;">
-                            <label for="points" style="font-weight:bold;">Puntos:</label>
-                            <input type="number" id="points" name="points" min="0" value="{{ user_to_edit.points if user_to_edit else 0 }}" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:1; min-width:120px;">
-                            <label for="level" style="font-weight:bold;">Nivel:</label>
-                            <input type="number" id="level" name="level" min="1" value="{{ user_to_edit.level if user_to_edit else 1 }}" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:1; min-width:180px;">
-                            <label for="password" style="font-weight:bold;">Contraseña:</label>
-                            <input type="password" id="password" name="password" {% if not user_to_edit %}required{% endif %} autocomplete="new-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <button type="submit">{{ 'Actualizar' if user_to_edit else 'Agregar' }} usuario</button>
+        <!-- Usuarios -->
+        <section id="seccion-usuarios">
+            <div class="section">
+                <h2><i class="fa-solid fa-user-friends"></i> Gestión de Usuarios</h2>
+                <form method="POST" action="/admin/create_or_update_user" class="admin-form">
+                    <input type="hidden" name="user_id" value="{{ user_to_edit.id if user_to_edit else '' }}">
+                    <div>
+                        <label for="username">Usuario:</label>
+                        <input type="text" id="username" name="username" required value="{{ user_to_edit.username if user_to_edit else '' }}">
+                    </div>
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required value="{{ user_to_edit.email if user_to_edit else '' }}">
+                    </div>
+                    <div>
+                        <label for="area">Área:</label>
+                        <input type="text" id="area" name="area" required value="{{ user_to_edit.area if user_to_edit else '' }}">
+                    </div>
+                    <div>
+                        <label for="points">Puntos:</label>
+                        <input type="number" id="points" name="points" min="0" value="{{ user_to_edit.points if user_to_edit else 0 }}">
+                    </div>
+                    <div>
+                        <label for="level">Nivel:</label>
+                        <input type="number" id="level" name="level" min="1" value="{{ user_to_edit.level if user_to_edit else 1 }}">
+                    </div>
+                    <div>
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" name="password" {% if not user_to_edit %}required{% endif %} autocomplete="new-password">
+                    </div>
+                    <div style="flex-basis: 100%; display:flex; gap:var(--spacing-sm); align-items:center;">
+                        <button type="submit"><i class="fa-solid fa-save"></i> {{ 'Actualizar' if user_to_edit else 'Agregar' }} usuario</button>
                         {% if user_to_edit %}
-                        <a href="/admin/clear_user_edit" style="margin-left:1rem; color:#e67e22; font-weight:bold;">Cancelar edición</a>
+                        <a href="/admin/clear_user_edit" class="btn" style="background:var(--text-gray);"><i class="fa-solid fa-times"></i> Cancelar edición</a>
                         {% endif %}
-                    </form>
-                    <table style="width:100%; border-collapse:collapse; margin-top:1.5rem;">
+                    </div>
+                </form>
+
+                <div class="table-wrapper">
+                    <table>
                         <thead>
-                            <tr style="background:#e0e7ef; color:#2a5298;">
-                                <th style="padding:0.7rem;">Usuario</th>
-                                <th style="padding:0.7rem;">Email</th>
-                                <th style="padding:0.7rem;">Área</th>
-                                <th style="padding:0.7rem;">Puntos</th>
-                                <th style="padding:0.7rem;">Nivel</th>
-                                <th style="padding:0.7rem;">Estado</th>
-                                <th style="padding:0.7rem;">Acciones</th>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Área</th>
+                                <th>Puntos</th>
+                                <th>Nivel</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for u in users %}
-                            <tr style="background:#fff; color:#2c3e50;">
-                                <td style="padding:0.6rem;">{{ u.username }}</td>
-                                <td style="padding:0.6rem;">{{ u.email }}</td>
-                                <td style="padding:0.6rem;">{{ u.area }}</td>
-                                <td style="padding:0.6rem; text-align:center;">{{ u.points }}</td>
-                                <td style="padding:0.6rem; text-align:center;">{{ u.level }}</td>
-                                <td style="padding:0.6rem; text-align:center;">{% if u.is_blocked %}<span style="color:#e74c3c; font-weight:bold;">Bloqueado</span>{% else %}<span style="color:#117864; font-weight:bold;">Activo</span>{% endif %}</td>
-                                <td style="padding:0.6rem; text-align:center;">
-                                    <a href="/admin/edit_user/{{ u.id }}" style="color:#2a5298; font-weight:bold; margin-right:0.7rem; text-decoration:none;">Editar</a>
+                            <tr>
+                                <td>{{ u.username }}</td>
+                                <td>{{ u.email }}</td>
+                                <td>{{ u.area }}</td>
+                                <td>{{ u.points }}</td>
+                                <td>{{ u.level }}</td>
+                                <td>{% if u.is_blocked %}<span style="color:#e74c3c; font-weight:bold;">Bloqueado</span>{% else %}<span style="color:#28a745; font-weight:bold;">Activo</span>{% endif %}</td>
+                                <td>
+                                    <a href="/admin/edit_user/{{ u.id }}" class="btn" style="padding:0.5rem 1rem;"><i class="fa-solid fa-edit"></i> Editar</a>
                                     <form method="POST" action="/admin/delete_user/{{ u.id }}" style="display:inline;">
                                         {% if csrf_token %}{{ csrf_token() }}{% endif %}
-                                        <button type="submit" style="background:none; border:none; color:#e74c3c; font-weight:bold; margin-right:0.7rem; cursor:pointer;">Eliminar</button>
+                                        <button type="submit" style="background:#e74c3c; padding:0.5rem 1rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
                                     </form>
                                     <form method="POST" action="/admin/toggle_block_user/{{ u.id }}" style="display:inline;">
                                         {% if csrf_token %}{{ csrf_token() }}{% endif %}
                                         {% if u.is_blocked %}
-                                        <button type="submit" style="background:none; border:none; color:#117864; font-weight:bold; cursor:pointer;">Desbloquear</button>
+                                        <button type="submit" style="background:#28a745; padding:0.5rem 1rem;"><i class="fa-solid fa-unlock"></i> Desbloquear</button>
                                         {% else %}
-                                        <button type="submit" style="background:none; border:none; color:#e67e22; font-weight:bold; cursor:pointer;">Bloquear</button>
+                                        <button type="submit" style="background:#ff9800; padding:0.5rem 1rem;"><i class="fa-solid fa-lock"></i> Bloquear</button>
                                         {% endif %}
                                     </form>
                                 </td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="7" style="text-align:center; color:#7f8c8d; padding:1.2rem;">No hay usuarios registrados.</td></tr>
+                            <tr><td colspan="7" class="empty-row">No hay usuarios registrados.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </section>
-            <!-- Juegos -->
-            <section id="seccion-juegos">
-                <div class="section">
-                    <h2>🎮 Gestión de Juegos</h2>
-                    <!-- Formulario para agregar juego -->
-                    <form method="POST" action="/admin/create_game" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                        <!-- CSRF token removed -->
-                        <input type="hidden" name="game_id" value="{{ game_to_edit.id if game_to_edit else '' }}">
-                        <div style="flex:1; min-width:160px;">
-                            <label for="game_name" style="font-weight:bold;">Nombre del Juego:</label>
-                            <input type="text" id="game_name" name="game_name" value="{{ game_to_edit.name if game_to_edit else '' }}" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:220px;">
-                            <label for="game_description" style="font-weight:bold;">Descripción:</label>
-                            <input type="text" id="game_description" name="game_description" value="{{ game_to_edit.description if game_to_edit else '' }}" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:220px;">
-                            <label for="game_rules" style="font-weight:bold;">Reglas:</label>
-                            <input type="text" id="game_rules" name="game_rules" value="{{ game_to_edit.rules if game_to_edit else '' }}" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <button type="submit" style="margin-top:1.2rem;">{{ 'Actualizar' if game_to_edit else 'Agregar' }} Juego</button>
+            </div>
+        </section>
+
+        <!-- Juegos -->
+        <section id="seccion-juegos">
+            <div class="section">
+                <h2><i class="fa-solid fa-gamepad"></i> Gestión de Juegos</h2>
+                <form method="POST" action="/admin/create_game" class="admin-form">
+                    <input type="hidden" name="game_id" value="{{ game_to_edit.id if game_to_edit else '' }}">
+                    <div>
+                        <label for="game_name">Nombre del Juego:</label>
+                        <input type="text" id="game_name" name="game_name" value="{{ game_to_edit.name if game_to_edit else '' }}" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="game_description">Descripción:</label>
+                        <input type="text" id="game_description" name="game_description" value="{{ game_to_edit.description if game_to_edit else '' }}" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="game_rules">Reglas:</label>
+                        <input type="text" id="game_rules" name="game_rules" value="{{ game_to_edit.rules if game_to_edit else '' }}">
+                    </div>
+                    <div style="flex-basis: 100%; display:flex; gap:var(--spacing-sm);">
+                        <button type="submit"><i class="fa-solid fa-save"></i> {{ 'Actualizar' if game_to_edit else 'Agregar' }} Juego</button>
                         {% if game_to_edit %}
-                        <a href="/admin/clear_game_edit" style="margin-left:1rem; color:#e67e22; font-weight:bold;">Cancelar edición</a>
+                        <a href="/admin/clear_game_edit" class="btn" style="background:var(--text-gray);"><i class="fa-solid fa-times"></i> Cancelar edición</a>
                         {% endif %}
-                    </form>
-                    <!-- Lista de juegos existentes -->
-                    <h3 style="margin-top:1.5rem;">Juegos Agregados</h3>
-                    <table style="width:100%; border-collapse:collapse; margin-top:0.7rem;">
+                    </div>
+                </form>
+
+                <h3 style="margin-top:var(--spacing-lg);">Juegos Agregados</h3>
+                <div class="table-wrapper">
+                    <table>
                         <thead>
-                            <tr style="background:#e0e7ef; color:#2a5298;">
-                                <th style="padding:0.7rem;">Nombre</th>
-                                <th style="padding:0.7rem;">Tipo</th>
-                                <th style="padding:0.7rem;">Descripción</th>
-                                <th style="padding:0.7rem;">Reglas</th>
-                                <th style="padding:0.7rem;">Fecha</th>
-                                <th style="padding:0.7rem;">Acciones</th>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Reglas</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for game in games %}
-                            <tr style="background:#fff; color:#2c3e50;">
-                                <td style="padding:0.6rem;">{{ game.name }}</td>
-                                <td style="padding:0.6rem;">{{ game.type or 'N/A' }}</td>
-                                <td style="padding:0.6rem;">{{ game.description }}</td>
-                                <td style="padding:0.6rem;">{{ game.rules or 'N/A' }}</td>
-                                <td style="padding:0.6rem;">{{ game.created_at.strftime('%Y-%m-%d') if game.created_at else '' }}</td>
-                                <td style="padding:0.6rem; text-align:center;">
-                                    <a href="/admin/edit_game/{{ game.id }}" style="color:#2a5298; font-weight:bold; margin-right:0.7rem; text-decoration:none;">Editar</a>
+                            <tr>
+                                <td>{{ game.name }}</td>
+                                <td>{{ game.type or 'N/A' }}</td>
+                                <td>{{ game.description }}</td>
+                                <td>{{ game.rules or 'N/A' }}</td>
+                                <td>{{ game.created_at.strftime('%Y-%m-%d') if game.created_at else '' }}</td>
+                                <td>
+                                    <a href="/admin/edit_game/{{ game.id }}" class="btn" style="padding:0.5rem 1rem;"><i class="fa-solid fa-edit"></i> Editar</a>
                                     <form method="POST" action="/admin/delete_game/{{ game.id }}" style="display:inline;">
                                         {% if csrf_token %}{{ csrf_token() }}{% endif %}
-                                        <button type="submit" style="background:none; border:none; color:#e74c3c; font-weight:bold; margin-right:0.7rem; cursor:pointer;">Eliminar</button>
+                                        <button type="submit" style="background:#e74c3c; padding:0.5rem 1rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="6" style="text-align:center; color:#7f8c8d; padding:1.2rem;">No hay juegos registrados.</td></tr>
+                            <tr><td colspan="6" class="empty-row">No hay juegos registrados.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Quizzes -->
-            <section id="seccion-quizzes">
-                <div class="section">
-                    <h2>📝 Gestión de Quizzes</h2>
-                    <!-- Formulario para agregar quiz -->
-                    <form method="POST" action="/admin/create_quiz" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                <!-- CSRF token removed -->
-                        <div style="flex:1; min-width:160px;">
-                            <label for="quiz_name" style="font-weight:bold;">Nombre del Quiz:</label>
-                            <input type="text" id="quiz_name" name="quiz_name" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:220px;">
-                            <label for="quiz_area" style="font-weight:bold;">Área:</label>
-                            <input type="text" id="quiz_area" name="quiz_area" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:220px;">
-                            <label for="quiz_description" style="font-weight:bold;">Descripción:</label>
-                            <input type="text" id="quiz_description" name="quiz_description" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <button type="submit" style="margin-top:1.2rem;">Agregar Quiz</button>
-                    </form>
-                    <!-- Lista de quizzes existentes -->
-                    <h3 style="margin-top:1.5rem;">Quizzes Agregados</h3>
-                    <table style="width:100%; border-collapse:collapse; margin-top:0.7rem;">
+        <!-- Quizzes -->
+        <section id="seccion-quizzes">
+            <div class="section">
+                <h2><i class="fa-solid fa-clipboard-list"></i> Gestión de Quizzes</h2>
+                <form method="POST" action="/admin/create_quiz" class="admin-form">
+                    <div>
+                        <label for="quiz_name">Nombre del Quiz:</label>
+                        <input type="text" id="quiz_name" name="quiz_name" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="quiz_area">Área:</label>
+                        <input type="text" id="quiz_area" name="quiz_area" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="quiz_description">Descripción:</label>
+                        <input type="text" id="quiz_description" name="quiz_description" required>
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Agregar Quiz</button>
+                </form>
+
+                <h3 style="margin-top:var(--spacing-lg);">Quizzes Agregados</h3>
+                <div class="table-wrapper">
+                    <table>
                         <thead>
-                            <tr style="background:#e0e7ef; color:#2a5298;">
-                                <th style="padding:0.7rem;">Nombre</th>
-                                <th style="padding:0.7rem;">Área</th>
-                                <th style="padding:0.7rem;">Descripción</th>
-                                <th style="padding:0.7rem;">Fecha</th>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Área</th>
+                                <th>Descripción</th>
+                                <th>Fecha</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for quiz in quizzes %}
-                            <tr style="background:#fff; color:#2c3e50;">
-                                <td style="padding:0.6rem;">{{ quiz.title }}</td>
-                                <td style="padding:0.6rem;">{{ quiz.area }}</td>
-                                <td style="padding:0.6rem;">{{ quiz.description }}</td>
-                                <td style="padding:0.6rem;">{{ quiz.created_at.strftime('%Y-%m-%d') if quiz.created_at else '' }}</td>
+                            <tr>
+                                <td>{{ quiz.title }}</td>
+                                <td>{{ quiz.area }}</td>
+                                <td>{{ quiz.description }}</td>
+                                <td>{{ quiz.created_at.strftime('%Y-%m-%d') if quiz.created_at else '' }}</td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="4" style="text-align:center; color:#7f8c8d; padding:1.2rem;">No hay quizzes registrados.</td></tr>
+                            <tr><td colspan="4" class="empty-row">No hay quizzes registrados.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </section>
-            <!-- Preguntas -->
-            <section id="seccion-preguntas">
-                <div class="section">
-                    <h2>❓ Gestión de Preguntas</h2>
-                    <form method="POST" action="/admin/add_question" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                <!-- CSRF token removed -->
-                        <div style="flex:2; min-width:220px;">
-                            <label for="quiz_id" style="font-weight:bold;">Quiz:</label>
-                            <select id="quiz_id" name="quiz_id" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                                <option value="">Selecciona un quiz</option>
-                                {% for quiz in quizzes %}
-                                <option value="{{ quiz.id }}">{{ quiz.title }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div style="flex:3; min-width:260px;">
-                            <label for="question_text" style="font-weight:bold;">Pregunta:</label>
-                            <input type="text" id="question_text" name="question_text" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:180px;">
-                            <label for="option1" style="font-weight:bold;">Opción 1:</label>
-                            <input type="text" id="option1" name="option1" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:180px;">
-                            <label for="option2" style="font-weight:bold;">Opción 2:</label>
-                            <input type="text" id="option2" name="option2" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:180px;">
-                            <label for="option3" style="font-weight:bold;">Opción 3:</label>
-                            <input type="text" id="option3" name="option3" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:180px;">
-                            <label for="option4" style="font-weight:bold;">Opción 4:</label>
-                            <input type="text" id="option4" name="option4" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:2; min-width:180px;">
-                            <label for="correct_answer" style="font-weight:bold;">Respuesta Correcta:</label>
-                            <select id="correct_answer" name="correct_answer" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                                <option value="">Selecciona la respuesta correcta</option>
-                                <option value="1">Opción 1</option>
-                                <option value="2">Opción 2</option>
-                                <option value="3">Opción 3</option>
-                                <option value="4">Opción 4</option>
-                            </select>
-                        </div>
-                        <button type="submit" style="margin-top:1.2rem;">Agregar Pregunta</button>
-                    </form>
-                    <p style="color:#888;">Ejemplo de pregunta: ¿Cuál es la salida de <code>print(2+2)</code>? Opciones: 2, 4, 22, Error. Respuesta correcta: 4.</p>
-                </div>
-            </section>
-            <!-- Logros -->
-            <section id="seccion-logros">
-                <div class="section">
-                    <h2>🏅 Gestión de Logros/Insignias</h2>
-                    <!-- Formulario para agregar/actualizar logro -->
-                    <form method="POST" action="/admin/create_or_update_achievement" enctype="multipart/form-data" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                <!-- CSRF token removed -->
-                        <input type="hidden" name="achievement_id" value="{{ achievement_to_edit.id if achievement_to_edit else '' }}">
-                        <div style="flex:2; min-width:180px;">
-                            <label for="achievement_name" style="font-weight:bold;">Nombre:</label>
-                            <input type="text" id="achievement_name" name="achievement_name" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;" value="{{ achievement_to_edit.name if achievement_to_edit else '' }}">
-                        </div>
-                        <div style="flex:3; min-width:220px;">
-                            <label for="achievement_description" style="font-weight:bold;">Descripción:</label>
-                            <input type="text" id="achievement_description" name="achievement_description" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;" value="{{ achievement_to_edit.description if achievement_to_edit else '' }}">
-                        </div>
-                        <div style="flex:2; min-width:180px;">
-                            <label for="achievement_image" style="font-weight:bold;">Imagen:</label>
-                            <input type="file" id="achievement_image" name="achievement_image" accept="image/*" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                            {% if achievement_to_edit and achievement_to_edit.image_url %}
-                                <img src="{{ achievement_to_edit.image_url }}" alt="Imagen logro" style="max-width:60px; margin-top:0.5rem; border-radius:8px; border:1px solid #eee;">
-                            {% endif %}
-                        </div>
-                        <button type="submit" style="margin-top:1.2rem;">{{ 'Actualizar' if achievement_to_edit else 'Agregar Logro' }}</button>
-                        {% if achievement_to_edit %}
-                        <a href="/admin/clear_achievement_edit" style="margin-top:1.2rem; color:#e67e22; font-weight:bold; text-decoration:none;">Cancelar edición</a>
+            </div>
+        </section>
+
+        <!-- Preguntas -->
+        <section id="seccion-preguntas">
+            <div class="section">
+                <h2><i class="fa-solid fa-question-circle"></i> Gestión de Preguntas</h2>
+                <form method="POST" action="/admin/add_question" class="admin-form">
+                    <div style="flex:2;">
+                        <label for="quiz_id">Quiz:</label>
+                        <select id="quiz_id" name="quiz_id" required>
+                            <option value="">Selecciona un quiz</option>
+                            {% for quiz in quizzes %}
+                            <option value="{{ quiz.id }}">{{ quiz.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="flex:3;">
+                        <label for="question_text">Pregunta:</label>
+                        <input type="text" id="question_text" name="question_text" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="option1">Opción 1:</label>
+                        <input type="text" id="option1" name="option1" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="option2">Opción 2:</label>
+                        <input type="text" id="option2" name="option2" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="option3">Opción 3:</label>
+                        <input type="text" id="option3" name="option3" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="option4">Opción 4:</label>
+                        <input type="text" id="option4" name="option4" required>
+                    </div>
+                    <div style="flex:2;">
+                        <label for="correct_answer">Respuesta Correcta:</label>
+                        <select id="correct_answer" name="correct_answer" required>
+                            <option value="">Selecciona la respuesta correcta</option>
+                            <option value="1">Opción 1</option>
+                            <option value="2">Opción 2</option>
+                            <option value="3">Opción 3</option>
+                            <option value="4">Opción 4</option>
+                        </select>
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Agregar Pregunta</button>
+                </form>
+                <p style="color:var(--text-gray); margin-top:var(--spacing-sm);">Ejemplo de pregunta: ¿Cuál es la salida de <code>print(2+2)</code>? Opciones: 2, 4, 22, Error. Respuesta correcta: 4.</p>
+            </div>
+        </section>
+
+        <!-- Logros -->
+        <section id="seccion-logros">
+            <div class="section">
+                <h2><i class="fa-solid fa-award"></i> Gestión de Logros/Insignias</h2>
+                <form method="POST" action="/admin/create_or_update_achievement" enctype="multipart/form-data" class="admin-form">
+                    <input type="hidden" name="achievement_id" value="{{ achievement_to_edit.id if achievement_to_edit else '' }}">
+                    <div style="flex:2;">
+                        <label for="achievement_name">Nombre:</label>
+                        <input type="text" id="achievement_name" name="achievement_name" required value="{{ achievement_to_edit.name if achievement_to_edit else '' }}">
+                    </div>
+                    <div style="flex:3;">
+                        <label for="achievement_description">Descripción:</label>
+                        <input type="text" id="achievement_description" name="achievement_description" required value="{{ achievement_to_edit.description if achievement_to_edit else '' }}">
+                    </div>
+                    <div style="flex:2;">
+                        <label for="achievement_image">Imagen:</label>
+                        <input type="file" id="achievement_image" name="achievement_image" accept="image/*">
+                        {% if achievement_to_edit and achievement_to_edit.image_url %}
+                            <img src="{{ achievement_to_edit.image_url }}" alt="Imagen logro" style="max-width:60px; margin-top:0.5rem; border-radius:var(--radius-sm); border:1px solid var(--accent-color);">
                         {% endif %}
-                    </form>
-                    <!-- Lista de logros existentes -->
-                    <h3 style="margin-top:1.5rem;">Logros/Insignias Registrados</h3>
-                    <table style="width:100%; border-collapse:collapse; margin-top:0.7rem;">
+                    </div>
+                    <div style="flex-basis: 100%; display:flex; gap:var(--spacing-sm);">
+                        <button type="submit"><i class="fa-solid fa-save"></i> {{ 'Actualizar' if achievement_to_edit else 'Agregar Logro' }}</button>
+                        {% if achievement_to_edit %}
+                        <a href="/admin/clear_achievement_edit" class="btn" style="background:var(--text-gray);"><i class="fa-solid fa-times"></i> Cancelar edición</a>
+                        {% endif %}
+                    </div>
+                </form>
+
+                <h3 style="margin-top:var(--spacing-lg);">Logros/Insignias Registrados</h3>
+                <div class="table-wrapper">
+                    <table>
                         <thead>
-                            <tr style="background:#e0e7ef; color:#2a5298;">
-                                <th style="padding:0.7rem;">Imagen</th>
-                                <th style="padding:0.7rem;">Nombre</th>
-                                <th style="padding:0.7rem;">Descripción</th>
-                                <th style="padding:0.7rem;">Acciones</th>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for ach in achievements %}
-                            <tr style="background:#fff; color:#2c3e50;">
-                                <td style="padding:0.6rem; text-align:center;">
+                            <tr>
+                                <td>
                                     {% if ach.image_url %}
-                                    <img src="{{ ach.image_url }}" alt="img" style="max-width:48px; border-radius:8px; border:1px solid #eee;">
+                                    <img src="{{ ach.image_url }}" alt="img" style="max-width:48px; border-radius:var(--radius-sm); border:1px solid var(--accent-color);">
                                     {% else %}-{% endif %}
                                 </td>
-                                <td style="padding:0.6rem;">{{ ach.name }}</td>
-                                <td style="padding:0.6rem;">{{ ach.description }}</td>
-                                <td style="padding:0.6rem; text-align:center;">
+                                <td>{{ ach.name }}</td>
+                                <td>{{ ach.description }}</td>
+                                <td>
                                     <form method="GET" action="/admin/edit_achievement/{{ ach.id }}" style="display:inline;">
-                                        <button type="submit" style="background:none; border:none; color:#2a5298; font-weight:bold; margin-right:0.7rem; cursor:pointer;">Editar</button>
+                                        <button type="submit" style="padding:0.5rem 1rem;"><i class="fa-solid fa-edit"></i> Editar</button>
                                     </form>
                                     <form method="POST" action="/admin/delete_achievement/{{ ach.id }}" style="display:inline;">
-                                                                                {% if csrf_token %}{{ csrf_token() }}{% endif %}
-                                        <button type="submit" style="background:none; border:none; color:#e74c3c; font-weight:bold; cursor:pointer;">Eliminar</button>
+                                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                        <button type="submit" style="background:#e74c3c; padding:0.5rem 1rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="4" style="text-align:center; color:#7f8c8d; padding:1.2rem;">No hay logros registrados.</td></tr>
+                            <tr><td colspan="4" class="empty-row">No hay logros registrados.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
 
-                    <!-- Formulario para asignar logro a usuario -->
-                    <div style="margin:2rem 0;">
-                        <h4 style="margin-bottom:0.7rem;">Asignar logro/insignia a usuario</h4>
-                        <form method="POST" action="/admin/assign_achievement" style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
-                                                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
-                            <div>
-                                <label for="user_id" style="font-weight:bold;">Usuario:</label>
-                                <select id="user_id" name="user_id" required style="padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1; min-width:160px;">
-                                    <option value="">Selecciona usuario</option>
-                                    {% for u in users %}
-                                    <option value="{{ u.id }}">{{ u.username }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div>
-                                <label for="badge_id" style="font-weight:bold;">Logro/Insignia:</label>
-                                <select id="badge_id" name="badge_id" required style="padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1; min-width:160px;">
-                                    <option value="">Selecciona logro</option>
-                                    {% for b in achievements %}
-                                    <option value="{{ b.id }}">{{ b.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button type="submit" style="margin-top:0;">Asignar logro</button>
-                        </form>
-                    </div>
-                </div>
-            </section>
-            <!-- Reportes -->
-            <section id="seccion-reportes">
-                <div class="section">
-                    <h2>📈 Panel de Reportes</h2>
-                    <h3 style="margin-top:1.2rem;">Desbloqueo de Logros/Insignias</h3>
-                    <table style="width:100%; border-collapse:collapse; margin-top:0.7rem;">
-                        <thead>
-                            <tr style="background:#e0e7ef; color:#2a5298;">
-                                <th style="padding:0.7rem;">Imagen</th>
-                                <th style="padding:0.7rem;">Nombre</th>
-                                <th style="padding:0.7rem;">Descripción</th>
-                                <th style="padding:0.7rem;">Usuarios que lo tienen</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for ach in achievements %}
-                            <tr style="background:#fff; color:#2c3e50;">
-                                <td style="padding:0.6rem; text-align:center;">
-                                    {% if ach.image_url %}
-                                    <img src="{{ ach.image_url }}" alt="img" style="max-width:48px; border-radius:8px; border:1px solid #eee;">
-                                    {% else %}-{% endif %}
-                                </td>
-                                <td style="padding:0.6rem;">{{ ach.name }}</td>
-                                <td style="padding:0.6rem;">{{ ach.description }}</td>
-                                <td style="padding:0.6rem; text-align:center; font-weight:bold;">{{ ach.achievements|length }}</td>
-                            </tr>
-                            {% else %}
-                            <tr><td colspan="4" style="text-align:center; color:#7f8c8d; padding:1.2rem;">No hay logros registrados.</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-            <!-- Mensajes -->
-            <section id="seccion-mensajes">
-                <div class="section">
-                    <h2>✉️ Mensajes/Notificaciones</h2>
-                    <!-- Formulario para enviar notificación -->
-                    <form method="POST" action="/admin/send_notification" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
-                                                <!-- CSRF token removed -->
-                        <div style="flex:2; min-width:220px;">
-                            <label for="notification_message" style="font-weight:bold;">Mensaje:</label>
-                            <input type="text" id="notification_message" name="notification_message" required style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="flex:1; min-width:180px;">
-                            <label for="notification_user" style="font-weight:bold;">Para:</label>
-                            <select id="notification_user" name="notification_user" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                                <option value="all">Todos los usuarios</option>
+                <div style="margin-top:var(--spacing-xl);">
+                    <h3>Asignar logro/insignia a usuario</h3>
+                    <form method="POST" action="/admin/assign_achievement" class="admin-form" style="margin-top:var(--spacing-md);">
+                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                        <div>
+                            <label for="user_id">Usuario:</label>
+                            <select id="user_id" name="user_id" required>
+                                <option value="">Selecciona usuario</option>
                                 {% for u in users %}
                                 <option value="{{ u.id }}">{{ u.username }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <button type="submit" style="margin-top:1.2rem;">Enviar Notificación</button>
+                        <div>
+                            <label for="badge_id">Logro/Insignia:</label>
+                            <select id="badge_id" name="badge_id" required>
+                                <option value="">Selecciona logro</option>
+                                {% for b in achievements %}
+                                <option value="{{ b.id }}">{{ b.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit"><i class="fa-solid fa-plus"></i> Asignar logro</button>
                     </form>
-                    <!-- Tabla de notificaciones enviadas -->
-                    <h3 style="margin-top:1.5rem;">Historial de Notificaciones</h3>
-                    <table style="width:100%; border-collapse:collapse; margin-top:0.7rem;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Reportes -->
+        <section id="seccion-reportes">
+            <div class="section">
+                <h2><i class="fa-solid fa-chart-simple"></i> Panel de Reportes</h2>
+                <h3 style="margin-top:var(--spacing-md);">Desbloqueo de Logros/Insignias</h3>
+                <div class="table-wrapper">
+                    <table>
                         <thead>
-                            <tr style="background:#e0e7ef; color:#2a5298;">
-                                <th style="padding:0.7rem;">Mensaje</th>
-                                <th style="padding:0.7rem;">Para</th>
-                                <th style="padding:0.7rem;">Fecha</th>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Usuarios que lo tienen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ach in achievements %}
+                            <tr>
+                                <td>
+                                    {% if ach.image_url %}
+                                    <img src="{{ ach.image_url }}" alt="img" style="max-width:48px; border-radius:var(--radius-sm); border:1px solid var(--accent-color);">
+                                    {% else %}-{% endif %}
+                                </td>
+                                <td>{{ ach.name }}</td>
+                                <td>{{ ach.description }}</td>
+                                <td><strong>{{ ach.achievements|length }}</strong></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="empty-row">No hay logros registrados.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mensajes -->
+        <section id="seccion-mensajes">
+            <div class="section">
+                <h2><i class="fa-solid fa-comments"></i> Mensajes/Notificaciones</h2>
+                <form method="POST" action="/admin/send_notification" class="admin-form">
+                    <div style="flex:2;">
+                        <label for="notification_message">Mensaje:</label>
+                        <input type="text" id="notification_message" name="notification_message" required>
+                    </div>
+                    <div>
+                        <label for="notification_user">Para:</label>
+                        <select id="notification_user" name="notification_user">
+                            <option value="all">Todos los usuarios</option>
+                            {% for u in users %}
+                            <option value="{{ u.id }}">{{ u.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-paper-plane"></i> Enviar Notificación</button>
+                </form>
+
+                <h3 style="margin-top:var(--spacing-lg);">Historial de Notificaciones</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mensaje</th>
+                                <th>Para</th>
+                                <th>Fecha</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for n in notifications %}
-                            <tr style="background:#fff; color:#2c3e50;">
-                                <td style="padding:0.6rem;">{{ n.message }}</td>
-                                <td style="padding:0.6rem;">{{ n.to_user if n.to_user else 'Todos' }}</td>
-                                <td style="padding:0.6rem;">{{ n.date_sent.strftime('%Y-%m-%d %H:%M') if n.date_sent else '' }}</td>
+                            <tr>
+                                <td>{{ n.message }}</td>
+                                <td>{{ n.to_user if n.to_user else 'Todos' }}</td>
+                                <td>{{ n.date_sent.strftime('%Y-%m-%d %H:%M') if n.date_sent else '' }}</td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="3" style="text-align:center; color:#7f8c8d; padding:1.2rem;">No hay notificaciones enviadas.</td></tr>
+                            <tr><td colspan="3" class="empty-row">No hay notificaciones enviadas.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </section>
-            <!-- Seguridad -->
-            <section id="seccion-seguridad">
-                <div class="section">
-                    <h2>🔒 Seguridad</h2>
-                    <!-- Formulario para cambiar contraseña de admin -->
-                    <form method="POST" action="/admin/change_password" style="max-width:400px; margin-bottom:2rem;">
-                                                <!-- CSRF token removed -->
-                        <h3 style="font-size:1.1rem; margin-bottom:0.7rem;">Cambiar contraseña de administrador</h3>
-                        <div style="margin-bottom:0.7rem;">
-                            <label for="current_password" style="font-weight:bold;">Contraseña actual:</label>
-                            <input type="password" id="current_password" name="current_password" required autocomplete="current-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="margin-bottom:0.7rem;">
-                            <label for="new_password" style="font-weight:bold;">Nueva contraseña:</label>
-                            <input type="password" id="new_password" name="new_password" required autocomplete="new-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <div style="margin-bottom:0.7rem;">
-                            <label for="confirm_password" style="font-weight:bold;">Confirmar nueva contraseña:</label>
-                            <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" style="width:100%; padding:0.5rem; border-radius:6px; border:1px solid #bfc9d1;">
-                        </div>
-                        <button type="submit">Actualizar contraseña</button>
-                    </form>
+            </div>
+        </section>
 
-                    <!-- Tabla de logs de acceso -->
-                    <h3 style="font-size:1.1rem; margin-bottom:0.7rem;">Logs de acceso recientes</h3>
-                    <table style="width:100%; border-collapse:collapse;">
+        <!-- Seguridad -->
+        <section id="seccion-seguridad">
+            <div class="section">
+                <h2><i class="fa-solid fa-shield-halved"></i> Seguridad</h2>
+                <form method="POST" action="/admin/change_password" style="max-width:500px; margin-bottom:var(--spacing-xl);">
+                    <h3 style="font-size:1.2rem; margin-bottom:var(--spacing-md);">Cambiar contraseña de administrador</h3>
+                    <div style="margin-bottom:var(--spacing-sm);">
+                        <label for="current_password" style="font-weight:600; color:var(--primary-color); display:block; margin-bottom:0.3rem;">Contraseña actual:</label>
+                        <input type="password" id="current_password" name="current_password" required autocomplete="current-password" style="width:100%; padding:0.6rem; border-radius:var(--radius-sm); border:2px solid var(--accent-color);">
+                    </div>
+                    <div style="margin-bottom:var(--spacing-sm);">
+                        <label for="new_password" style="font-weight:600; color:var(--primary-color); display:block; margin-bottom:0.3rem;">Nueva contraseña:</label>
+                        <input type="password" id="new_password" name="new_password" required autocomplete="new-password" style="width:100%; padding:0.6rem; border-radius:var(--radius-sm); border:2px solid var(--accent-color);">
+                    </div>
+                    <div style="margin-bottom:var(--spacing-md);">
+                        <label for="confirm_password" style="font-weight:600; color:var(--primary-color); display:block; margin-bottom:0.3rem;">Confirmar nueva contraseña:</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" style="width:100%; padding:0.6rem; border-radius:var(--radius-sm); border:2px solid var(--accent-color);">
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-key"></i> Actualizar contraseña</button>
+                </form>
+
+                <h3 style="font-size:1.2rem; margin-bottom:var(--spacing-md);">Logs de acceso recientes</h3>
+                <div class="table-wrapper">
+                    <table>
                         <thead>
-                            <tr style="background:#e0e7ef; color:#2a5298;">
-                                <th style="padding:0.7rem;">Usuario</th>
-                                <th style="padding:0.7rem;">IP</th>
-                                <th style="padding:0.7rem;">Fecha y hora</th>
-                                <th style="padding:0.7rem;">Éxito</th>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>IP</th>
+                                <th>Fecha y hora</th>
+                                <th>Éxito</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for log in access_logs %}
-                            <tr style="background:#fff; color:#2c3e50;">
-                                <td style="padding:0.6rem;">{{ log.username }}</td>
-                                <td style="padding:0.6rem;">{{ log.ip }}</td>
-                                <td style="padding:0.6rem;">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                                <td style="padding:0.6rem;">{{ 'Sí' if log.success else 'No' }}</td>
+                            <tr>
+                                <td>{{ log.username }}</td>
+                                <td>{{ log.ip }}</td>
+                                <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>{{ 'Sí' if log.success else 'No' }}</td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="4" style="text-align:center; color:#7f8c8d; padding:1.2rem;">No hay logs recientes.</td></tr>
+                            <tr><td colspan="4" class="empty-row">No hay logs recientes.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
     </div>
 
-    <script>
-    // Confirmaciones para acciones de usuarios
-    document.addEventListener('DOMContentLoaded', function() {
-        // Confirmación para eliminar usuarios
-        const deleteUserForms = document.querySelectorAll('form[action*="/admin/delete_user/"]');
-        deleteUserForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const userName = this.closest('tr').querySelector('td:first-child').textContent.trim();
-                if (confirm(`¿Estás seguro de que quieres eliminar el usuario "${userName}"? Esta acción no se puede deshacer.`)) {
-                    this.submit();
-                }
-            });
-        });
-
-        // Confirmación para bloquear/desbloquear usuarios
-        const blockUserForms = document.querySelectorAll('form[action*="/admin/toggle_block_user/"]');
-        blockUserForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const userName = this.closest('tr').querySelector('td:first-child').textContent.trim();
-                const button = this.querySelector('button[type="submit"]');
-                const action = button.textContent.trim().toLowerCase();
-                
-                if (confirm(`¿Estás seguro de que quieres ${action} el usuario "${userName}"?`)) {
-                    this.submit();
-                }
-            });
-        });
-
-        // Confirmación para eliminar juegos
-        const deleteGameForms = document.querySelectorAll('form[action*="/admin/delete_game/"]');
-        deleteGameForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const gameName = this.closest('tr').querySelector('td:first-child').textContent.trim();
-                if (confirm(`¿Estás seguro de que quieres eliminar el juego "${gameName}"? Esta acción no se puede deshacer.`)) {
-                    this.submit();
-                }
-            });
-        });
-    });
+    <!-- Datos desde Flask para JS -->
+    <script id="flask-data" type="application/json">
+    {
+        "totalUsers": {{ total_users|default(0)|tojson|safe }},
+        "totalQuizzes": {{ total_quizzes|default(0)|tojson|safe }},
+        "totalQuestions": {{ total_questions|default(0)|tojson|safe }}
+    }
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos de Flask
+        const flaskData = JSON.parse(document.getElementById('flask-data').textContent);
+        const totalUsers = flaskData.totalUsers;
+        const totalQuizzes = flaskData.totalQuizzes;
+        const totalQuestions = flaskData.totalQuestions;
+
+        // Gráfica de barras
+        const ctxBar = document.getElementById('statsBarChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Usuarios', 'Quizzes', 'Preguntas'],
+                datasets: [{
+                    label: 'Cantidad',
+                    data: [totalUsers, totalQuizzes, totalQuestions],
+                    backgroundColor: [
+                        '#6A2C3D',
+                        '#B57386',
+                        '#8A4255'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: 'Totales del sistema', color: '#6A2C3D', font: { size: 18, weight: 'bold' } }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#6A2C3D', font: { weight: 'bold' } } },
+                    x: { ticks: { color: '#6A2C3D', font: { weight: 'bold' } } }
+                }
+            }
+        });
+
+        // Gráfica de pastel
+        const ctxPie = document.getElementById('statsPieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['Usuarios', 'Quizzes', 'Preguntas'],
+                datasets: [{
+                    data: [totalUsers, totalQuizzes, totalQuestions],
+                    backgroundColor: [
+                        '#6A2C3D',
+                        '#B57386',
+                        '#8A4255'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#6A2C3D', font: { weight: 'bold' } } },
+                    title: { display: true, text: 'Distribución', color: '#6A2C3D', font: { size: 18, weight: 'bold' } }
+                }
+            }
+        });
+
+        // Modal de confirmación de logout
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutModal = document.getElementById('logoutModal');
+        const confirmLogout = document.getElementById('confirmLogout');
+        const cancelLogout = document.getElementById('cancelLogout');
+
+        if (logoutBtn && logoutModal && confirmLogout && cancelLogout) {
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                logoutModal.style.display = 'flex';
+            });
+
+            cancelLogout.addEventListener('click', function() {
+                logoutModal.style.display = 'none';
+            });
+
+            confirmLogout.addEventListener('click', function() {
+                document.getElementById('logoutForm').submit();
+            });
+        }
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    const navHeight = document.querySelector('.navbar').offsetHeight;
+                    const targetPosition = targetElement.offsetTop - navHeight - 20;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    // Close mobile menu if open
+                    const navLinks = document.getElementById('navLinks');
+                    if (navLinks && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        // Confirmaciones para acciones de usuarios
+        document.addEventListener('DOMContentLoaded', function() {
+            // Confirmación para eliminar usuarios
+            const deleteUserForms = document.querySelectorAll('form[action*="/admin/delete_user/"]');
+            deleteUserForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const userName = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                    if (confirm(`¿Estás seguro de que quieres eliminar el usuario "${userName}"? Esta acción no se puede deshacer.`)) {
+                        this.submit();
+                    }
+                });
+            });
+
+            // Confirmación para bloquear/desbloquear usuarios
+            const blockUserForms = document.querySelectorAll('form[action*="/admin/toggle_block_user/"]');
+            blockUserForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const userName = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                    const button = this.querySelector('button[type="submit"]');
+                    const action = button.textContent.trim().toLowerCase();
+
+                    if (confirm(`¿Estás seguro de que quieres ${action} el usuario "${userName}"?`)) {
+                        this.submit();
+                    }
+                });
+            });
+
+            // Confirmación para eliminar juegos
+            const deleteGameForms = document.querySelectorAll('form[action*="/admin/delete_game/"]');
+            deleteGameForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const gameName = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                    if (confirm(`¿Estás seguro de que quieres eliminar el juego "${gameName}"? Esta acción no se puede deshacer.`)) {
+                        this.submit();
+                    }
+                });
+            });
+        });
+
+        // Prevenir volver atrás después de logout
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.href = '/login';
+            }
+        });
+    </script>
 </body>
 </html>
