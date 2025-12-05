@@ -1,18 +1,14 @@
 
-{% block content %}
-<style>
-body {
-    background: linear-gradient(135deg, #1a0a1f 0%, #3d1f3d 50%, #2c1a2e 100%) !important;
-    font-family: 'Poppins', Arial, sans-serif;
-    min-height: 100vh;
-}
-
-.edit-profile-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 1rem;
-}
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil | MenTora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
 .edit-profile-card {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
@@ -21,6 +17,9 @@ body {
     color: #4a3840;
     position: relative;
     overflow: hidden;
+    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .edit-profile-card::before {
@@ -36,7 +35,7 @@ body {
 .edit-profile-card h2 {
     color: #6A2C3D;
     font-family: 'Orbitron', 'Poppins', Arial, sans-serif;
-    font-size: 2rem;
+    font-size: clamp(1.3rem, 4vw, 2rem);
     font-weight: bold;
     margin-bottom: 2rem;
     text-align: center;
@@ -44,6 +43,12 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.edit-profile-card h2 img {
+    width: clamp(24px, 5vw, 32px);
+    height: clamp(24px, 5vw, 32px);
 }
 
 .form-group {
@@ -55,16 +60,16 @@ body {
     font-weight: 600;
     margin-bottom: 0.5rem;
     display: block;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 0.9rem;
+    padding: clamp(0.7rem, 2vw, 0.9rem);
     border-radius: 12px;
     border: 2px solid #B57386;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     background: rgba(255, 255, 255, 0.9);
     color: #4a3840;
     font-family: 'Poppins', Arial, sans-serif;
@@ -88,13 +93,13 @@ body {
     font-weight: 600;
     margin-bottom: 1rem;
     display: block;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .avatar-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(55px, 15vw, 80px), 1fr));
+    gap: clamp(0.6rem, 2vw, 1rem);
     margin-bottom: 1rem;
 }
 
@@ -112,12 +117,13 @@ body {
 .avatar-option img {
     border-radius: 50%;
     border: 3px solid #B57386;
-    width: 70px;
-    height: 70px;
+    width: clamp(55px, 15vw, 70px);
+    height: clamp(55px, 15vw, 70px);
     margin-bottom: 0.3rem;
     transition: all 0.3s ease;
     background: #fff;
     padding: 5px;
+    object-fit: cover;
 }
 
 .avatar-option input[type="radio"]:checked + img {
@@ -132,10 +138,11 @@ body {
 }
 
 .avatar-option span {
-    font-size: 0.85rem;
+    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
     color: #6A2C3D;
     font-weight: 500;
     text-align: center;
+    word-break: break-word;
 }
 
 .btn-save {
@@ -143,9 +150,9 @@ body {
     color: #fff;
     border: none;
     border-radius: 12px;
-    padding: 1rem 2.5rem;
+    padding: clamp(0.8rem, 2.5vw, 1rem) clamp(1.5rem, 5vw, 2.5rem);
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
     margin-top: 1rem;
@@ -171,109 +178,97 @@ body {
     color: #fff;
     font-weight: bold;
     border-radius: 12px;
-    padding: 1rem;
+    padding: clamp(0.8rem, 2vw, 1rem);
     text-align: center;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     box-shadow: 0 4px 15px rgba(106, 44, 61, 0.3);
 }
 
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #B57386;
-    text-decoration: none;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    transition: color 0.3s ease;
-}
-
-.back-link:hover {
-    color: #6A2C3D;
+/* Container responsive */
+.container {
+    padding: clamp(1rem, 3vw, 2rem);
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .edit-profile-container {
-        padding: 0.5rem;
-        margin: 1rem auto;
+@media (max-width: 992px) {
+    .edit-profile-card {
+        padding: 2rem;
     }
+}
 
+@media (max-width: 768px) {
     .edit-profile-card {
         padding: 1.5rem;
         border-radius: 15px;
+        margin: 0 0.5rem;
     }
 
     .edit-profile-card h2 {
-        font-size: 1.5rem;
         margin-bottom: 1.5rem;
     }
 
-    .avatar-grid {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-        gap: 0.8rem;
+    .form-group {
+        margin-bottom: 1.2rem;
     }
 
-    .avatar-option img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .form-group input,
-    .form-group select {
-        padding: 0.8rem;
-        font-size: 0.95rem;
-    }
-
-    .btn-save {
-        padding: 0.9rem 2rem;
-        font-size: 1rem;
+    .avatar-section {
+        margin-bottom: 1.2rem;
     }
 }
 
 @media (max-width: 480px) {
     .edit-profile-card {
         padding: 1.2rem;
+        border-radius: 12px;
+        margin: 0 0.3rem;
     }
 
     .edit-profile-card h2 {
-        font-size: 1.3rem;
         flex-direction: column;
         gap: 0.3rem;
+        margin-bottom: 1.2rem;
     }
 
-    .avatar-grid {
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-        gap: 0.6rem;
+    .form-group {
+        margin-bottom: 1rem;
     }
 
-    .avatar-option img {
-        width: 55px;
-        height: 55px;
+    .avatar-section {
+        margin-bottom: 1rem;
     }
 
-    .avatar-option span {
-        font-size: 0.75rem;
-    }
-
-    .form-group label {
-        font-size: 0.9rem;
-    }
-
-    .form-group input,
-    .form-group select {
-        padding: 0.7rem;
-        font-size: 0.9rem;
+    .avatar-section label {
+        margin-bottom: 0.8rem;
     }
 
     .btn-save {
-        padding: 0.8rem 1.5rem;
-        font-size: 0.95rem;
+        margin-top: 0.8rem;
+    }
+
+    #alert-edit-success {
+        margin-top: 1rem;
     }
 }
-</style>
 
+@media (max-width: 360px) {
+    .edit-profile-card {
+        padding: 1rem;
+    }
 
+    .avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.8rem;
+    }
+}
+    </style>
+</head>
+<body>
+
+    {% include 'background_usser.html' %}  
 
     <a href="/dashboard" class="back-button" title="Volver al Dashboard">
         <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -281,10 +276,8 @@ body {
         </svg>
     </a>
 
-<div class="edit-profile-container">
-    
-
-    <div class="edit-profile-card">
+    <div class="container">
+        <div class="edit-profile-card">
         <h2>
             <img src="https://api.iconify.design/mdi/account-edit.svg?color=%236A2C3D" alt="editar perfil" style="width: 32px; height: 32px;">
             Editar Perfil
@@ -326,7 +319,7 @@ body {
             </div>
 
             <button type="submit" class="btn-save">
-                <span>💾</span> Guardar Cambios
+                <span></span> Guardar Cambios
             </button>
 
             <div id="alert-edit-success">
@@ -334,7 +327,12 @@ body {
             </div>
         </form>
     </div>
-</div>
+    </div>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 MenTora - Todos los derechos reservados.</p>
+    </footer>
+
 <script>
 const editProfileForm = document.getElementById('editProfileForm');
 const alertEditSuccess = document.getElementById('alert-edit-success');
@@ -367,5 +365,11 @@ if(editProfileForm) {
         }
     });
 }
+
+// Inicializar iconos de Lucide
+document.addEventListener('DOMContentLoaded', function() {
+    lucide.createIcons();
+});
 </script>
-{% endblock %}
+</body>
+</html>

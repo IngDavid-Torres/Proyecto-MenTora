@@ -18,24 +18,31 @@
             <span>MENTORA ADMIN</span>
         </a>
         <button id="navToggle" class="menu-button" aria-label="Abrir menú">
-            <img src="https://api.iconify.design/mdi/menu.svg?color=%23ffffff" alt="menu" class="menu-icon">
+            <i class="fas fa-bars" id="menuIconOpen"></i>
+            <i class="fas fa-times" id="menuIconClose" style="display: none;"></i>
         </button>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#seccion-estadisticas"><i class="fa-solid fa-chart-bar"></i> ESTADÍSTICAS</a></li>
-            <li><a href="#seccion-usuarios"><i class="fa-solid fa-users"></i> USUARIOS</a></li>
-            <li><a href="#seccion-quizzes"><i class="fa-solid fa-clipboard-question"></i> QUIZZES</a></li>
-            <li><a href="#seccion-preguntas"><i class="fa-solid fa-circle-question"></i> PREGUNTAS</a></li>
-            <li><a href="#seccion-logros"><i class="fa-solid fa-trophy"></i> LOGROS</a></li>
-            <li><a href="#seccion-reportes"><i class="fa-solid fa-chart-line"></i> REPORTES</a></li>
-            <li><a href="#seccion-mensajes"><i class="fa-solid fa-envelope"></i> MENSAJES</a></li>
-            <li><a href="#seccion-seguridad"><i class="fa-solid fa-lock"></i> SEGURIDAD</a></li>
-            <li>
-                <form id="logoutForm" method="POST" action="/logout" style="margin:0;">
-                    <button id="logoutBtn" class="logout-btn-nav" type="button">CERRAR SESIÓN</button>
-                </form>
-            </li>
-        </ul>
+        <div class="nav-wrapper" id="navWrapper">
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#seccion-estadisticas"><i class="fa-solid fa-chart-bar"></i> <span>Estadísticas</span></a></li>
+                <li><a href="#seccion-usuarios"><i class="fa-solid fa-users"></i> <span>Usuarios</span></a></li>
+                <li><a href="#seccion-juegos"><i class="fa-solid fa-gamepad"></i> <span>Juegos</span></a></li>
+                <li><a href="#seccion-quizzes"><i class="fa-solid fa-clipboard-question"></i> <span>Quizzes</span></a></li>
+                <li><a href="#seccion-preguntas"><i class="fa-solid fa-circle-question"></i> <span>Preguntas</span></a></li>
+                <li><a href="#seccion-logros"><i class="fa-solid fa-trophy"></i> <span>Logros</span></a></li>
+                <li><a href="#seccion-reportes"><i class="fa-solid fa-chart-line"></i> <span>Reportes</span></a></li>
+                <li><a href="#seccion-mensajes"><i class="fa-solid fa-envelope"></i> <span>Mensajes</span></a></li>
+                <li><a href="#seccion-seguridad"><i class="fa-solid fa-lock"></i> <span>Seguridad</span></a></li>
+                <li>
+                    <form id="logoutForm" method="POST" action="/logout" style="margin:0;">
+                        <button id="logoutBtn" class="logout-btn-nav" type="button"><i class="fa-solid fa-sign-out-alt"></i> <span>Cerrar Sesión</span></button>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </nav>
+
+    <!-- Overlay para menú móvil -->
+    <div id="navOverlay" class="nav-overlay"></div>
 
     <!-- Modal de confirmación de logout -->
     <div id="logoutModal" class="modal">
@@ -657,11 +664,47 @@
         // Mobile menu toggle
         document.addEventListener('DOMContentLoaded', function() {
             const navToggle = document.getElementById('navToggle');
-            const navLinks = document.getElementById('navLinks');
+            const navWrapper = document.getElementById('navWrapper');
+            const navOverlay = document.getElementById('navOverlay');
+            const menuIconOpen = document.getElementById('menuIconOpen');
+            const menuIconClose = document.getElementById('menuIconClose');
 
-            if (navToggle && navLinks) {
-                navToggle.addEventListener('click', function() {
-                    navLinks.classList.toggle('active');
+            if (navToggle && navWrapper && navOverlay) {
+                navToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    navWrapper.classList.toggle('active');
+                    navOverlay.classList.toggle('active');
+                    
+                    // Toggle icons
+                    if (navWrapper.classList.contains('active')) {
+                        menuIconOpen.style.display = 'none';
+                        menuIconClose.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        menuIconOpen.style.display = 'block';
+                        menuIconClose.style.display = 'none';
+                        document.body.style.overflow = '';
+                    }
+                });
+
+                // Close menu when clicking overlay
+                navOverlay.addEventListener('click', function() {
+                    navWrapper.classList.remove('active');
+                    navOverlay.classList.remove('active');
+                    menuIconOpen.style.display = 'block';
+                    menuIconClose.style.display = 'none';
+                    document.body.style.overflow = '';
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!navToggle.contains(event.target) && !navWrapper.contains(event.target)) {
+                        navWrapper.classList.remove('active');
+                        navOverlay.classList.remove('active');
+                        menuIconOpen.style.display = 'block';
+                        menuIconClose.style.display = 'none';
+                        document.body.style.overflow = '';
+                    }
                 });
             }
         });
@@ -680,9 +723,18 @@
                         behavior: 'smooth'
                     });
                     // Close mobile menu if open
-                    const navLinks = document.getElementById('navLinks');
-                    if (navLinks && navLinks.classList.contains('active')) {
-                        navLinks.classList.remove('active');
+                    const navWrapper = document.getElementById('navWrapper');
+                    const navOverlay = document.getElementById('navOverlay');
+                    const menuIconOpen = document.getElementById('menuIconOpen');
+                    const menuIconClose = document.getElementById('menuIconClose');
+                    if (navWrapper && navWrapper.classList.contains('active')) {
+                        navWrapper.classList.remove('active');
+                        navOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        if (menuIconOpen && menuIconClose) {
+                            menuIconOpen.style.display = 'block';
+                            menuIconClose.style.display = 'none';
+                        }
                     }
                 }
             });
@@ -735,6 +787,36 @@
             if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
                 window.location.href = '/login';
             }
+        });
+
+        // Table scroll indicators
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableWrappers = document.querySelectorAll('.table-wrapper');
+            
+            tableWrappers.forEach(wrapper => {
+                const table = wrapper.querySelector('table');
+                if (table && wrapper.scrollWidth > wrapper.clientWidth) {
+                    wrapper.classList.add('has-scroll');
+                    
+                    // Add scroll event listener
+                    wrapper.addEventListener('scroll', function() {
+                        const scrollLeft = wrapper.scrollLeft;
+                        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+                        
+                        if (scrollLeft >= maxScroll - 10) {
+                            wrapper.classList.add('scrolled-end');
+                        } else {
+                            wrapper.classList.remove('scrolled-end');
+                        }
+                        
+                        if (scrollLeft > 10) {
+                            wrapper.classList.add('scrolled-start');
+                        } else {
+                            wrapper.classList.remove('scrolled-start');
+                        }
+                    });
+                }
+            });
         });
     </script>
 </body>

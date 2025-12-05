@@ -33,14 +33,20 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-behavior: auto;
+    height: 100%;
+}
+
 body {
     font-family: 'Poppins', 'Orbitron', Arial, sans-serif;
     background: #6A2C3D;
     color: #ffffff;
-    overflow-x: hidden;
-    overflow-y: auto;
-    min-height: 100vh;
-    scroll-behavior: auto;
+    overflow: visible;
+    min-height: 100%;
+    height: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -579,6 +585,8 @@ section {
     margin: 0 auto;
     overflow: hidden;
     border-radius: 20px;
+    border: none;
+    outline: none;
     box-shadow: 0 20px 60px rgba(74, 30, 42, 0.3);
     background: linear-gradient(135deg, #f8f9fa 0%, #e8e8e8 100%);
     contain: layout style paint;
@@ -589,6 +597,8 @@ section {
     display: flex;
     transition: transform 0.15s ease-out;
     height: 100%;
+    border: none;
+    outline: none;
     will-change: transform;
 }
 
@@ -613,6 +623,8 @@ section {
     max-height: 500px;
     display: block;
     border-radius: 20px;
+    border: none;
+    outline: none;
     object-fit: contain;
     object-position: center;
     backface-visibility: hidden;
@@ -2451,13 +2463,8 @@ main {
     .cta-buttonss a { width: 100%; max-width: 300px; margin: 0 auto; }
 }
 
-html, body { overflow-x: hidden; max-width: 100vw; }
-
-
-
 /* Additional responsive improvements */
 @media (max-width: 768px) {
     .profesores-grid, .profesores-inicio-grid { grid-template-columns: 1fr !important; }
     table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
-

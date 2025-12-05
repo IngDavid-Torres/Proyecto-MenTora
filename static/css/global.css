@@ -41,40 +41,41 @@ body {
     color: var(--white);
     min-height: 100vh;
     letter-spacing: 0.5px;
+    overflow-x: hidden;
 }
 
 header {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: var(--white);
-    padding: 1.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
     text-align: center;
     box-shadow: var(--shadow-md);
 }
 
 header h1 {
     margin: 0;
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-family: 'Exo 2', sans-serif;
-    letter-spacing: 2px;
+    letter-spacing: clamp(0.5px, 0.3vw, 2px);
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--spacing-xl) 1.2rem;
+    padding: clamp(1rem, 4vw, 2.5rem) clamp(0.8rem, 2vw, 1.2rem);
     position: relative;
     z-index: 10;
 }
 
 .stat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-lg);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: clamp(1rem, 3vw, 2rem);
 }
 
 .stat-card {
     background: rgba(255, 255, 255, 0.95);
-    padding: var(--spacing-lg);
+    padding: clamp(1rem, 3vw, 2rem);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     text-align: center;
@@ -88,14 +89,14 @@ header h1 {
 }
 
 .stat-card h3 {
-    margin-bottom: var(--spacing-sm);
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    margin-bottom: clamp(0.5rem, 2vw, 1rem);
+    font-size: clamp(0.95rem, 2.5vw, 1.2rem);
     color: var(--secondary-color);
     font-weight: 600;
 }
 
 .stat-card p {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     margin: 0;
     color: var(--primary-color);
     font-weight: 700;
@@ -103,15 +104,17 @@ header h1 {
 
 .back-link {
     text-align: center;
-    margin-top: var(--spacing-lg);
+    margin-top: clamp(1rem, 3vw, 2rem);
 }
 
 .back-link a {
     color: var(--light-blue);
     text-decoration: none;
     font-weight: 600;
-    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-size: clamp(0.85rem, 2vw, 1rem);
     transition: color var(--transition-normal);
+    padding: 0.5rem 1rem;
+    display: inline-block;
 }
 
 .back-link a:hover {
@@ -122,7 +125,7 @@ header h1 {
 /* QUIZ STYLES */
 .quiz-container {
     background: rgba(255, 255, 255, 0.95);
-    padding: var(--spacing-xl);
+    padding: clamp(1.2rem, 4vw, 2.5rem);
     border-radius: var(--radius-xl);
     width: 100%;
     max-width: 500px;
@@ -132,21 +135,21 @@ header h1 {
 
 .quiz-list-container {
     background: rgba(255, 255, 255, 0.95);
-    padding: var(--spacing-xl);
+    padding: clamp(1.2rem, 4vw, 2.5rem);
     border-radius: var(--radius-xl);
     width: 100%;
     max-width: 500px;
     box-shadow: var(--shadow-lg);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: clamp(1rem, 3vw, 2rem);
 }
 
 h2 {
     text-align: center;
-    margin-bottom: var(--spacing-md);
-    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
     color: var(--primary-color);
     font-family: 'Exo 2', sans-serif;
-    letter-spacing: 1.5px;
+    letter-spacing: clamp(0.5px, 0.2vw, 1.5px);
 }
 
 .quiz-list-container h2 {
@@ -163,9 +166,10 @@ form {
     color: var(--primary-color);
     border: 2px solid var(--accent-color);
     border-radius: var(--radius-md);
-    padding: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
+    padding: clamp(0.8rem, 2vw, 1rem);
+    margin-bottom: clamp(0.6rem, 2vw, 1rem);
     font-weight: 600;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     cursor: pointer;
     transition: all var(--transition-normal);
 }
@@ -182,11 +186,13 @@ form {
     color: var(--white);
     border: none;
     border-radius: var(--radius-md);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.2rem, 3vw, 2rem);
     font-weight: 600;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
     cursor: pointer;
     transition: all var(--transition-normal);
     box-shadow: var(--shadow-md);
+    width: 100%;
 }
 
 .submit-btn:hover {
@@ -198,19 +204,29 @@ form {
 .quiz-list-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
+    overflow-x: auto;
+    display: block;
+}
+
+.quiz-list-table thead,
+.quiz-list-table tbody {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
 .quiz-list-table th,
 .quiz-list-table td {
-    padding: var(--spacing-sm);
+    padding: clamp(0.6rem, 2vw, 1rem);
     border-bottom: 1px solid rgba(106, 44, 61, 0.2);
     text-align: left;
+    word-wrap: break-word;
 }
 
 .quiz-list-table th {
     color: var(--primary-color);
-    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
     font-weight: 600;
 }
 
@@ -223,10 +239,12 @@ form {
     color: var(--primary-color);
     border: none;
     border-radius: var(--radius-sm);
-    padding: var(--spacing-xs) var(--spacing-md);
+    padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.8rem, 2vw, 1.5rem);
     font-weight: 600;
+    font-size: clamp(0.8rem, 1.8vw, 1rem);
     cursor: pointer;
     transition: all var(--transition-normal);
+    white-space: nowrap;
 }
 
 .quiz-list-table .quiz-btn:hover {
@@ -276,18 +294,20 @@ form {
 #logoutModal .tecnonauta-modal {
     background: rgba(255, 255, 255, 0.98);
     color: var(--primary-color);
-    padding: 2.5rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
     border-radius: var(--radius-xl);
     box-shadow: 0 0 64px rgba(106, 44, 61, 0.3), var(--shadow-lg);
-    min-width: 370px;
+    min-width: min(370px, 90vw);
+    max-width: 450px;
     text-align: center;
     position: relative;
     border: 3px solid var(--accent-color);
     font-family: 'Poppins', Arial, sans-serif;
-    letter-spacing: 1px;
+    letter-spacing: clamp(0.3px, 0.15vw, 1px);
     animation: modalPop 0.7s cubic-bezier(.4, 0, .2, 1);
     backdrop-filter: blur(8px) saturate(1.3);
     z-index: 10003;
+    margin: 1rem;
 }
 
 #logoutModal .tecnonauta-modal::before {
@@ -301,15 +321,16 @@ form {
 }
 
 #logoutModal .tecnonauta-modal button {
-    margin: 0 var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    margin: clamp(0.3rem, 1vw, 0.5rem) clamp(0.4rem, 1.5vw, 1rem);
+    padding: clamp(0.7rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem);
     border-radius: var(--radius-md);
     font-family: 'Poppins', Arial, sans-serif;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
     border: none;
     box-shadow: var(--shadow-md);
     transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
+    min-width: clamp(100px, 25vw, 140px);
 }
 
 #logoutModal .tecnonauta-modal button#confirmLogout {
@@ -363,25 +384,27 @@ form {
 /* GAME DETAIL STYLES */
 .game-container {
     max-width: 600px;
-    margin: 2.5rem auto;
+    margin: clamp(1rem, 4vw, 2.5rem) auto;
     background: rgba(255, 255, 255, 0.95);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    padding: var(--spacing-xl);
+    padding: clamp(1.2rem, 4vw, 2.5rem);
+    width: calc(100% - 2rem);
 }
 
 h1 {
     color: var(--primary-color);
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    margin-bottom: var(--spacing-sm);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    margin-bottom: clamp(0.6rem, 2vw, 1rem);
     font-family: 'Exo 2', sans-serif;
-    letter-spacing: 1.5px;
+    letter-spacing: clamp(0.5px, 0.2vw, 1.5px);
+    line-height: 1.3;
 }
 
 .desc {
     color: var(--text-gray);
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    margin-bottom: var(--spacing-md);
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
     line-height: 1.6;
 }
 
@@ -389,27 +412,29 @@ h1 {
     background: linear-gradient(135deg, rgba(227, 200, 207, 0.4), rgba(181, 115, 134, 0.3));
     color: var(--primary-color);
     border-radius: var(--radius-md);
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    padding: clamp(1rem, 3vw, 1.5rem);
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
     border-left: 4px solid var(--accent-color);
+    font-size: clamp(0.85rem, 2vw, 1rem);
 }
 
 .play-section {
-    margin-top: var(--spacing-lg);
+    margin-top: clamp(1rem, 3vw, 2rem);
 }
 
 textarea,
 input[type="text"] {
     width: 100%;
-    padding: var(--spacing-sm);
+    padding: clamp(0.7rem, 2vw, 1rem);
     border-radius: var(--radius-md);
     border: 2px solid rgba(106, 44, 61, 0.3);
-    font-size: 1rem;
-    margin-bottom: var(--spacing-sm);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    margin-bottom: clamp(0.6rem, 2vw, 1rem);
     background: rgba(255, 255, 255, 0.95);
     color: var(--text-dark);
     transition: all var(--transition-normal);
     font-family: 'Poppins', Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 textarea:focus,
@@ -425,8 +450,8 @@ button {
     font-weight: 600;
     border: none;
     border-radius: var(--radius-md);
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    padding: clamp(0.7rem, 2vw, 1rem) clamp(1.2rem, 3vw, 2rem);
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     cursor: pointer;
     transition: all var(--transition-normal);
     box-shadow: var(--shadow-md);
@@ -442,11 +467,12 @@ button:hover {
     background: rgba(106, 44, 61, 0.05);
     color: var(--primary-color);
     border-radius: var(--radius-md);
-    padding: var(--spacing-md);
-    margin-top: var(--spacing-sm);
+    padding: clamp(0.8rem, 2.5vw, 1.5rem);
+    margin-top: clamp(0.6rem, 2vw, 1rem);
     font-family: 'Courier New', monospace;
-    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-size: clamp(0.85rem, 2vw, 1rem);
     border-left: 4px solid var(--accent-color);
+    overflow-x: auto;
 }
 
 /* EDIT FORMS */
@@ -454,20 +480,22 @@ label {
     font-weight: 600;
     color: var(--primary-color);
     display: block;
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: clamp(0.4rem, 1.5vw, 0.5rem);
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 input[type="text"],
 select {
     width: 100%;
-    padding: var(--spacing-sm);
+    padding: clamp(0.7rem, 2vw, 1rem);
     border-radius: var(--radius-sm);
     border: 2px solid rgba(106, 44, 61, 0.3);
-    font-size: 1rem;
-    margin-bottom: var(--spacing-sm);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    margin-bottom: clamp(0.6rem, 2vw, 1rem);
     background: rgba(255, 255, 255, 0.95);
     color: var(--text-dark);
     transition: all var(--transition-normal);
+    box-sizing: border-box;
 }
 
 input[type="text"]:focus,
@@ -482,15 +510,18 @@ select:focus {
     color: var(--primary-color);
     border: none;
     border-radius: var(--radius-md);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: clamp(0.7rem, 2vw, 1rem) clamp(1.2rem, 3vw, 2rem);
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-normal);
     box-shadow: var(--shadow-sm);
-    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-xs);
+    justify-content: center;
+    gap: clamp(0.3rem, 1vw, 0.5rem);
+    text-align: center;
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -502,28 +533,43 @@ select:focus {
 
 .actions {
     display: flex;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-md);
+    gap: clamp(0.6rem, 2vw, 1rem);
+    margin-top: clamp(1rem, 3vw, 1.5rem);
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .container {
-        padding: var(--spacing-md) 1rem;
+        padding: clamp(1rem, 3vw, 1.5rem) clamp(0.8rem, 2vw, 1rem);
     }
 
     .stat-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.2rem;
     }
 
     .game-container {
-        padding: var(--spacing-md);
-        margin: var(--spacing-md);
+        padding: 1.2rem;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+
+    .quiz-container,
+    .quiz-list-container {
+        padding: 1.2rem;
+        margin: 0.5rem auto;
+        width: calc(100% - 1rem);
     }
 
     .actions {
         flex-direction: column;
+        gap: 0.8rem;
     }
 
     .actions .btn {
@@ -534,19 +580,211 @@ select:focus {
     #logoutModal .tecnonauta-modal {
         min-width: 90%;
         max-width: 350px;
+        padding: 1.5rem;
+    }
+
+    #logoutModal .tecnonauta-modal button {
+        margin: 0.3rem;
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        min-width: 110px;
+    }
+
+    .quiz-list-table {
+        font-size: 0.85rem;
+    }
+
+    .quiz-list-table th,
+    .quiz-list-table td {
+        padding: 0.6rem 0.4rem;
+    }
+
+    textarea {
+        min-height: 120px;
+        font-size: 0.9rem;
     }
 }
 
 @media (max-width: 480px) {
+    header {
+        padding: 0.8rem;
+    }
+
     header h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        letter-spacing: 0.5px;
     }
 
     .stat-card {
-        padding: var(--spacing-sm);
+        padding: 1rem;
     }
 
-    button {
-        padding: var(--spacing-xs) var(--spacing-md);
+    .stat-card h3 {
+        font-size: 0.95rem;
+    }
+
+    .stat-card p {
+        font-size: 1.5rem;
+    }
+
+    .game-container {
+        padding: 1rem;
+        margin: 0.5rem;
+        width: calc(100% - 1rem);
+        border-radius: 12px;
+    }
+
+    .quiz-container,
+    .quiz-list-container {
+        padding: 1rem;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+    }
+
+    button,
+    .submit-btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .option {
+        padding: 0.7rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    #logoutModal .tecnonauta-modal {
+        padding: 1.2rem;
+        min-width: 85%;
+    }
+
+    #logoutModal .tecnonauta-modal button {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        min-width: 90px;
+        margin: 0.2rem;
+    }
+
+    .quiz-list-table {
+        font-size: 0.8rem;
+    }
+
+    .quiz-list-table th,
+    .quiz-list-table td {
+        padding: 0.5rem 0.3rem;
+    }
+
+    .quiz-list-table .quiz-btn {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.75rem;
+    }
+
+    textarea,
+    input[type="text"],
+    select {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    .output,
+    .rules {
+        padding: 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .back-link a {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+@media (max-width: 360px) {
+    header h1 {
+        font-size: 1.1rem;
+    }
+
+    .game-container,
+    .quiz-container,
+    .quiz-list-container {
+        padding: 0.8rem;
+        margin: 0.3rem;
+        width: calc(100% - 0.6rem);
+    }
+
+    .stat-card {
+        padding: 0.8rem;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    h2 {
+        font-size: 1rem;
+    }
+
+    button,
+    .submit-btn,
+    .btn {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .option {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    #logoutModal .tecnonauta-modal {
+        padding: 1rem;
+    }
+
+    #logoutModal .tecnonauta-modal button {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+        margin: 0.2rem 0.1rem;
+    }
+
+    .quiz-list-table {
+        font-size: 0.75rem;
+    }
+
+    textarea,
+    input[type="text"],
+    select {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Mejoras adicionales para pantallas muy grandes */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    .stat-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .game-container {
+        max-width: 800px;
+    }
+
+    .quiz-container,
+    .quiz-list-container {
+        max-width: 600px;
     }
 }

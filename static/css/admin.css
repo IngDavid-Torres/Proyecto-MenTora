@@ -78,15 +78,59 @@
             object-fit: contain;
         }
 
+        /* Always show menu button and hide nav wrapper by default */
+        .menu-button {
+            display: block;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--white);
+            font-size: 1.5rem;
+            transition: transform var(--transition-normal);
+            z-index: 101;
+        }
+
+        .menu-button:hover {
+            transform: scale(1.1);
+        }
+
+        .menu-button i {
+            display: block;
+        }
+
+        /* Nav Wrapper as dropdown menu for all screen sizes */
+        .nav-wrapper {
+            position: fixed;
+            top: 80px;
+            right: -100%;
+            width: 320px;
+            max-width: 90vw;
+            height: calc(100vh - 80px);
+            background: var(--primary-color);
+            transition: right 0.3s ease-in-out;
+            overflow-y: auto;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        .nav-wrapper.active {
+            right: 0;
+        }
+
         .nav-links {
             display: flex;
-            gap: var(--spacing-lg);
-            align-items: center;
+            flex-direction: column;
+            gap: 0;
+            padding: var(--spacing-md);
+            align-items: stretch;
             list-style: none;
+            margin: 0;
         }
 
         .nav-links li {
             margin: 0;
+            width: 100%;
         }
 
         .nav-links a {
@@ -94,37 +138,61 @@
             color: var(--white);
             font-size: 1rem;
             font-weight: 600;
-            transition: color var(--transition-normal), text-shadow var(--transition-normal);
-            letter-spacing: 1px;
+            transition: background var(--transition-normal), color var(--transition-normal);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
             color: var(--light-blue);
-            text-shadow: 0 0 8px var(--accent-color);
         }
 
-        .menu-button {
+        .nav-links a i {
+            width: 28px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* Nav Overlay for mobile */
+        .nav-overlay {
             display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
 
-        .menu-button .menu-icon {
-            width: 32px;
-            height: 32px;
+        .nav-overlay.active {
+            display: block;
+            opacity: 1;
         }
 
         .logout-btn-nav {
             background: var(--accent-color);
             color: var(--white);
             border: none;
-            padding: 0.7rem 1.2rem;
+            padding: 0.8rem 1rem;
             border-radius: 20px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            width: 100%;
         }
 
         .logout-btn-nav:hover {
@@ -245,17 +313,87 @@
         .table-wrapper {
             overflow-x: auto;
             margin-top: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             -webkit-overflow-scrolling: touch;
-            border-radius: var(--radius-sm);
-            box-shadow: inset 0 0 8px rgba(106, 44, 61, 0.05);
+            position: relative;
+        }
+
+        /* Scroll indicator for tables */
+        .table-wrapper.has-scroll::after {
+            content: '→';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(to left, rgba(181, 115, 134, 0.9), transparent);
+            color: var(--white);
+            padding: 2rem 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .table-wrapper.scrolled-end::after {
+            opacity: 0;
+        }
+
+        .table-wrapper.has-scroll::before {
+            content: '←';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(to right, rgba(181, 115, 134, 0.9), transparent);
+            color: var(--white);
+            padding: 2rem 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .table-wrapper.scrolled-start::before {
+            opacity: 0.8;
+        }
+
+        @media (min-width: 769px) {
+            .table-wrapper::after,
+            .table-wrapper::before {
+                display: none;
+            }
+        }
+
+        .table-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: rgba(106, 44, 61, 0.1);
+            border-radius: 10px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 10px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
         }
 
         table {
             width: 100%;
+            min-width: 800px;
             border-collapse: separate;
             border-spacing: 0 var(--spacing-xs);
             margin-top: var(--spacing-md);
-            min-width: 600px;
         }
 
         thead {
@@ -300,6 +438,17 @@
         td form {
             display: inline-block;
             margin: 0;
+        }
+
+        /* Actions column styling */
+        td:last-child {
+            white-space: nowrap;
+        }
+
+        td button,
+        td .btn {
+            margin: 0.2rem;
+            white-space: nowrap;
         }
 
         .empty-row {
@@ -427,56 +576,43 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: var(--spacing-lg) var(--spacing-md);
+            }
+        }
+
+        @media (max-width: 992px) {
+            table {
+                min-width: 750px;
+            }
+
+            th, td {
+                padding: 0.7rem 0.6rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .navbar {
-                flex-direction: row;
                 height: 70px;
                 padding: var(--spacing-sm) var(--spacing-md);
             }
 
             .navbar .logo {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
+            }
+
+            .navbar .logo span {
+                display: none;
             }
 
             .navbar .logo img {
                 height: 50px;
             }
 
-            .menu-button {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
+            .nav-wrapper {
                 top: 70px;
-                left: -100%;
-                flex-direction: column;
-                gap: 0;
-                width: 80%;
-                max-width: 300px;
                 height: calc(100vh - 70px);
-                background: var(--primary-color);
-                padding: var(--spacing-md);
-                transition: left 0.3s ease;
-                overflow-y: auto;
-                box-shadow: var(--shadow-lg);
-                align-items: flex-start;
-            }
-
-            .nav-links.active {
-                left: 0;
-            }
-
-            .nav-links li {
-                width: 100%;
-            }
-
-            .nav-links a {
-                display: block;
-                width: 100%;
-                padding: var(--spacing-md) var(--spacing-sm);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                font-size: 1rem;
             }
 
             .container {
@@ -513,13 +649,24 @@
                 width: 100%;
             }
 
+            .table-wrapper {
+                border-radius: var(--radius-sm);
+            }
+
             table {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
+                min-width: 700px;
             }
 
             th, td {
-                padding: 0.5rem 0.4rem;
-                font-size: 0.85rem;
+                padding: 0.6rem 0.5rem;
+                font-size: 0.8rem;
+                white-space: nowrap;
+            }
+
+            td form {
+                display: inline-block;
+                margin: 0.2rem;
             }
 
             button, .btn {
@@ -529,6 +676,15 @@
         }
 
         @media (max-width: 480px) {
+            .navbar .logo img {
+                height: 40px;
+            }
+
+            .nav-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
+
             .container h1 {
                 font-size: 1.3rem;
             }
@@ -537,16 +693,31 @@
                 font-size: 2rem;
             }
 
+            .section {
+                padding: var(--spacing-md) var(--spacing-sm);
+            }
+
             .section h2 {
                 font-size: 1.2rem;
             }
 
+            .admin-form > div label {
+                font-size: 0.9rem;
+            }
+
+            .admin-form input,
+            .admin-form select,
+            .admin-form textarea {
+                font-size: 0.9rem;
+            }
+
             table {
                 font-size: 0.75rem;
+                min-width: 650px;
             }
 
             th, td {
-                padding: 0.4rem 0.3rem;
+                padding: 0.5rem 0.4rem;
                 font-size: 0.75rem;
             }
 
