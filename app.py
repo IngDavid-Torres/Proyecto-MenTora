@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-# from flask_wtf import CSRFProtect
+from flask_wtf import CSRFProtect
 from flask_socketio import SocketIO, emit
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -33,6 +33,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SITE_NAME'] = 'MenTora'
 db.init_app(app)
+csrf = CSRFProtect(app)
 socketio = SocketIO(app)
 
 

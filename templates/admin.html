@@ -97,6 +97,7 @@
             <div class="section">
                 <h2><i class="fa-solid fa-user-friends"></i> Gestión de Usuarios</h2>
                 <form method="POST" action="/admin/create_or_update_user" class="admin-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="user_id" value="{{ user_to_edit.id if user_to_edit else '' }}">
                     <div>
                         <label for="username">Usuario:</label>
@@ -155,11 +156,11 @@
                                 <td>
                                     <a href="/admin/edit_user/{{ u.id }}" class="btn" style="padding:0.5rem 1rem;"><i class="fa-solid fa-edit"></i> Editar</a>
                                     <form method="POST" action="/admin/delete_user/{{ u.id }}" style="display:inline;">
-                                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" style="background:#e74c3c; padding:0.5rem 1rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
                                     </form>
                                     <form method="POST" action="/admin/toggle_block_user/{{ u.id }}" style="display:inline;">
-                                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         {% if u.is_blocked %}
                                         <button type="submit" style="background:#28a745; padding:0.5rem 1rem;"><i class="fa-solid fa-unlock"></i> Desbloquear</button>
                                         {% else %}
@@ -182,6 +183,7 @@
             <div class="section">
                 <h2><i class="fa-solid fa-gamepad"></i> Gestión de Juegos</h2>
                 <form method="POST" action="/admin/create_game" class="admin-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="game_id" value="{{ game_to_edit.id if game_to_edit else '' }}">
                     <div>
                         <label for="game_name">Nombre del Juego:</label>
@@ -227,7 +229,7 @@
                                 <td>
                                     <a href="/admin/edit_game/{{ game.id }}" class="btn" style="padding:0.5rem 1rem;"><i class="fa-solid fa-edit"></i> Editar</a>
                                     <form method="POST" action="/admin/delete_game/{{ game.id }}" style="display:inline;">
-                                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" style="background:#e74c3c; padding:0.5rem 1rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
                                     </form>
                                 </td>
@@ -246,6 +248,7 @@
             <div class="section">
                 <h2><i class="fa-solid fa-clipboard-list"></i> Gestión de Quizzes</h2>
                 <form method="POST" action="/admin/create_quiz" class="admin-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div>
                         <label for="quiz_name">Nombre del Quiz:</label>
                         <input type="text" id="quiz_name" name="quiz_name" required>
@@ -294,6 +297,7 @@
             <div class="section">
                 <h2><i class="fa-solid fa-question-circle"></i> Gestión de Preguntas</h2>
                 <form method="POST" action="/admin/add_question" class="admin-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div style="flex:2;">
                         <label for="quiz_id">Quiz:</label>
                         <select id="quiz_id" name="quiz_id" required>
@@ -394,7 +398,7 @@
                                         <button type="submit" style="padding:0.5rem 1rem;"><i class="fa-solid fa-edit"></i> Editar</button>
                                     </form>
                                     <form method="POST" action="/admin/delete_achievement/{{ ach.id }}" style="display:inline;">
-                                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" style="background:#e74c3c; padding:0.5rem 1rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
                                     </form>
                                 </td>
@@ -409,7 +413,7 @@
                 <div style="margin-top:var(--spacing-xl);">
                     <h3>Asignar logro/insignia a usuario</h3>
                     <form method="POST" action="/admin/assign_achievement" class="admin-form" style="margin-top:var(--spacing-md);">
-                        {% if csrf_token %}{{ csrf_token() }}{% endif %}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div>
                             <label for="user_id">Usuario:</label>
                             <select id="user_id" name="user_id" required>
@@ -475,6 +479,7 @@
             <div class="section">
                 <h2><i class="fa-solid fa-comments"></i> Mensajes/Notificaciones</h2>
                 <form method="POST" action="/admin/send_notification" class="admin-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div style="flex:2;">
                         <label for="notification_message">Mensaje:</label>
                         <input type="text" id="notification_message" name="notification_message" required>
@@ -522,6 +527,7 @@
             <div class="section">
                 <h2><i class="fa-solid fa-shield-halved"></i> Seguridad</h2>
                 <form method="POST" action="/admin/change_password" style="max-width:500px; margin-bottom:var(--spacing-xl);">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <h3 style="font-size:1.2rem; margin-bottom:var(--spacing-md);">Cambiar contraseña de administrador</h3>
                     <div style="margin-bottom:var(--spacing-sm);">
                         <label for="current_password" style="font-weight:600; color:var(--primary-color); display:block; margin-bottom:0.3rem;">Contraseña actual:</label>
