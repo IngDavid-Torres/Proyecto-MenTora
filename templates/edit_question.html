@@ -10,6 +10,7 @@
     <div class="container">
         <h1><i class="fa-solid fa-pen"></i> Editar Pregunta</h1>
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <label for="question_text">Pregunta:</label>
             <input type="text" name="question_text" id="question_text" required value="{{ question.text }}">
 

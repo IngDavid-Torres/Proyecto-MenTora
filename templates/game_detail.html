@@ -55,6 +55,7 @@
                 
                 {% if not cooldown and not success %}
                 <form method="POST" action="/games/{{ game.id }}/run" class="code-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <label for="code" class="form-label">Escribe tu código en Python:</label>
                     <textarea id="code" name="code" rows="6" required placeholder="print('Hola mundo')" class="code-textarea"></textarea>
                     <button type="submit" class="btn-game">Ejecutar Código</button>
@@ -101,6 +102,7 @@
                 
                 {% if not cooldown and not success %}
                 <form method="POST" action="/games/{{ game.id }}/run" class="code-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <label for="code" class="form-label">Escribe tu código en Python que sume dos números:</label>
                     <textarea id="code" name="code" rows="6" required placeholder="a = 5&#10;b = 7&#10;print(a + b)" class="code-textarea"></textarea>
                     <button type="submit" class="btn-game">Ejecutar Código</button>

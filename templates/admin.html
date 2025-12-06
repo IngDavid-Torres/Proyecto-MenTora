@@ -34,6 +34,7 @@
                 <li><a href="#seccion-seguridad"><i class="fa-solid fa-lock"></i> <span>Seguridad</span></a></li>
                 <li>
                     <form id="logoutForm" method="POST" action="/logout" style="margin:0;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button id="logoutBtn" class="logout-btn-nav" type="button"><i class="fa-solid fa-sign-out-alt"></i> <span>Cerrar Sesión</span></button>
                     </form>
                 </li>

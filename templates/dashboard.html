@@ -320,7 +320,9 @@
     </footer>
 
   
-    <form id="logoutForm" method="POST" action="/logout"></form>
+    <form id="logoutForm" method="POST" action="/logout">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    </form>
 
     <div id="logoutModal" class="modal" tabindex="-1">
         <div class="modal-content">

@@ -36,6 +36,7 @@
         <div id="alert-success" class="alert-success" style="display:none;">Registro exitoso. Ahora puedes iniciar sesión.</div>
         <div id="alert-error" class="mentora-error" style="display:none;"></div>
         <form id="registerForm" method="POST" action="/register" autocomplete="off">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div>
                 <label for="username">Usuario: </label>
                 <input type="text" id="username" name="username" required autocomplete="username">

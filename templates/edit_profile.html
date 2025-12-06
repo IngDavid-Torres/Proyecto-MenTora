@@ -284,6 +284,7 @@
         </h2>
 
         <form id="editProfileForm" method="POST" action="/update_profile" autocomplete="off">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label>Email:</label>
                 <input type="email" name="email" value="{{ user.email }}" required>

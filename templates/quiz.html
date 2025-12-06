@@ -65,6 +65,7 @@
         {% else %}
             <h2>{{ quiz.title if quiz else question.text }}</h2>
             <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 {% if questions %}
                     {% for q in questions %}
                         <div style="margin-bottom:1.2rem;">

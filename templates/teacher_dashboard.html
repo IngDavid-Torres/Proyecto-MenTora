@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Panel Profesor | MenTora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -148,6 +149,7 @@
                         <td>
                             <a href="{{ url_for('editar_quiz', quiz_id=quiz.id) }}" class="btn"><i class="fa-solid fa-pen"></i> Editar</a>
                             <form method="POST" action="{{ url_for('eliminar_quiz', quiz_id=quiz.id) }}" style="display:inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn" style="background:#e74c3c; color:#fff;"><i class="fa-solid fa-trash"></i> Eliminar</button>
                             </form>
                         </td>
@@ -167,6 +169,7 @@
                     <strong>IA Local - Sin necesidad de internet</strong>
                 </div>
                 <form method="POST" action="" class="ai-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <label><i class="fa-solid fa-lightbulb"></i> Tema:</label>
                     <input type="text" name="tema" required placeholder="Ej: Álgebra, Historia, Ciencias...">
                     
@@ -472,7 +475,15 @@
         confirmLogout.addEventListener('click', async function() {
             // Cierre de sesión real por POST y redirección segura
             try {
-                await fetch('/logout', { method: 'POST', credentials: 'same-origin' });
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+                await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'csrf_token=' + encodeURIComponent(csrfToken)
+                });
             } catch (e) {}
             // Limpiar historial y redirigir
             window.location.replace('/login');

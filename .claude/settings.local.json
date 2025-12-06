@@ -5,7 +5,8 @@
       "Bash(python migrate_cedula.py:*)",
       "Bash(python -c:*)",
       "Bash(python migrate_teacher_table.py:*)",
-      "Bash(python migrate_avatars.py:*)"
+      "Bash(python migrate_avatars.py:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []
