@@ -32,11 +32,21 @@ app = Flask(__name__, static_folder=static_dir, static_url_path='/static', templ
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SITE_NAME'] = 'MenTora'
+app.config['WTF_CSRF_TIME_LIMIT'] = None  # Sin límite de tiempo para tokens CSRF
+app.config['WTF_CSRF_SSL_STRICT'] = False  # Permitir HTTP en desarrollo
 db.init_app(app)
 csrf = CSRFProtect(app)
 socketio = SocketIO(app)
 
-
+# Manejador de errores CSRF
+@app.errorhandler(400)
+def handle_csrf_error(e):
+    # Si el error es por CSRF, mostrar mensaje amigable
+    if 'CSRF' in str(e) or 'csrf' in str(e.description if hasattr(e, 'description') else ''):
+        flash('Error de seguridad: Token CSRF inválido. Por favor, intenta de nuevo.', 'error')
+        # Redirigir al referer o a la página de admin
+        return redirect(request.referrer or url_for('admin_panel'))
+    return str(e), 400
 
 # Activar recarga automática
 app.config['DEBUG'] = True
@@ -655,6 +665,7 @@ def admin_panel():
     games = Game.query.order_by(Game.created_at.desc()).all()
     game_to_edit = session.get('game_to_edit', None)
     quizzes = Quiz.query.order_by(Quiz.created_at.desc()).all()
+    quiz_to_edit = session.get('quiz_to_edit', None)
     achievements = Badge.query.order_by(Badge.created_at.desc()).all()
     achievement_to_edit = session.pop('achievement_to_edit', None)
     # Notificaciones: últimas 20
@@ -671,6 +682,7 @@ def admin_panel():
                            games=games,
                            game_to_edit=game_to_edit,
                            quizzes=quizzes,
+                           quiz_to_edit=quiz_to_edit,
                            achievements=achievements,
                            achievement_to_edit=achievement_to_edit,
                            notifications=notifications,
@@ -800,84 +812,98 @@ def delete_achievement(badge_id):
     return redirect(url_for('admin_panel'))
 # Ruta para crear juego desde admin
 @app.route('/admin/create_game', methods=['POST'])
-
 def create_game():
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
 
-    # Obtener datos del formulario
-    name = request.form.get('game_name', '').strip()
-    description = request.form.get('game_description', '').strip()
-    rules = request.form.get('game_rules', '').strip()
-    type_ = request.form.get('game_type', '').strip() if 'game_type' in request.form else None
+    try:
+        game_id = request.form.get('game_id')
+        name = request.form.get('game_name', '').strip()
+        description = request.form.get('game_description', '').strip()
+        rules = request.form.get('game_rules', '').strip()
+        type_ = request.form.get('game_type', '').strip() if 'game_type' in request.form else None
 
-    # Validar campos obligatorios
-    if not name or not description:
-        flash('Todos los campos son obligatorios.')
-        return redirect(url_for('admin_panel'))
+        # Validar campos obligatorios
+        if not name or not description:
+            flash('Todos los campos son obligatorios.', 'error')
+            return redirect(url_for('admin_panel'))
 
-    from models import Game
-    new_game = Game(
-        name=name,
-        description=description,
-        rules=rules,
-        type=type_,
-        created_at=datetime.utcnow()
-    )
-    db.session.add(new_game)
-    db.session.commit()
-    flash(f'Juego "{name}" creado correctamente.')
+        from models import Game
+
+        if game_id:
+            # Actualizar juego existente
+            game = Game.query.get(game_id)
+            if not game:
+                flash('Juego no encontrado.', 'error')
+                return redirect(url_for('admin_panel'))
+            game.name = name
+            game.description = description
+            game.rules = rules
+            game.type = type_
+            db.session.commit()
+            flash(f'Juego "{name}" actualizado correctamente.', 'success')
+        else:
+            # Crear nuevo juego
+            new_game = Game(
+                name=name,
+                description=description,
+                rules=rules,
+                type=type_,
+                created_at=datetime.utcnow()
+            )
+            db.session.add(new_game)
+            db.session.commit()
+            flash(f'Juego "{name}" creado correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al guardar juego: {str(e)}', 'error')
+
     session.pop('game_to_edit', None)
     return redirect(url_for('admin_panel'))
 
-    # Evaluar código
-    # Seguridad: nunca ejecutar código arbitrario del usuario
-    if game.name.lower() == 'hola mundo':
-        buf = io.StringIO()
-        try:
-            # Solo permitir impresión de texto, sin eval ni exec
-            if code.strip().replace(' ', '').lower() == "print('holamundo')" or code.strip().replace(' ', '').lower() == 'print("holamundo")':
-                print('Hola mundo', file=buf)
-            else:
-                print('Código no permitido.', file=buf)
-            output = buf.getvalue()
-        except Exception as exc:
-            output = f'Error: {exc}'
-        # Validar si acertó (print exacto)
-        if output.strip() == 'Hola mundo':
-            feedback = '¡Correcto!'
-            attempts += 1
-        else:
-            feedback = 'Intenta de nuevo.'
-            attempts += 1
-    elif game.name.lower() == 'la suma de dos números':
-        buf = io.StringIO()
-        try:
-            # Solo permitir impresión de suma, sin eval ni exec
-            nums = re.findall(r'(\d+)', code)
-            if len(nums) >= 2:
-                suma = int(nums[0]) + int(nums[1])
-                print(suma, file=buf)
-                output = buf.getvalue()
-                feedback = f'Resultado: {suma}'
-                attempts += 1
-            else:
-                print('Código no permitido.', file=buf)
-                output = buf.getvalue()
-                feedback = 'Intenta de nuevo.'
-                attempts += 1
-        except Exception as exc:
-            output = f'Error: {exc}'
-    return render_template('game_detail.html', game=game, output=output, feedback=feedback, attempts=attempts, max_attempts=max_attempts)
+# Editar juego (cargar en formulario)
+@app.route('/admin/edit_game/<int:game_id>', methods=['GET'])
+def edit_game_admin(game_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.', 'error')
+        return redirect(url_for('login'))
+
     from models import Game
     game = Game.query.get_or_404(game_id)
     session['game_to_edit'] = {
         'id': game.id,
         'name': game.name,
         'description': game.description,
-        'rules': game.rules
+        'rules': game.rules,
+        'type': game.type
     }
+    return redirect(url_for('admin_panel'))
+
+# Eliminar juego
+@app.route('/admin/delete_game/<int:game_id>', methods=['POST'])
+def delete_game_admin(game_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.', 'error')
+        return redirect(url_for('login'))
+
+    try:
+        from models import Game, GameProgress
+        game = Game.query.get_or_404(game_id)
+        game_name = game.name
+
+        # Eliminar progreso relacionado
+        GameProgress.query.filter_by(game_id=game_id).delete()
+
+        # Eliminar el juego
+        db.session.delete(game)
+        db.session.commit()
+
+        flash(f'Juego "{game_name}" eliminado correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar juego: {str(e)}', 'error')
+
     return redirect(url_for('admin_panel'))
 
 # Cancelar edición de juego
@@ -888,36 +914,106 @@ def clear_game_edit():
 
 # Ruta para crear quiz desde admin
 @app.route('/admin/create_quiz', methods=['POST'])
-
 def create_quiz():
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
 
-    title = request.form.get('quiz_name', '').strip()
-    area = request.form.get('quiz_area', '').strip()
-    description = request.form.get('quiz_description', '').strip()
+    try:
+        quiz_id = request.form.get('quiz_id')
+        title = request.form.get('quiz_name', '').strip()
+        area = request.form.get('quiz_area', '').strip()
+        description = request.form.get('quiz_description', '').strip()
 
-    if not title or not area or not description:
-        flash('Todos los campos son obligatorios.')
-        return redirect(url_for('admin_panel'))
+        if not title or not area or not description:
+            flash('Todos los campos son obligatorios.', 'error')
+            return redirect(url_for('admin_panel'))
 
-    # Buscar el usuario admin y usar su id
-    admin = User.query.filter_by(username='admin').first()
-    if not admin:
-        flash('No se encontró el usuario administrador. No se puede crear el quiz.')
-        return redirect(url_for('admin_panel'))
-    new_quiz = Quiz(
-        title=title,
-        area=area,
-        description=description,
-        created_by=admin.id,
-        teacher_id=None,
-        created_at=datetime.utcnow()
-    )
-    db.session.add(new_quiz)
-    db.session.commit()
-    flash(f'Quiz "{title}" creado exitosamente.')
+        if quiz_id:
+            # Actualizar quiz existente
+            quiz = Quiz.query.get(quiz_id)
+            if not quiz:
+                flash('Quiz no encontrado.', 'error')
+                return redirect(url_for('admin_panel'))
+            quiz.title = title
+            quiz.area = area
+            quiz.description = description
+            db.session.commit()
+            flash(f'Quiz "{title}" actualizado correctamente.', 'success')
+        else:
+            # Crear nuevo quiz
+            admin = User.query.filter_by(username='admin').first()
+            if not admin:
+                flash('No se encontró el usuario administrador.', 'error')
+                return redirect(url_for('admin_panel'))
+
+            new_quiz = Quiz(
+                title=title,
+                area=area,
+                description=description,
+                created_by=admin.id,
+                teacher_id=None,
+                created_at=datetime.utcnow()
+            )
+            db.session.add(new_quiz)
+            db.session.commit()
+            flash(f'Quiz "{title}" creado correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al guardar quiz: {str(e)}', 'error')
+
+    session.pop('quiz_to_edit', None)
+    return redirect(url_for('admin_panel'))
+
+# Editar quiz (cargar en formulario)
+@app.route('/admin/edit_quiz/<int:quiz_id>', methods=['GET'])
+def edit_quiz_admin(quiz_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.', 'error')
+        return redirect(url_for('login'))
+
+    quiz = Quiz.query.get_or_404(quiz_id)
+    session['quiz_to_edit'] = {
+        'id': quiz.id,
+        'title': quiz.title,
+        'area': quiz.area,
+        'description': quiz.description
+    }
+    return redirect(url_for('admin_panel'))
+
+# Eliminar quiz
+@app.route('/admin/delete_quiz/<int:quiz_id>', methods=['POST'])
+def delete_quiz_admin(quiz_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash('Acceso restringido.', 'error')
+        return redirect(url_for('login'))
+
+    try:
+        quiz = Quiz.query.get_or_404(quiz_id)
+        quiz_title = quiz.title
+
+        # Eliminar preguntas relacionadas
+        Question.query.filter_by(quiz_id=quiz_id).delete()
+        # Eliminar respuestas de usuarios
+        UserAnswer.query.filter_by(quiz_id=quiz_id).delete()
+        # Eliminar progreso
+        QuizProgress.query.filter_by(quiz_id=quiz_id).delete()
+
+        # Eliminar el quiz
+        db.session.delete(quiz)
+        db.session.commit()
+
+        flash(f'Quiz "{quiz_title}" eliminado correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar quiz: {str(e)}', 'error')
+
+    return redirect(url_for('admin_panel'))
+
+# Cancelar edición de quiz
+@app.route('/admin/clear_quiz_edit')
+def clear_quiz_edit():
+    session.pop('quiz_to_edit', None)
     return redirect(url_for('admin_panel'))
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -1395,42 +1491,47 @@ def create_or_update_user():
     points = int(request.form.get('points', 0))
     level = int(request.form.get('level', 1))
     password = request.form.get('password')
-    if user_id:
-        user = User.query.get(user_id)
-        if not user:
-            flash('Usuario no encontrado.')
-            return redirect(url_for('admin_panel'))
-        user.username = username
-        user.email = email
-        user.area = area
-        user.points = points
-        user.level = level
-        if password:
-            user.password = generate_password_hash(password)
-        db.session.commit()
-        flash('Usuario actualizado correctamente.')
-    else:
-        if not password:
-            flash('La contraseña es obligatoria para crear un usuario.')
-            return redirect(url_for('admin_panel'))
-        if User.query.filter_by(username=username).first():
-            flash('El nombre de usuario ya existe.')
-            return redirect(url_for('admin_panel'))
-        if User.query.filter_by(email=email).first():
-            flash('El email ya está registrado.')
-            return redirect(url_for('admin_panel'))
-        new_user = User(
-            username=username,
-            email=email,
-            area=area,
-            points=points,
-            level=level,
-            password=generate_password_hash(password),
-            is_admin=False
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Usuario creado correctamente.')
+    try:
+        if user_id:
+            user = User.query.get(user_id)
+            if not user:
+                flash('Usuario no encontrado.', 'error')
+                return redirect(url_for('admin_panel'))
+            user.username = username
+            user.email = email
+            user.area = area
+            user.points = points
+            user.level = level
+            if password:
+                user.password = generate_password_hash(password)
+            db.session.commit()
+            flash('Usuario actualizado correctamente.', 'success')
+        else:
+            if not password:
+                flash('La contraseña es obligatoria para crear un usuario.', 'error')
+                return redirect(url_for('admin_panel'))
+            if User.query.filter_by(username=username).first():
+                flash('El nombre de usuario ya existe.', 'error')
+                return redirect(url_for('admin_panel'))
+            if User.query.filter_by(email=email).first():
+                flash('El email ya está registrado.', 'error')
+                return redirect(url_for('admin_panel'))
+            new_user = User(
+                username=username,
+                email=email,
+                area=area,
+                points=points,
+                level=level,
+                password=generate_password_hash(password),
+                is_admin=False
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Usuario creado correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al guardar usuario: {str(e)}', 'error')
+
     session.pop('user_to_edit', None)
     return redirect(url_for('admin_panel'))
 
@@ -1471,39 +1572,51 @@ def delete_user(user_id):
         flash('No se puede eliminar un usuario administrador.')
         return redirect(url_for('admin_panel'))
     
-    # Eliminar datos relacionados del usuario
-    UserAnswer.query.filter_by(user_id=user_id).delete()
-    Achievement.query.filter_by(user_id=user_id).delete()
-    # Notification.to_user is an Integer FK to users.id — use id, not username
-    Notification.query.filter_by(to_user=user.id).delete()
-    
-    # Eliminar el usuario
-    db.session.delete(user)
-    db.session.commit()
-    
-    flash(f'Usuario "{user.username}" eliminado correctamente.')
+    try:
+        # Guardar el username antes de eliminar
+        username = user.username
+
+        # Eliminar datos relacionados del usuario
+        UserAnswer.query.filter_by(user_id=user_id).delete()
+        Achievement.query.filter_by(user_id=user_id).delete()
+        # Notification.to_user is an Integer FK to users.id — use id, not username
+        Notification.query.filter_by(to_user=user.id).delete()
+
+        # Eliminar el usuario
+        db.session.delete(user)
+        db.session.commit()
+
+        flash(f'Usuario "{username}" eliminado correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar usuario: {str(e)}', 'error')
+
     return redirect(url_for('admin_panel'))
 
 # Bloquear/Desbloquear usuario
 @app.route('/admin/toggle_block_user/<int:user_id>', methods=['POST'])
 def toggle_block_user(user_id):
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
-    
+
     user = User.query.get_or_404(user_id)
-    
+
     # No permitir bloquear administradores
     if user.is_admin:
-        flash('No se puede bloquear un usuario administrador.')
+        flash('No se puede bloquear un usuario administrador.', 'error')
         return redirect(url_for('admin_panel'))
-    
-    # Cambiar estado de bloqueo
-    user.is_blocked = not user.is_blocked
-    db.session.commit()
-    
-    status = "bloqueado" if user.is_blocked else "desbloqueado"
-    flash(f'Usuario "{user.username}" {status} correctamente.')
+
+    try:
+        # Cambiar estado de bloqueo
+        user.is_blocked = not user.is_blocked
+        db.session.commit()
+
+        status = "bloqueado" if user.is_blocked else "desbloqueado"
+        flash(f'Usuario "{user.username}" {status} correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al cambiar estado del usuario: {str(e)}', 'error')
     return redirect(url_for('admin_panel'))
 
 @app.route('/admin/assign_achievement', methods=['POST'])

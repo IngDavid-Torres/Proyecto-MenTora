@@ -60,6 +60,17 @@
     <div class="container">
         <h1><i class="fa-solid fa-user-shield"></i> PANEL DE ADMINISTRACIÓN</h1>
 
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="padding: 1rem; margin: 1rem 0; border-radius: var(--radius-md); {% if category == 'success' %}background: #d4edda; color: #155724; border: 1px solid #c3e6cb;{% else %}background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;{% endif %}">
+                        <i class="fa-solid {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <!-- Estadísticas -->
         <section id="seccion-estadisticas">
             <div class="dashboard-cards">
@@ -190,6 +201,10 @@
                         <label for="game_name">Nombre del Juego:</label>
                         <input type="text" id="game_name" name="game_name" value="{{ game_to_edit.name if game_to_edit else '' }}" required>
                     </div>
+                    <div>
+                        <label for="game_type">Tipo:</label>
+                        <input type="text" id="game_type" name="game_type" value="{{ game_to_edit.type if game_to_edit else '' }}" placeholder="Ej: código, quiz, puzzle">
+                    </div>
                     <div style="flex:2;">
                         <label for="game_description">Descripción:</label>
                         <input type="text" id="game_description" name="game_description" value="{{ game_to_edit.description if game_to_edit else '' }}" required>
@@ -250,19 +265,25 @@
                 <h2><i class="fa-solid fa-clipboard-list"></i> Gestión de Quizzes</h2>
                 <form method="POST" action="/admin/create_quiz" class="admin-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="quiz_id" value="{{ quiz_to_edit.id if quiz_to_edit else '' }}">
                     <div>
                         <label for="quiz_name">Nombre del Quiz:</label>
-                        <input type="text" id="quiz_name" name="quiz_name" required>
+                        <input type="text" id="quiz_name" name="quiz_name" value="{{ quiz_to_edit.title if quiz_to_edit else '' }}" required>
                     </div>
                     <div style="flex:2;">
                         <label for="quiz_area">Área:</label>
-                        <input type="text" id="quiz_area" name="quiz_area" required>
+                        <input type="text" id="quiz_area" name="quiz_area" value="{{ quiz_to_edit.area if quiz_to_edit else '' }}" required>
                     </div>
                     <div style="flex:2;">
                         <label for="quiz_description">Descripción:</label>
-                        <input type="text" id="quiz_description" name="quiz_description" required>
+                        <input type="text" id="quiz_description" name="quiz_description" value="{{ quiz_to_edit.description if quiz_to_edit else '' }}" required>
                     </div>
-                    <button type="submit"><i class="fa-solid fa-plus"></i> Agregar Quiz</button>
+                    <div style="flex-basis: 100%; display:flex; gap:var(--spacing-sm);">
+                        <button type="submit"><i class="fa-solid fa-save"></i> {{ 'Actualizar' if quiz_to_edit else 'Agregar' }} Quiz</button>
+                        {% if quiz_to_edit %}
+                        <a href="/admin/clear_quiz_edit" class="btn" style="background:var(--text-gray);"><i class="fa-solid fa-times"></i> Cancelar edición</a>
+                        {% endif %}
+                    </div>
                 </form>
 
                 <h3 style="margin-top:var(--spacing-lg);">Quizzes Agregados</h3>
@@ -274,6 +295,7 @@
                                 <th>Área</th>
                                 <th>Descripción</th>
                                 <th>Fecha</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -283,9 +305,16 @@
                                 <td>{{ quiz.area }}</td>
                                 <td>{{ quiz.description }}</td>
                                 <td>{{ quiz.created_at.strftime('%Y-%m-%d') if quiz.created_at else '' }}</td>
+                                <td>
+                                    <a href="/admin/edit_quiz/{{ quiz.id }}" class="btn" style="padding:0.5rem 1rem;"><i class="fa-solid fa-edit"></i> Editar</a>
+                                    <form method="POST" action="/admin/delete_quiz/{{ quiz.id }}" style="display:inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" style="background:#e74c3c; padding:0.5rem 1rem;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                                    </form>
+                                </td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="4" class="empty-row">No hay quizzes registrados.</td></tr>
+                            <tr><td colspan="5" class="empty-row">No hay quizzes registrados.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -771,6 +800,18 @@
                     const action = button.textContent.trim().toLowerCase();
 
                     if (confirm(`¿Estás seguro de que quieres ${action} el usuario "${userName}"?`)) {
+                        this.submit();
+                    }
+                });
+            });
+
+            // Confirmación para eliminar quizzes
+            const deleteQuizForms = document.querySelectorAll('form[action*="/admin/delete_quiz/"]');
+            deleteQuizForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const quizName = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                    if (confirm(`¿Estás seguro de que quieres eliminar el quiz "${quizName}"? Esta acción eliminará también todas sus preguntas y no se puede deshacer.`)) {
                         this.submit();
                     }
                 });
