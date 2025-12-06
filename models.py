@@ -140,6 +140,10 @@ class AccessLog(db.Model):
 # Modelo para rastrear el progreso en quizzes
 class QuizProgress(db.Model):
     __tablename__ = 'quiz_progress'
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'quiz_id', name='unique_user_quiz_progress'),
+    )
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quizzes.id'), nullable=False)
@@ -150,7 +154,7 @@ class QuizProgress(db.Model):
     attempts = db.Column(db.Integer, default=0)
     last_attempt = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime, nullable=True)
-    
+
     user = db.relationship('User', backref='quiz_progress', lazy=True)
     quiz = db.relationship('Quiz', backref='progress_records', lazy=True)
 
@@ -158,6 +162,10 @@ class QuizProgress(db.Model):
 # Modelo para rastrear el progreso en juegos
 class GameProgress(db.Model):
     __tablename__ = 'game_progress'
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'game_id', name='unique_user_game_progress'),
+    )
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'), nullable=False)
@@ -166,7 +174,7 @@ class GameProgress(db.Model):
     attempts = db.Column(db.Integer, default=0)
     last_attempt = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime, nullable=True)
-    
+
     user = db.relationship('User', backref='game_progress', lazy=True)
     game = db.relationship('Game', backref='progress_records', lazy=True)
 

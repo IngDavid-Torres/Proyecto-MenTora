@@ -1142,8 +1142,8 @@ def run_game_code(game_id):
         db.session.commit()
     
     # Guardar intentos y cooldown en sesión por usuario y juego
-    session_key = f'game_{game_id}_attempts'
-    session_cooldown_key = f'game_{game_id}_cooldown'
+    session_key = f'game_{game_id}_user_{user.id}_attempts'
+    session_cooldown_key = f'game_{game_id}_user_{user.id}_cooldown'
     attempts = session.get(session_key, 0)
     cooldown_until = session.get(session_cooldown_key)
     import datetime
@@ -1362,8 +1362,8 @@ def quiz_attempt(quiz_id):
     
     max_attempts = 3
     cooldown_minutes = 30
-    session_key = f'quiz_{quiz_id}_attempts'
-    session_cooldown_key = f'quiz_{quiz_id}_cooldown'
+    session_key = f'quiz_{quiz_id}_user_{user.id}_attempts'
+    session_cooldown_key = f'quiz_{quiz_id}_user_{user.id}_cooldown'
     attempts = session.get(session_key, 0)
     cooldown_until = session.get(session_cooldown_key)
     import time
