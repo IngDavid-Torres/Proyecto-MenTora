@@ -993,13 +993,21 @@ def delete_quiz_admin(quiz_id):
         quiz_title = quiz.title
 
         # IMPORTANTE: Eliminar en el orden correcto para evitar violaciones de clave foránea
-        # 1. Primero eliminar respuestas de usuarios (referencia a questions)
-        UserAnswer.query.filter_by(quiz_id=quiz_id).delete()
-        # 2. Luego eliminar progreso del quiz
+        # 1. Primero obtener todas las preguntas del quiz
+        questions = Question.query.filter_by(quiz_id=quiz_id).all()
+        question_ids = [q.id for q in questions]
+
+        # 2. Eliminar respuestas de usuarios que referencian a estas preguntas
+        if question_ids:
+            UserAnswer.query.filter(UserAnswer.question_id.in_(question_ids)).delete(synchronize_session=False)
+
+        # 3. Eliminar progreso del quiz
         QuizProgress.query.filter_by(quiz_id=quiz_id).delete()
-        # 3. Después eliminar las preguntas
+
+        # 4. Eliminar las preguntas
         Question.query.filter_by(quiz_id=quiz_id).delete()
-        # 4. Finalmente eliminar el quiz
+
+        # 5. Finalmente eliminar el quiz
         db.session.delete(quiz)
         db.session.commit()
 
