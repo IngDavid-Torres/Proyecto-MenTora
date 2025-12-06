@@ -28,9 +28,12 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}" style="background: linear-gradient(90deg, var(--accent-color), var(--light-blue)); color: var(--primary-color); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 600; text-align: center; box-shadow: var(--shadow-md);">
-                        {{ message }}
-                    </div>
+                    {# Solo mostrar mensajes de teacher - ignorar mensajes de otros contextos #}
+                    {% if category == 'teacher' %}
+                        <div class="alert alert-{{ category }}" style="background: linear-gradient(90deg, var(--accent-color), var(--light-blue)); color: var(--primary-color); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 600; text-align: center; box-shadow: var(--shadow-md);">
+                            {{ message }}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         {% endwith %}

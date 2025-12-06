@@ -22,15 +22,6 @@
 
     <main>
         <div class="login-container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div id="flashed-messages" style="display:none;">
-                    {% for category, message in messages %}
-                        <div class="flashed" data-category="{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
             <h2>INICIAR SESIÓN</h2>
             <form id="loginForm" method="POST" action="/login" autocomplete="off">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

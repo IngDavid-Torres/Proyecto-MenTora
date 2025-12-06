@@ -698,29 +698,29 @@ def change_admin_password():
     confirm_password = request.form.get('confirm_password')
     admin = User.query.get(session['user_id'])
     if not check_password_hash(admin.password, current_password):
-        flash('La contraseña actual es incorrecta.')
+        flash('La contraseña actual es incorrecta.', 'error')
         return redirect(url_for('admin_panel'))
     if new_password != confirm_password:
-        flash('La nueva contraseña y la confirmación no coinciden.')
+        flash('La nueva contraseña y la confirmación no coinciden.', 'error')
         return redirect(url_for('admin_panel'))
     if len(new_password) < 6:
-        flash('La nueva contraseña debe tener al menos 6 caracteres.')
+        flash('La nueva contraseña debe tener al menos 6 caracteres.', 'error')
         return redirect(url_for('admin_panel'))
     admin.password = generate_password_hash(new_password)
     db.session.commit()
-    flash('Contraseña actualizada correctamente.')
+    flash('Contraseña actualizada correctamente.', 'success')
     return redirect(url_for('admin_panel'))
 
 
 @app.route('/admin/send_notification', methods=['POST'])
 def send_notification():
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
     message = request.form.get('notification_message', '').strip()
     to_user = request.form.get('notification_user')
     if not message:
-        flash('El mensaje no puede estar vacío.')
+        flash('El mensaje no puede estar vacío.', 'error')
         return redirect(url_for('admin_panel'))
     if to_user == 'all':
         notif = Notification(message=message, to_user=None)
@@ -730,25 +730,25 @@ def send_notification():
             user_id = int(to_user)
             user = User.query.get(user_id)
             if not user:
-                flash('Usuario destino no existe.')
+                flash('Usuario destino no existe.', 'error')
                 return redirect(url_for('admin_panel'))
             notif = Notification(message=message, to_user=user_id)
             db.session.add(notif)
         except ValueError:
-            flash('ID de usuario inválido.')
+            flash('ID de usuario inválido.', 'error')
             return redirect(url_for('admin_panel'))
         except Exception as exc:
-            flash(f'Error inesperado: {exc}')
+            flash(f'Error inesperado: {exc}', 'error')
             return redirect(url_for('admin_panel'))
     db.session.commit()
-    flash('Notificación enviada.')
+    flash('Notificación enviada.', 'success')
     return redirect(url_for('admin_panel'))
 
 
 @app.route('/admin/create_or_update_achievement', methods=['POST'])
 def create_or_update_achievement():
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
     achievement_id = request.form.get('achievement_id')
     name = request.form['achievement_name'].strip()
@@ -770,19 +770,19 @@ def create_or_update_achievement():
             if image_url:
                 badge.image_url = image_url
             db.session.commit()
-            flash('Logro/insignia actualizado.')
+            flash('Logro/insignia actualizado.', 'success')
     else:
         badge = Badge(name=name, description=description, image_url=image_url)
         db.session.add(badge)
         db.session.commit()
-        flash('Logro/insignia creado.')
+        flash('Logro/insignia creado.', 'success')
     return redirect(url_for('admin_panel'))
 
 
 @app.route('/admin/edit_achievement/<int:badge_id>', methods=['GET'])
 def edit_achievement(badge_id):
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
     badge = Badge.query.get_or_404(badge_id)
     session['achievement_to_edit'] = {
@@ -803,12 +803,12 @@ def clear_achievement_edit():
 @app.route('/admin/delete_achievement/<int:badge_id>', methods=['POST'])
 def delete_achievement(badge_id):
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
     badge = Badge.query.get_or_404(badge_id)
     db.session.delete(badge)
     db.session.commit()
-    flash('Logro/insignia eliminado.')
+    flash('Logro/insignia eliminado.', 'success')
     return redirect(url_for('admin_panel'))
 # Ruta para crear juego desde admin
 @app.route('/admin/create_game', methods=['POST'])
@@ -1019,8 +1019,7 @@ def clear_quiz_edit():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
-    # Mark logout message as an 'error' style (red) to match the site's visual language
-    flash('Sesión cerrada correctamente.', 'error')
+    # No flash message - login page uses JavaScript alerts
     response = redirect(url_for('login'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0, private'
     response.headers['Pragma'] = 'no-cache'
@@ -1068,7 +1067,7 @@ def update_profile():
     session['theme'] = user.theme if user.theme else 'default'
     if request.headers.get('Accept') == 'application/json':
         return jsonify(success=True, theme=session['theme'])
-    flash('Perfil actualizado correctamente.')
+    flash('Perfil actualizado correctamente.', 'profile')
     return redirect(url_for('dashboard'))
 
 
@@ -1622,22 +1621,22 @@ def toggle_block_user(user_id):
 @app.route('/admin/assign_achievement', methods=['POST'])
 def assign_achievement():
     if 'user_id' not in session or not session.get('is_admin'):
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'error')
         return redirect(url_for('login'))
     user_id = request.form.get('user_id')
     badge_id = request.form.get('badge_id')
     if not user_id or not badge_id:
-        flash('Usuario y logro requeridos.')
+        flash('Usuario y logro requeridos.', 'error')
         return redirect(url_for('admin_panel'))
     # Evitar duplicados
     exists = Achievement.query.filter_by(user_id=user_id, badge_id=badge_id).first()
     if exists:
-        flash('El usuario ya tiene este logro.')
+        flash('El usuario ya tiene este logro.', 'error')
         return redirect(url_for('admin_panel'))
     achievement = Achievement(user_id=user_id, badge_id=badge_id)
     db.session.add(achievement)
     db.session.commit()
-    flash('Logro asignado correctamente.')
+    flash('Logro asignado correctamente.', 'success')
     return redirect(url_for('admin_panel'))
 
 @app.route('/teacher/dashboard', methods=['GET', 'POST'])
@@ -1648,7 +1647,7 @@ def teacher_dashboard():
     from models import Game
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher:
-        flash('No tienes perfil de profesor.')
+        flash('No tienes perfil de profesor.', 'teacher')
         return redirect(url_for('dashboard'))
     quizzes = Quiz.query.filter_by(teacher_id=teacher.id).all()
     games = Game.query.filter_by(teacher_id=teacher.id).all()
@@ -1730,17 +1729,17 @@ def teacher_dashboard():
 @app.route('/teacher/create_quiz', methods=['POST'])
 def teacher_create_quiz():
     if 'user_id' not in session:
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'teacher')
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher:
-        flash('No tienes perfil de profesor.')
+        flash('No tienes perfil de profesor.', 'teacher')
         return redirect(url_for('dashboard'))
     title = request.form['title'].strip()
     area = request.form['area'].strip()
     if not title or not area:
-        flash('Todos los campos son obligatorios.')
+        flash('Todos los campos son obligatorios.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     new_quiz = Quiz(
         title=title,
@@ -1752,40 +1751,40 @@ def teacher_create_quiz():
     )
     db.session.add(new_quiz)
     db.session.commit()
-    flash('Quiz creado correctamente.')
+    flash('Quiz creado correctamente.', 'teacher')
     return redirect(url_for('teacher_dashboard'))
 
 @app.route('/teacher/create_game', methods=['POST'])
 def teacher_create_game():
     if 'user_id' not in session:
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'teacher')
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher:
-        flash('No tienes perfil de profesor.')
+        flash('No tienes perfil de profesor.', 'teacher')
         return redirect(url_for('dashboard'))
     name = request.form.get('name', '').strip()
     type_ = request.form.get('type', '').strip()
     if not name or not type_:
-        flash('Todos los campos son obligatorios.')
+        flash('Todos los campos son obligatorios.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     from models import Game
     new_game = Game(name=name, type=type_, teacher_id=teacher.id, created_at=datetime.utcnow())
     db.session.add(new_game)
     db.session.commit()
-    flash('Juego creado correctamente.')
+    flash('Juego creado correctamente.', 'teacher')
     return redirect(url_for('teacher_dashboard'))
 
 @app.route('/teacher/add_question', methods=['POST'])
 def teacher_add_question():
     if 'user_id' not in session:
-        flash('Acceso restringido.')
+        flash('Acceso restringido.', 'teacher')
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher:
-        flash('No tienes perfil de profesor.')
+        flash('No tienes perfil de profesor.', 'teacher')
         return redirect(url_for('dashboard'))
     quiz_id = request.form['quiz_id']
     text = request.form['question_text'].strip()
@@ -1797,12 +1796,12 @@ def teacher_add_question():
     ]
     correct_index = int(request.form['correct_answer']) - 1
     if not text or any(not o for o in options) or correct_index not in range(4):
-        flash('Todos los campos son obligatorios y la respuesta debe ser válida.')
+        flash('Todos los campos son obligatorios y la respuesta debe ser válida.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     correct_answer = options[correct_index]
     quiz = Quiz.query.get(quiz_id)
     if not quiz or quiz.teacher_id != teacher.id:
-        flash('No tienes permisos para agregar preguntas a este quiz.')
+        flash('No tienes permisos para agregar preguntas a este quiz.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     new_question = Question(
         quiz_id=quiz_id,
@@ -1812,7 +1811,7 @@ def teacher_add_question():
     )
     db.session.add(new_question)
     db.session.commit()
-    flash('Pregunta agregada correctamente.')
+    flash('Pregunta agregada correctamente.', 'teacher')
     return redirect(url_for('teacher_dashboard'))
 # Descargar examen en Word
 @app.route('/download_exam_word', methods=['POST'])
@@ -2160,14 +2159,14 @@ def editar_quiz(quiz_id):
     # Solo permitir editar si el usuario es el profesor creador
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher or quiz.teacher_id != teacher.id:
-        flash('No tienes permisos para editar este quiz.')
+        flash('No tienes permisos para editar este quiz.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     if request.method == 'POST':
         quiz.title = request.form['title'].strip()
         quiz.area = request.form['area'].strip()
         quiz.description = request.form.get('description', '').strip()
         db.session.commit()
-        flash('Quiz actualizado correctamente.')
+        flash('Quiz actualizado correctamente.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     return render_template('edit_quiz.html', quiz=quiz)
 
@@ -2179,11 +2178,11 @@ def eliminar_quiz(quiz_id):
     quiz = Quiz.query.get_or_404(quiz_id)
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher or quiz.teacher_id != teacher.id:
-        flash('No tienes permisos para eliminar este quiz.')
+        flash('No tienes permisos para eliminar este quiz.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     db.session.delete(quiz)
     db.session.commit()
-    flash('Quiz eliminado correctamente.')
+    flash('Quiz eliminado correctamente.', 'teacher')
     return redirect(url_for('teacher_dashboard'))
 
 @app.route('/teacher/editar_juego/<int:game_id>', methods=['GET', 'POST'])
@@ -2195,7 +2194,7 @@ def editar_juego(game_id):
     game = Game.query.get_or_404(game_id)
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher or game.teacher_id != teacher.id:
-        flash('No tienes permisos para editar este juego.')
+        flash('No tienes permisos para editar este juego.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     if request.method == 'POST':
         game.name = request.form['name'].strip()
@@ -2203,7 +2202,7 @@ def editar_juego(game_id):
         game.type = request.form['type'].strip()
         game.rules = request.form['rules'].strip()
         db.session.commit()
-        flash('Juego actualizado correctamente.')
+        flash('Juego actualizado correctamente.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     return render_template('edit_game.html', game=game)
 
@@ -2216,11 +2215,11 @@ def eliminar_juego(game_id):
     game = Game.query.get_or_404(game_id)
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher or game.teacher_id != teacher.id:
-        flash('No tienes permisos para eliminar este juego.')
+        flash('No tienes permisos para eliminar este juego.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     db.session.delete(game)
     db.session.commit()
-    flash('Juego eliminado correctamente.')
+    flash('Juego eliminado correctamente.', 'teacher')
     return redirect(url_for('teacher_dashboard'))
 
 # Editar pregunta (profesor)
@@ -2233,7 +2232,7 @@ def editar_pregunta(question_id):
     quiz = Quiz.query.get(question.quiz_id)
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher or quiz.teacher_id != teacher.id:
-        flash('No tienes permisos para editar esta pregunta.')
+        flash('No tienes permisos para editar esta pregunta.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     if request.method == 'POST':
         question.text = request.form['question_text'].strip()
@@ -2245,11 +2244,11 @@ def editar_pregunta(question_id):
         ]
         correct_index = int(request.form['correct_answer']) - 1
         if correct_index not in range(4):
-            flash('La respuesta correcta debe ser válida.')
+            flash('La respuesta correcta debe ser válida.', 'teacher')
             return redirect(url_for('editar_pregunta', question_id=question.id))
         question.correct_answer = question.options[correct_index]
         db.session.commit()
-        flash('Pregunta actualizada correctamente.')
+        flash('Pregunta actualizada correctamente.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     return render_template('edit_question.html', question=question)
 
@@ -2263,11 +2262,11 @@ def eliminar_pregunta(question_id):
     quiz = Quiz.query.get(question.quiz_id)
     teacher = Teacher.query.filter_by(user_id=user.id).first()
     if not teacher or quiz.teacher_id != teacher.id:
-        flash('No tienes permisos para eliminar esta pregunta.')
+        flash('No tienes permisos para eliminar esta pregunta.', 'teacher')
         return redirect(url_for('teacher_dashboard'))
     db.session.delete(question)
     db.session.commit()
-    flash('Pregunta eliminada correctamente.')
+    flash('Pregunta eliminada correctamente.', 'teacher')
     return redirect(url_for('teacher_dashboard'))
 
 # Editar pregunta (profesor)

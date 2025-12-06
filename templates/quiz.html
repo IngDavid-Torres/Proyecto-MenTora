@@ -2,125 +2,238 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reto Activo | MenTora</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usser.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    {% if all_quizzes %}
-    <div class="quiz-list-container">
-        <h2>Quizzes Disponibles</h2>
-        <table class="quiz-list-table">
-            <thead>
-                <tr><th>Título</th><th>Área</th><th>Acción</th></tr>
-            </thead>
-            <tbody>
-            {% for quiz in all_quizzes %}
-                <tr>
-                    <td>{{ quiz.title }}</td>
-                    <td>{{ quiz.area }}</td>
-                    <td>
-                        <form method="GET" action="/quiz/{{ quiz.id }}">
-                            <button type="submit" class="quiz-btn">Intentar Quiz</button>
-                        </form>
-                    </td>
-                </tr>
-            {% else %}
-                <tr><td colspan="3" style="text-align:center; color:#ffe06699;">No hay quizzes disponibles.</td></tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-    <div class="quiz-container">
-        {% if cooldown %}
-            <h2>⏳ Espera</h2>
-            <p style="color:#ffe066; font-weight:bold;">Sin intentos disponibles.<br>Intenta de nuevo en {{ mins_left }} minutos.</p>
-            <div class="back-link"><a href="/dashboard">← Volver al Dashboard</a></div>
-        {% elif show_answers and results %}
-            <h2>{{ quiz.title }}</h2>
-            <div style="margin-bottom:1.2rem;">
-                <b>Resultados del Quiz:</b>
-            </div>
-            {% for q, user_ans in results %}
-                <div style="margin-bottom:1.2rem;">
-                    <div style="font-weight:bold; margin-bottom:0.5rem;">{{ loop.index }}. {{ q.text }}</div>
-                    <ul style="list-style:none; padding-left:0;">
-                        {% for option in q.options %}
-                        <li style="margin-bottom:0.2rem;">
-                            {% if option == q.correct_answer %}
-                                <span style="color:#27ae60; font-weight:bold;">✔ {{ option }} (Correcta)</span>
-                            {% elif user_ans == option %}
-                                <span style="color:#e74c3c; font-weight:bold;">✘ {{ option }} (Tu respuesta)</span>
-                            {% else %}
-                                <span>{{ option }}</span>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endfor %}
-            <div class="back-link">
-                <a href="/dashboard">← Volver al Dashboard</a>
-            </div>
-        {% else %}
-            <h2>{{ quiz.title if quiz else question.text }}</h2>
-            <form method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                {% if questions %}
-                    {% for q in questions %}
-                        <div style="margin-bottom:1.2rem;">
-                            <div style="font-weight:bold; margin-bottom:0.5rem;">{{ loop.index }}. {{ q.text }}</div>
-                            {% for option in q.options %}
-                                <label style="display:block; margin-bottom:0.3rem;">
-                                    <input type="radio" name="q_{{ q.id }}" value="{{ option }}" required> {{ option }}
-                                </label>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                    <button type="submit" class="submit-btn">Enviar respuestas</button>
-                {% else %}
-                    {% for option in question.options %}
-                        <button type="submit" name="selected_answer" value="{{ option }}" class="option">{{ option }}</button>
-                    {% endfor %}
-                {% endif %}
-            </form>
-            <div style="margin-top:1rem; color:#ffe066; font-size:1.05rem;">
-                Intentos usados: {{ attempts }}/{{ max_attempts }}
-            </div>
-            {% if error %}
-                <div style="color:#ff7675; font-weight:bold; margin-top:0.7rem;">Respuestas incorrectas. Intenta de nuevo.</div>
-            {% endif %}
-            <div class="back-link">
-                <a href="/dashboard">← Volver al Dashboard</a>
-            </div>
-        {% endif %}
-        {% if show_15pts_modal %}
-        <div id="modal-15pts" style="display:flex;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;align-items:center;justify-content:center;background:rgba(44,62,80,0.45);backdrop-filter:blur(2px);">
-            <div style="background:linear-gradient(120deg,#00fff1 0%,#16213e 100%);border-radius:22px;box-shadow:0 8px 32px #00fff1a0,0 0 24px #00fff1;padding:2.5rem 2.5rem 2rem 2.5rem;max-width:95vw;min-width:320px;text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;">
-                <div style="font-size:2.5rem;font-family:'Orbitron','Inter',Arial,sans-serif;font-weight:bold;color:#ffe066;letter-spacing:2px;text-shadow:0 0 12px #ffe066,0 0 2px #fff;animation:glow 1.2s infinite alternate; margin-bottom:1.1rem;">¡Excelente!</div>
-                {% if puntos_ganados is defined and puntos_ganados > 0 %}
-                    <div style="font-size:1.7rem;color:#00fff1;font-family:'Poppins','Orbitron',Arial,sans-serif;margin-bottom:1.2rem;text-align:center;">+{{ puntos_ganados }} puntos</div>
-                    <div style="font-size:1rem;color:#e3c8cf;font-family:'Poppins',Arial,sans-serif;margin-bottom:0.5rem;">¡Quiz completado correctamente!</div>
-                {% else %}
-                    <div style="font-size:1.2rem;color:#e3c8cf;font-family:'Poppins',Arial,sans-serif;margin-bottom:1.2rem;">¡Ya habías completado este quiz anteriormente!</div>
-                    <div style="font-size:0.95rem;color:#b5e7e3;font-family:'Poppins',Arial,sans-serif;margin-bottom:0.5rem;">Tu progreso está guardado</div>
-                {% endif %}
-                {% if progress and progress.completed %}
-                    <div style="font-size:0.9rem;color:#b5e7e3;font-family:'Poppins',Arial,sans-serif;margin-top:0.5rem;">
-                        📊 Intentos totales: {{ progress.attempts }} | Puntuación: {{ progress.score }}/{{ progress.total_questions }}
-                    </div>
-                {% endif %}
-                <button onclick="document.getElementById('modal-15pts').style.display='none'" style="margin-top:1.2rem;padding:0.7rem 2.2rem;background:linear-gradient(90deg,#ffe066,#fab005);color:#2a5298;font-weight:bold;border:none;border-radius:8px;font-size:1.08rem;cursor:pointer;box-shadow:0 2px 8px #fab00522;">Aceptar</button>
+    {% include 'background_usser.html' %}
+
+    <nav class="main-navbar">
+        <div class="navbar-content">
+            <a href="/dashboard" class="navbar-logo">
+                <img src="{{ url_for('static', filename='img/mentora1.png') }}" alt="Logo MenTora">
+            </a>
+            <div class="navbar-user">
+                <img src="{{ session.get('avatar_url', url_for('static', filename='img/default-avatar.png')) }}" alt="avatar" class="navbar-avatar">
+                <span class="navbar-username">{{ session.get('username', 'Usuario') }}</span>
+                <a href="/dashboard" class="btn" style="margin-left: 1rem; padding: 0.5rem 1rem;">
+                    <i class="fa-solid fa-home"></i> Dashboard
+                </a>
             </div>
         </div>
-        <script>
+    </nav>
+
+    <div class="container" style="margin-top: 6rem; max-width: 900px;">
+        {% if all_quizzes %}
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2 style="color: #B57386; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif;">
+                <i class="fa-solid fa-list-check"></i> Quizzes Disponibles
+            </h2>
+            <div class="table-wrapper">
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-heading"></i> Título</th>
+                            <th><i class="fa-solid fa-book"></i> Área</th>
+                            <th><i class="fa-solid fa-play"></i> Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for quiz in all_quizzes %}
+                        <tr>
+                            <td>{{ quiz.title }}</td>
+                            <td>{{ quiz.area }}</td>
+                            <td>
+                                <a href="/quiz/{{ quiz.id }}" class="btn" style="padding: 0.5rem 1rem;">
+                                    <i class="fa-solid fa-play-circle"></i> Intentar Quiz
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="3" style="text-align:center; color:#999;">No hay quizzes disponibles.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            {% if cooldown %}
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; color: #B57386; margin-bottom: 1rem;">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <h2 style="color: #B57386; margin-bottom: 1rem;">⏳ Espera un Momento</h2>
+                    <p style="color: #8A4255; font-weight: 600; font-size: 1.1rem;">
+                        Sin intentos disponibles.<br>
+                        Intenta de nuevo en <span style="color: #B57386; font-weight: bold;">{{ mins_left }} minutos</span>.
+                    </p>
+                    <a href="/dashboard" class="btn" style="margin-top: 1.5rem; display: inline-block;">
+                        <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
+                    </a>
+                </div>
+
+            {% elif show_answers and results %}
+                <h2 style="color: #B57386; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif;">
+                    <i class="fa-solid fa-file-circle-check"></i> {{ quiz.title }}
+                </h2>
+                <div style="background: rgba(181, 115, 134, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <h3 style="color: #8A4255; margin-bottom: 1rem;">
+                        <i class="fa-solid fa-chart-simple"></i> Resultados del Quiz
+                    </h3>
+                </div>
+
+                {% for q, user_ans in results %}
+                    <div class="quiz-question-result" style="background: rgba(255, 255, 255, 0.5); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.2rem; border-left: 4px solid #B57386;">
+                        <div style="font-weight: bold; color: #6A2C3D; margin-bottom: 0.8rem; font-size: 1.05rem;">
+                            <i class="fa-solid fa-question-circle"></i> {{ loop.index }}. {{ q.text }}
+                        </div>
+                        <ul style="list-style: none; padding-left: 0;">
+                            {% for option in q.options %}
+                            <li style="margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 8px; {% if option == q.correct_answer %}background: rgba(39, 174, 96, 0.15); border: 2px solid #27ae60;{% elif user_ans == option %}background: rgba(231, 76, 60, 0.15); border: 2px solid #e74c3c;{% else %}background: rgba(0,0,0,0.05);{% endif %}">
+                                {% if option == q.correct_answer %}
+                                    <span style="color: #27ae60; font-weight: bold;">
+                                        <i class="fa-solid fa-check-circle"></i> {{ option }} <span style="font-size: 0.9rem;">(Correcta)</span>
+                                    </span>
+                                {% elif user_ans == option %}
+                                    <span style="color: #e74c3c; font-weight: bold;">
+                                        <i class="fa-solid fa-times-circle"></i> {{ option }} <span style="font-size: 0.9rem;">(Tu respuesta)</span>
+                                    </span>
+                                {% else %}
+                                    <span style="color: #666;">{{ option }}</span>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="/dashboard" class="btn" style="padding: 0.8rem 2rem;">
+                        <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
+                    </a>
+                </div>
+
+            {% else %}
+                <h2 style="color: #B57386; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif;">
+                    <i class="fa-solid fa-pen-to-square"></i> {{ quiz.title if quiz else question.text }}
+                </h2>
+
+                <form method="POST" style="margin-bottom: 1.5rem;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    {% if questions %}
+                        {% for q in questions %}
+                            <div class="quiz-question" style="background: rgba(255, 255, 255, 0.6); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #B57386;">
+                                <div style="font-weight: bold; color: #6A2C3D; margin-bottom: 1rem; font-size: 1.1rem;">
+                                    <i class="fa-solid fa-circle-question"></i> {{ loop.index }}. {{ q.text }}
+                                </div>
+                                {% for option in q.options %}
+                                    <label class="quiz-option" style="display: block; margin-bottom: 0.8rem; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.7); border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <input type="radio" name="q_{{ q.id }}" value="{{ option }}" required style="margin-right: 0.5rem; transform: scale(1.2);">
+                                        <span style="color: #4a3840; font-weight: 500;">{{ option }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; background: linear-gradient(135deg, #B57386, #8A4255); color: white;">
+                            <i class="fa-solid fa-paper-plane"></i> Enviar Respuestas
+                        </button>
+                    {% else %}
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            {% for option in question.options %}
+                                <button type="submit" name="selected_answer" value="{{ option }}" class="btn" style="padding: 1rem; font-size: 1rem; text-align: left; background: rgba(255, 255, 255, 0.8); color: #4a3840; border: 2px solid #B57386;">
+                                    {{ option }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </form>
+
+                <div style="background: rgba(181, 115, 134, 0.15); padding: 1rem; border-radius: 12px; text-align: center; margin-bottom: 1rem;">
+                    <span style="color: #6A2C3D; font-weight: 600; font-size: 1.05rem;">
+                        <i class="fa-solid fa-repeat"></i> Intentos usados: <span style="color: #B57386; font-weight: bold;">{{ attempts }}/{{ max_attempts }}</span>
+                    </span>
+                </div>
+
+                {% if error %}
+                    <div style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 1rem; border-radius: 12px; font-weight: bold; text-align: center; border: 2px solid #e74c3c; margin-bottom: 1rem;">
+                        <i class="fa-solid fa-exclamation-triangle"></i> Respuestas incorrectas. Intenta de nuevo.
+                    </div>
+                {% endif %}
+
+                <div style="text-align: center;">
+                    <a href="/dashboard" class="btn" style="background: rgba(106, 44, 61, 0.1); color: #6A2C3D; padding: 0.7rem 1.5rem;">
+                        <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if show_15pts_modal %}
+    <div id="modal-15pts" style="display:flex; position:fixed; z-index:3000; left:0; top:0; width:100vw; height:100vh; align-items:center; justify-content:center; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px);">
+        <div style="background: linear-gradient(135deg, #B57386, #6A2C3D); border-radius: 20px; box-shadow: 0 8px 32px rgba(181, 115, 134, 0.5); padding: 2.5rem; max-width: 500px; text-align: center; position: relative;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                <i class="fa-solid fa-trophy" style="color: #FFD700;"></i>
+            </div>
+            <div style="font-size: 2rem; font-family: 'Orbitron', sans-serif; font-weight: bold; color: #FFE066; letter-spacing: 2px; text-shadow: 0 0 12px rgba(255, 224, 102, 0.5); margin-bottom: 1rem;">
+                ¡Excelente!
+            </div>
+            {% if puntos_ganados is defined and puntos_ganados > 0 %}
+                <div style="font-size: 1.8rem; color: #FFE066; font-family: 'Poppins', sans-serif; font-weight: bold; margin-bottom: 1rem;">
+                    +{{ puntos_ganados }} puntos
+                </div>
+                <div style="font-size: 1.1rem; color: #fff; font-family: 'Poppins', sans-serif; margin-bottom: 1rem;">
+                    ¡Quiz completado correctamente!
+                </div>
+            {% else %}
+                <div style="font-size: 1.2rem; color: #fff; font-family: 'Poppins', sans-serif; margin-bottom: 1rem;">
+                    ¡Ya habías completado este quiz anteriormente!
+                </div>
+                <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.8); font-family: 'Poppins', sans-serif;">
+                    Tu progreso está guardado
+                </div>
+            {% endif %}
+            {% if progress and progress.completed %}
+                <div style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.9); font-family: 'Poppins', sans-serif; margin-top: 1rem; padding: 0.8rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                    <i class="fa-solid fa-chart-bar"></i> Intentos totales: {{ progress.attempts }} | Puntuación: {{ progress.score }}/{{ progress.total_questions }}
+                </div>
+            {% endif %}
+            <button onclick="document.getElementById('modal-15pts').style.display='none'" class="btn" style="margin-top: 1.5rem; padding: 0.8rem 2.5rem; background: linear-gradient(90deg, #FFE066, #FAB005); color: #6A2C3D; font-weight: bold; border: none; font-size: 1.1rem; cursor: pointer;">
+                <i class="fa-solid fa-check"></i> Aceptar
+            </button>
+        </div>
+    </div>
+    <script>
         setTimeout(function(){
             var m = document.getElementById('modal-15pts');
             if(m) m.style.display = 'flex';
-        }, 200);
-        </script>
-        {% endif %}
-    </div>
+        }, 300);
+    </script>
+    {% endif %}
 
+    <style>
+        .quiz-option:hover {
+            background: rgba(181, 115, 134, 0.15) !important;
+            border-color: #B57386 !important;
+            transform: translateX(5px);
+        }
+
+        .quiz-option input[type="radio"]:checked + span {
+            color: #B57386;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(181, 115, 134, 0.3);
+        }
+    </style>
 </body>
 </html>

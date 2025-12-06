@@ -22,15 +22,6 @@
 
     <main>
     <div class="login-container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div id="flashed-messages" style="display:none;">
-                {% for category, message in messages %}
-                    <div class="flashed" data-category="{{ category }}">{{ message }}</div>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
         <h2>CREAR CUENTA</h2>
 
         <div id="alert-success" class="alert-success" style="display:none;">Registro exitoso. Ahora puedes iniciar sesión.</div>
