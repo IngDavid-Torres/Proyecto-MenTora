@@ -144,36 +144,6 @@
         }
 
 
-        async function sendChatbotMessage(e) {
-            e.preventDefault();
-            const input = document.getElementById('chatbot-input');
-            const messages = document.getElementById('chatbot-messages');
-            
-            if (!input || !messages) return;
-            
-            const userMsg = input.value.trim();
-            if (!userMsg) return;
-            
-            messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:linear-gradient(135deg, #6A2C3D, #8A4255);color:#fff;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;box-shadow:0 2px 8px rgba(106,44,61,0.3);'>${userMsg}</span></div>`;
-            input.value = '';
-            messages.scrollTop = messages.scrollHeight;
-            
-
-            try {
-                const res = await fetch('/chatbot', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: userMsg })
-                });
-                const data = await res.json();
-                messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:linear-gradient(135deg, #f3e5e8, #fef8f9);color:#4a3840;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;border:1px solid #d4a5b0;box-shadow:0 2px 8px rgba(106,44,61,0.1);'>${data.response}</span></div>`;
-                messages.scrollTop = messages.scrollHeight;
-            } catch (err) {
-                messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#ffe5e5;color:#a03030;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;border:1px solid #ffb3b3;'>Error de conexión con el bot.</span></div>`;
-            }
-        }
-
-
         let socket;
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof io !== 'undefined') {

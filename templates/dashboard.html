@@ -361,19 +361,62 @@
         <div id="chatbot-box" class="chat-box">
             <div class="chat-header">
                 <span>MenToraBot</span>
-                <button onclick="toggleChatbot()">×</button>
+                <button type="button" onclick="toggleChatbot()">×</button>
             </div>
             <div id="chatbot-messages"></div>
-            <form class="chat-input-area" id="chatbot-form" onsubmit="sendChatbotMessage(event)">
+            <form class="chat-input-area" id="chatbot-form">
                 <input id="chatbot-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off">
                 <button type="submit">Enviar</button>
             </form>
         </div>
-        <button id="chatbot-toggle" class="chat-toggle" onclick="toggleChatbot()">
+        <button id="chatbot-toggle" class="chat-toggle" type="button" onclick="toggleChatbot()">
             <img src="https://api.iconify.design/bi/robot.svg?color=%23ffffff" alt="robot" class="chat-toggle-icon">
         </button>
     </div>
 
     <script defer src="{{ url_for('static', filename='js/script_usser.js') }}"></script>
+    <script>
+        // Inicializar chatbot después de que el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chatbot-form');
+            if (chatForm) {
+                chatForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const input = document.getElementById('chatbot-input');
+                    const messages = document.getElementById('chatbot-messages');
+                    
+                    if (!input || !messages) return;
+                    
+                    const userMsg = input.value.trim();
+                    if (!userMsg) return;
+                    
+                    // Mostrar mensaje del usuario
+                    messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:right;'><span style='background:linear-gradient(135deg, #6A2C3D, #8A4255);color:#fff;padding:0.5rem 1rem;border-radius:14px 14px 2px 14px;display:inline-block;box-shadow:0 2px 8px rgba(106,44,61,0.3);'>${userMsg}</span></div>`;
+                    input.value = '';
+                    messages.scrollTop = messages.scrollHeight;
+                    
+                    try {
+                        const res = await fetch('/chatbot', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: userMsg })
+                        });
+                        
+                        if (!res.ok) {
+                            throw new Error('Error en la respuesta del servidor');
+                        }
+                        
+                        const data = await res.json();
+                        messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:linear-gradient(135deg, #f3e5e8, #fef8f9);color:#4a3840;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;border:1px solid #d4a5b0;box-shadow:0 2px 8px rgba(106,44,61,0.1);'>${data.response}</span></div>`;
+                        messages.scrollTop = messages.scrollHeight;
+                    } catch (err) {
+                        console.error('Error en chatbot:', err);
+                        messages.innerHTML += `<div style='margin-bottom:0.5rem;text-align:left;'><span style='background:#ffe5e5;color:#a03030;padding:0.5rem 1rem;border-radius:14px 14px 14px 2px;display:inline-block;border:1px solid #ffb3b3;'>Error de conexión con el bot. Por favor, verifica tu conexión a internet.</span></div>`;
+                        messages.scrollTop = messages.scrollHeight;
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
