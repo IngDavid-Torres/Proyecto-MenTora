@@ -992,14 +992,14 @@ def delete_quiz_admin(quiz_id):
         quiz = Quiz.query.get_or_404(quiz_id)
         quiz_title = quiz.title
 
-        # Eliminar preguntas relacionadas
-        Question.query.filter_by(quiz_id=quiz_id).delete()
-        # Eliminar respuestas de usuarios
+        # IMPORTANTE: Eliminar en el orden correcto para evitar violaciones de clave foránea
+        # 1. Primero eliminar respuestas de usuarios (referencia a questions)
         UserAnswer.query.filter_by(quiz_id=quiz_id).delete()
-        # Eliminar progreso
+        # 2. Luego eliminar progreso del quiz
         QuizProgress.query.filter_by(quiz_id=quiz_id).delete()
-
-        # Eliminar el quiz
+        # 3. Después eliminar las preguntas
+        Question.query.filter_by(quiz_id=quiz_id).delete()
+        # 4. Finalmente eliminar el quiz
         db.session.delete(quiz)
         db.session.commit()
 
@@ -1575,8 +1575,10 @@ def delete_user(user_id):
         # Guardar el username antes de eliminar
         username = user.username
 
-        # Eliminar datos relacionados del usuario
+        # Eliminar datos relacionados del usuario en el orden correcto
         UserAnswer.query.filter_by(user_id=user_id).delete()
+        QuizProgress.query.filter_by(user_id=user_id).delete()
+        GameProgress.query.filter_by(user_id=user_id).delete()
         Achievement.query.filter_by(user_id=user_id).delete()
         # Notification.to_user is an Integer FK to users.id — use id, not username
         Notification.query.filter_by(to_user=user.id).delete()
